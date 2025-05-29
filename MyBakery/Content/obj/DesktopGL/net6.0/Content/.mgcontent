@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Brown64S.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/ChocoChip.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Ember.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Font.spritefont</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Green64.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Red64.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Toast.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Button.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/display1.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/cccookie.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Coin.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Ice.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Match.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Oven.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Wood.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Whisk.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Dough.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/ProgressBack.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/ProgressFront.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/TempFront.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/TempBack.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/MatchBox.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Cherry.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Apple.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Orange.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/SpriteSheet.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Bakery1.png</File>
+    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/chocofall_bg.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
