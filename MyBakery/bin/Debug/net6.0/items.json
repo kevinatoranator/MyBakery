@@ -1,0 +1,64 @@
+{
+  "Coin": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {}
+  },
+  "ChocoChip": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {}
+  },
+  "Dough": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {
+      "ChocoChip": 12,
+      "Flour": 12
+    }
+  },
+  "Cookie": {
+    "Value": 1,
+    "Sellable": true,
+    "Recipe": {
+      "Dough": 12
+    }
+  },
+  "Apple": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {}
+  },
+  "Cherry": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {}
+  },
+  "Orange": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {}
+  },
+  "Jelly": {
+    "Value": 1,
+    "Sellable": true,
+    "Recipe": {}
+  },
+  "CoffeeBean": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {}
+  },
+  "Flour": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {
+      "Wheat": 10
+    }
+  },
+  "Wheat": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {}
+  }
+}

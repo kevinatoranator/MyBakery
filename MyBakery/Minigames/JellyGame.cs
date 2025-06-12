@@ -120,7 +120,15 @@ public static class JellyGame{
     }
 
     private static void EndGame(){
-        GameManager.inventory[7].Quantity += (int)Math.Ceiling(player.scale*10);
+        if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Jelly))
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.Jelly] += (int)Math.Ceiling(player.scale*10);
+            }
+            else
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.Jelly] = (int)Math.Ceiling(player.scale*10);
+            }
+        
         jellies.Clear();
         timePassed = 0;
         player.scale = startingSize;

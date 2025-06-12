@@ -1,1 +1,11 @@
-[225,120,34,56,15,19,22]
+{
+  "Name": "NewPlayer",
+  "inventory": {
+    "Coin": 10,
+    "ChocoChip": 0,
+    "Dough": 33,
+    "Cookie": 42,
+    "Flour": 34,
+    "Wheat": 90
+  }
+}

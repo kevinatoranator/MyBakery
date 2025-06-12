@@ -3,40 +3,42 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeneralUtil;
 using System;
+using System.Collections.Generic;
 
 namespace MyBakery;
 
-public class UIButton : Button{
+public class UIButton : Button
+{
 
 
-    public UIButton(string name, Sprite sprite, Vector2 location){
+    public UIButton(string name, Sprite sprite, Vector2 location)
+    {
         Name = name;
         Sprite = sprite;
         Location = location;
         HitBox = new Rectangle((int)Location.X, (int)Location.Y, Sprite.TextureMapLocation.Width, Sprite.TextureMapLocation.Height);
     }
 
-    public void Update(GameTime gameTime) { 
+    public void Update(GameTime gameTime)
+    {
 
-        if(IsClicked()){
-            switch(Name){
+        if (IsClicked())
+        {
+            switch (Name)
+            {
                 case "ChocoLatte":
                     GameManager.CurrentMinigameState = GameManager.MinigameState.ChocoLatte;
                     break;
                 case "Dough":
-                    if(GameManager.inventory[1].Quantity >= 10){
+                    if (HasIngredients(GameManager.ItemDB[GameManager.Items.Dough].Recipe))
+                    {
                         GameManager.CurrentMinigameState = GameManager.MinigameState.Dough;
-                        GameManager.inventory[1].Quantity -= 10;
-                    }else{
-                        Console.WriteLine("Not enough chips");
                     }
                     break;
                 case "Baking":
-                    if(GameManager.inventory[2].Quantity >= 10){
+                    if (HasIngredients(GameManager.ItemDB[GameManager.Items.Cookie].Recipe))
+                    {
                         GameManager.CurrentMinigameState = GameManager.MinigameState.Baking;
-                        GameManager.inventory[2].Quantity -= 10;
-                    }else{
-                        Console.WriteLine("Not enough dough");
                     }
                     break;
                 case "Fruit Jump":
@@ -44,6 +46,13 @@ public class UIButton : Button{
                     break;
                 case "Jelly Eater":
                     GameManager.CurrentMinigameState = GameManager.MinigameState.JellyEater;
+                    break;
+                case "Flour Grind":
+                    FlourGame.Restart();
+                    if (HasIngredients(GameManager.ItemDB[GameManager.Items.Flour].Recipe))
+                    {
+                        GameManager.CurrentMinigameState = GameManager.MinigameState.FlourGrind;
+                    }
                     break;
                 case "Coffee Snake":
                     CoffeeSnakeGame.Restart();
@@ -55,7 +64,26 @@ public class UIButton : Button{
                     GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
                     break;
             }
-            
+
         }
     }
+
+    public bool HasIngredients(Dictionary<GameManager.Items, int> recipe) {
+        foreach (KeyValuePair<GameManager.Items, int> ingredient in recipe)
+        {
+            int quantity;
+             GameManager.PlayerInfo.inventory.TryGetValue(ingredient.Key, out quantity);
+            if (quantity >= ingredient.Value)
+            {
+                GameManager.PlayerInfo.inventory[ingredient.Key] -= ingredient.Value;
+            }
+            else
+            {
+                Console.WriteLine("Not enough " + ingredient.Key);
+                return false;
+            }
+        }
+        return true;
+    }
 }
+

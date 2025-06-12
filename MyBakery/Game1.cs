@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
-using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -16,10 +15,8 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private SpriteFont font;
     private Texture2D whiteBox, spriteSheet, button, progressFront, progressBack, oven, match, wood, ice, matchBox, tempFront, tempBack, whisk, display1, bakery, chocobg;
-    //Create Inventory Array taht loads from file
-    //public List<Recipe> recipes = new List<Recipe>();
-    public Dictionary<string, Dictionary<string, int>> recipes = new Dictionary<string, Dictionary<string, int>>();
     const int spriteSize = 64;
+    
 
     public Game1()
     {
@@ -29,7 +26,7 @@ public class Game1 : Game
         _graphics.PreferredBackBufferHeight = GameManager.gameHeight;
         _graphics.PreferredBackBufferWidth = GameManager.gameWidth;
 
-        
+
     }
 
     protected override void Initialize()
@@ -69,20 +66,27 @@ public class Game1 : Game
         FruitJumpGame.Initialize(GraphicsDevice, spriteSheet);
         JellyGame.Initialize(GraphicsDevice, spriteSheet);
         CoffeeSnakeGame.Initialize(spriteSheet);
+        FlourGame.Initialize(GraphicsDevice, spriteSheet);
         //load vals
         string jsonFilePath = "playerProfile.json";
         if(File.Exists(jsonFilePath)){
             string json = File.ReadAllText(jsonFilePath);
-            int[] json_array = JsonSerializer.Deserialize<int[]>(json);
-            for(int i = 0; i < json_array.Length; i++){
-                GameManager.inventory[i].Quantity = json_array[i];
+            if (json != "")
+            {
+                GameManager.PlayerInfo = JsonSerializer.Deserialize<PlayerProfile>(json);
             }
+            else
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.Coin] = 10;
+                GameManager.PlayerInfo.Name = "NewPlayer";
+            }
+           
         }
 
-        string recipeFilePath = "recipes.json";
-        if(File.Exists(recipeFilePath)){
-            string json = File.ReadAllText(recipeFilePath);
-            recipes = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, int>>>(json);
+        string itemsFilePath = "items.json";
+        if(File.Exists(itemsFilePath)){
+            string json = File.ReadAllText(itemsFilePath);
+            GameManager.ItemDB = JsonSerializer.Deserialize<Dictionary<GameManager.Items, Product>>(json);
         }
     }
 
@@ -90,13 +94,12 @@ public class Game1 : Game
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)){
             string fileName = "playerProfile.json";
-            int[] inventoryVals = {GameManager.inventory[0].Quantity, GameManager.inventory[1].Quantity, GameManager.inventory[2].Quantity, GameManager.inventory[3].Quantity,
-            GameManager.inventory[4].Quantity, GameManager.inventory[5].Quantity, GameManager.inventory[6].Quantity};
-            string jsonString = JsonSerializer.Serialize(inventoryVals);
+             var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonString = JsonSerializer.Serialize(GameManager.PlayerInfo, options);
             File.WriteAllText(fileName, jsonString);
 
-            string fileRecipeName = "recipes.json";
-            string jsonRecipes = JsonSerializer.Serialize(recipes);
+            string fileRecipeName = "items.json";
+            string jsonRecipes = JsonSerializer.Serialize(GameManager.ItemDB, options);
             File.WriteAllText(fileRecipeName, jsonRecipes);
             Exit();
         }
@@ -133,6 +136,9 @@ public class Game1 : Game
             case GameManager.MinigameState.CoffeeSnake:
                 CoffeeSnakeGame.Update(gameTime);
                 break;
+            case GameManager.MinigameState.FlourGrind:
+                FlourGame.Update(gameTime);
+                break;
         }
 
         
@@ -150,12 +156,15 @@ public class Game1 : Game
         _spriteBatch.Begin();
         //Inventory BG
         _spriteBatch.Draw(whiteBox, new Rectangle(0, 0, gameXOrigin, _graphics.PreferredBackBufferHeight), Color.Gray);
-        
+
 
         //Inventory
-        for(int i = 0; i < GameManager.inventory.Count; i++){
-            _spriteBatch.Draw(GameManager.inventory[i].Sprite.Texture, new Vector2(20, i*80), GameManager.inventory[i].Sprite.TextureMapLocation, Color.White);
-            _spriteBatch.DrawString(font, GameManager.inventory[i].Quantity.ToString(), new Vector2(90, i*80 + 24), Color.Black);
+        int inventoryNum = 0;
+        foreach (KeyValuePair<GameManager.Items, int> inv in GameManager.PlayerInfo.inventory)
+        {
+            _spriteBatch.Draw(GameManager.TextureDB[inv.Key].Texture, new Vector2(20, inventoryNum * 80), GameManager.TextureDB[inv.Key].TextureMapLocation, Color.White);
+            _spriteBatch.DrawString(font,inv.Value.ToString(), new Vector2(90, inventoryNum * 80 + 24), Color.Black);
+            inventoryNum++;
         }
 
         
@@ -182,6 +191,9 @@ public class Game1 : Game
                 break;
             case GameManager.MinigameState.CoffeeSnake:
                 CoffeeSnakeGame.Draw(_spriteBatch);
+                break;
+            case GameManager.MinigameState.FlourGrind:
+                FlourGame.Draw(font, _spriteBatch);
                 break;
         }
         BakeryManager.Draw(font, _spriteBatch);

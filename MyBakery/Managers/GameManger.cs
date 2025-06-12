@@ -19,7 +19,6 @@ public static class GameManager{
     public static Vector2 bottomScreenOrigin = new Vector2(gameWidth/3, gameHeight/2);
     public static ButtonState LastMouseState = ButtonState.Released;
     public static Boolean MouseClicked = false;
-    public static List<Product> inventory = new List<Product>();
     public static Sprite cancelSprite;
 
     //GAME STATES
@@ -36,7 +35,8 @@ public static class GameManager{
         Closing,
         WorldMap
     }
-    public enum MinigameState{
+    public enum MinigameState
+    {
         Menu,
         Select,
         ChocoLatte,
@@ -44,26 +44,36 @@ public static class GameManager{
         Dough,
         FruitJump,
         JellyEater,
-        CoffeeSnake
+        CoffeeSnake,
+        FlourGrind
     }
     public enum Items{
-        Coin, ChocoChip, Dough, Cookie, Orange, Cherry, Apple, Jelly, CoffeeBean
+        None, Coin, ChocoChip, Dough, Cookie, Orange, Cherry, Apple, Jelly, CoffeeBean, Flour, Wheat
     }
+
+    public static Dictionary<Items, Product> ItemDB = new Dictionary<Items, Product>();
+    public static Dictionary<Items, Sprite> TextureDB = new Dictionary<Items, Sprite>();
+
 
     public static GameState CurrentGameState;
     public static BakeryState CurrentBakeryState;
     public static MinigameState CurrentMinigameState;
     
-    public static void Initialize(Texture2D SpriteSheet){
-        inventory.Add(new Product(Items.Coin, 1, 0, false, new Sprite(SpriteSheet, new Rectangle(128, 128, 64, 64))));
-        inventory.Add(new Product(Items.ChocoChip, 1, 0, false, new Sprite(SpriteSheet, new Rectangle(0, 64, 64, 64))));
-        inventory.Add(new Product(Items.Dough, 1, 0, false, new Sprite(SpriteSheet, new Rectangle(0, 128, 64, 64))));
-        inventory.Add(new Product(Items.Cookie, 1, 0, true, new Sprite(SpriteSheet, new Rectangle(64, 128, 64, 64))));
-        inventory.Add(new Product(Items.Apple, 1, 0, false, new Sprite(SpriteSheet, new Rectangle(0, 0, 64, 64))));
-        inventory.Add(new Product(Items.Cherry, 1, 0, false, new Sprite(SpriteSheet, new Rectangle(64, 0, 64, 64))));
-        inventory.Add(new Product(Items.Orange, 1, 0, false, new Sprite(SpriteSheet, new Rectangle(128, 0, 64, 64))));
-        inventory.Add(new Product(Items.Jelly, 1, 0, true, new Sprite(SpriteSheet, new Rectangle(128, 192, 64, 64))));
-        inventory.Add(new Product(Items.CoffeeBean, 1, 0, false, new Sprite(SpriteSheet, new Rectangle(256, 128, 64, 64))));
+    public static PlayerProfile PlayerInfo = new PlayerProfile("");
+
+    public static void Initialize(Texture2D SpriteSheet)
+    {
+        TextureDB[Items.Coin] = new Sprite(SpriteSheet, new Rectangle(128, 128, 64, 64));
+        TextureDB[Items.ChocoChip] = new Sprite(SpriteSheet, new Rectangle(0, 64, 64, 64));
+        TextureDB[Items.Dough] = new Sprite(SpriteSheet, new Rectangle(0, 128, 64, 64));
+        TextureDB[Items.Cookie] = new Sprite(SpriteSheet, new Rectangle(64, 128, 64, 64));
+        TextureDB[Items.Apple] = new Sprite(SpriteSheet, new Rectangle(0, 0, 64, 64));
+        TextureDB[Items.Cherry] = new Sprite(SpriteSheet, new Rectangle(64, 0, 64, 64));
+        TextureDB[Items.Orange] = new Sprite(SpriteSheet, new Rectangle(128, 0, 64, 64));
+        TextureDB[Items.Jelly] = new Sprite(SpriteSheet, new Rectangle(128, 192, 64, 64));
+        TextureDB[Items.CoffeeBean] = new Sprite(SpriteSheet, new Rectangle(256, 128, 64, 64));
+        TextureDB[Items.Flour] = new Sprite(SpriteSheet, new Rectangle(320, 128, 64, 64));
+        TextureDB[Items.Wheat] = new Sprite(SpriteSheet, new Rectangle(192, 64, 64, 64));
         cancelSprite = new Sprite(SpriteSheet, new Rectangle(0, 192, 64, 64));
     }
 

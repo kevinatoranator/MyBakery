@@ -81,7 +81,15 @@ public static class DoughGame
             gameTimeLeft = 0;
             if(collectedDough > quota)
                 collectedDough += collectedDough/2;
-            GameManager.inventory[2].Quantity += collectedDough; // change to dough
+            
+            if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Dough))
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.Dough] += collectedDough; 
+            }
+            else
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.Dough] = collectedDough; // change to dough
+            }
             GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
         }
     }

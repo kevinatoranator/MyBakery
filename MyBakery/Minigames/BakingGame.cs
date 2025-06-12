@@ -97,7 +97,7 @@ public static class BakingGame
         //BakingGame
         currentMouse = Mouse.GetState();
         mousePos = new Point(currentMouse.X, currentMouse.Y);
-        if(isInside(mousePos, pilePos, spriteSize, spriteSize) && currentMouse.LeftButton == ButtonState.Pressed && heldItem is null){
+        if(MinigameManager.isInside(mousePos, pilePos, spriteSize, spriteSize) && currentMouse.LeftButton == ButtonState.Pressed && heldItem is null){
             Random rand = new();
             int spawnChance = rand.Next(100)+1;
             if(spawnChance < 20){
@@ -109,7 +109,7 @@ public static class BakingGame
             }
         }
         if(heldItem is not null){
-            if(isInside(mousePos, ovenPos, ovenSprite.TextureMapLocation.Width, ovenSprite.TextureMapLocation.Height) && currentMouse.LeftButton == ButtonState.Released){
+            if(MinigameManager.isInside(mousePos, ovenPos, ovenSprite.TextureMapLocation.Width, ovenSprite.TextureMapLocation.Height) && currentMouse.LeftButton == ButtonState.Released){
                 if(heldItem.type == "ice")
                     currentTemp -= 125;
                 else if(heldItem.type == "wood")
@@ -117,7 +117,7 @@ public static class BakingGame
                 else
                     currentTemp += 175;
                 heldItem = null;
-            }else if(!isInside(mousePos, ovenPos, ovenSprite.TextureMapLocation.Width, ovenSprite.TextureMapLocation.Height) && currentMouse.LeftButton == ButtonState.Released){
+            }else if(!MinigameManager.isInside(mousePos, ovenPos, ovenSprite.TextureMapLocation.Width, ovenSprite.TextureMapLocation.Height) && currentMouse.LeftButton == ButtonState.Released){
                 heldItem = null;
             }
         }
@@ -133,7 +133,15 @@ public static class BakingGame
             gameTimeLeft = 0;
             if(bakedGoods > quota)
                 bakedGoods += bakedGoods/2;
-            GameManager.inventory[3].Quantity += bakedGoods;
+            if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Cookie))
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.Cookie] += bakedGoods;
+            }
+            else
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.Cookie] = bakedGoods;
+            }
+            
             GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
         }
 
@@ -148,10 +156,5 @@ public static class BakingGame
             get => _type;
             set => _type = value;
         }
-    }
-
-    public static Boolean isInside(Point p1, Vector2 vec2, int xsize, int ysize){
-        Rectangle obj1 = new Rectangle((int)vec2.X, (int)vec2.Y, xsize, ysize);
-        return obj1.Contains(p1);
     }
 }

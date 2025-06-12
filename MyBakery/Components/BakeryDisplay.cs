@@ -10,7 +10,7 @@ namespace MyBakery;
 public class BakeryDisplay : Button
 {
 
-    public Product product {get; set;}
+    public GameManager.Items product {get; set;}
     public ProductSelectorMenu menu;
     private SpriteFont _font;
     public int Quantity { get; set; }
@@ -24,7 +24,7 @@ public class BakeryDisplay : Button
 
     public void Update(GameTime gameTime){
         if(IsClicked() && menu == null){
-            menu = new ProductSelectorMenu(GameManager.inventory, _font, Location);
+            menu = new ProductSelectorMenu(_font, Location);
         }else if(IsClicked() && menu != null){
             menu = null;
         }
@@ -43,8 +43,8 @@ public class BakeryDisplay : Button
             menu.Draw(spriteBatch);
         }
         
-        if(product is not null){
-            spriteBatch.Draw(product.Sprite.Texture, Location, product.Sprite.TextureMapLocation, Color.White);
+        if(product is not GameManager.Items.None){
+            spriteBatch.Draw(GameManager.TextureDB[product].Texture, Location, GameManager.TextureDB[product].TextureMapLocation, Color.White);
         }
     }
 }

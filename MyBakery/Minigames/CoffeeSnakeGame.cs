@@ -158,7 +158,7 @@ public static class CoffeeSnakeGame{
     }
 
     private static void EndGame(){
-        GameManager.inventory[8].Quantity += snake.Count*5;
+        GameManager.PlayerInfo.inventory[GameManager.Items.CoffeeBean] += snake.Count*5;
         GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
     }
 

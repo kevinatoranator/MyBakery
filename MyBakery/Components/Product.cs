@@ -1,6 +1,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using GeneralUtil;
 
 namespace MyBakery;
@@ -8,31 +9,30 @@ namespace MyBakery;
 public class Product{
 
     public int Value{get; set;}
-    public GameManager.Items Type{get; set;}
-    public int Quantity{get; set;}
-    public Sprite Sprite{get; set;}
     public Boolean Sellable{get; set;}
+    public Dictionary<GameManager.Items, int> Recipe {get; set;}
 
-    public void Sell(int amount){
-        if(Quantity >= amount){
-            Quantity -= amount;
-            GameManager.inventory[0].Quantity += amount*Value;
+    public void Sell(GameManager.Items item, int amount)
+    {
+        if (GameManager.PlayerInfo.inventory[item] >= amount)
+        {
+            GameManager.PlayerInfo.inventory[item] -= amount;
+            GameManager.PlayerInfo.inventory[GameManager.Items.Coin] += amount * Value;
         }
-            
+
     }
-    public void Buy(int amount){
-        if(GameManager.inventory[0].Quantity >= amount*Value){
-            Quantity += amount;
-            GameManager.inventory[0].Quantity -= amount*Value;
+    public void Buy(GameManager.Items item, int amount){
+        if(GameManager.PlayerInfo.inventory[GameManager.Items.Coin] >= amount*Value){
+             GameManager.PlayerInfo.inventory[item] += amount;
+            GameManager.PlayerInfo.inventory[GameManager.Items.Coin] -= amount*Value;
         }else
             Console.WriteLine("Out of money");
     }
 
-    public Product(GameManager.Items type, int value, int quantity, Boolean sellable, Sprite sprite){
-        Type = type;
+    public Product(int value, Boolean sellable, Dictionary<GameManager.Items, int> recipe)
+    {
         Value = value;
-        Quantity = quantity;
         Sellable = sellable;
-        Sprite = sprite;
+        Recipe = recipe;
     }
 }

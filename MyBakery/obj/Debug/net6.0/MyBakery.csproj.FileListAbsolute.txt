@@ -51,3 +51,4 @@ K:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\Orange.xnb
 K:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\SpriteSheet.xnb
 K:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\Bakery1.xnb
 K:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\chocofall_bg.xnb
+K:\Programming\Monogame\MyBakery\MyBakery\obj\Debug\net6.0\MyBakery.sourcelink.json

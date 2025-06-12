@@ -71,12 +71,12 @@ public static class BakeryManager
             foreach(BakeryDisplay display in shop.displays){
 
                 if(previousTime != dayTimeLeft){//remove when sell function is moved to customers
-                    if(display.product != null){
-                        if(display.product.Quantity < 1){
-                            display.product = null;
+                    if(display.product != GameManager.Items.None){
+                        if( GameManager.PlayerInfo.inventory[display.product] < 1){
+                            display.product = GameManager.Items.None;
                             //display.Text = "Select\nProduct";
                         }else{
-                            display.product.Sell(1);
+                            GameManager.ItemDB[display.product].Sell(display.product, 1);
                         }
                     }
                 }

@@ -10,27 +10,28 @@ namespace MyBakery;
 
 public class ProductSelectorMenu : Component
 {
-
-    private List<Product> _products;
     private List<Button> _buttons;
     private Vector2 _position;
     private SpriteFont _font;
-    public Product selectedProduct;
+    public GameManager.Items selectedProduct;
     public Boolean Clicked;
 
     //is Visible bool?
-    public ProductSelectorMenu(List<Product> products, SpriteFont font, Vector2 position){
-        _products = products;
+    public ProductSelectorMenu( SpriteFont font, Vector2 position){
+        
         _buttons = new List<Button>();
         _position = position;
         _font = font;
-        selectedProduct = null;
+        selectedProduct = GameManager.Items.None;
         Clicked = false;
 
         int number = 1;
-        foreach(Product p in _products){
-            if(p.Sellable && p.Quantity > 0){
-                Button b = new UIButton(p.Type.ToString(), p.Sprite, new Vector2(position.X, position.Y + (p.Sprite.TextureMapLocation.Height*number)));
+        foreach(KeyValuePair<GameManager.Items, Product> item in GameManager.ItemDB){
+            int quantity;
+            GameManager.PlayerInfo.inventory.TryGetValue(item.Key, out quantity);
+            if (item.Value.Sellable && quantity > 0)
+            {
+                Button b = new UIButton(item.Key.ToString(), GameManager.TextureDB[item.Key], new Vector2(position.X, position.Y + (GameManager.TextureDB[item.Key].TextureMapLocation.Height * number)));
                 b.HitBox = new Rectangle((int)b.Location.X, (int)b.Location.Y, b.Sprite.TextureMapLocation.Width, b.Sprite.TextureMapLocation.Height);
                 _buttons.Add(b);
                 number += 1;
@@ -54,11 +55,11 @@ public class ProductSelectorMenu : Component
             b.Update(gameTime);
             if(b.IsClicked()){
                 if(b.Name == "Cancel"){
-                    selectedProduct = null;
+                    selectedProduct = GameManager.Items.None;
                 }else{
-                    foreach(Product product in _products){
-                        if(product.Type.ToString() == b.Name){
-                            selectedProduct = product;
+                    foreach(KeyValuePair<GameManager.Items, Product> item in GameManager.ItemDB){
+                        if(item.Key.ToString() == b.Name){
+                            selectedProduct = item.Key;
                         }
                     }
                 }

@@ -101,9 +101,19 @@ public static class FruitJumpGame{
         if(gameTimeLeft < 0){
             fruits.Clear();
             gameTimeLeft = 0;
-            GameManager.inventory[4].Quantity += collectedApples;
-            GameManager.inventory[5].Quantity += collectedCherries;
-            GameManager.inventory[6].Quantity += collectedOranges;
+            if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Apple) && GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Cherry) && GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Orange))
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.Apple] += collectedApples;
+                GameManager.PlayerInfo.inventory[GameManager.Items.Cherry] += collectedCherries;
+                GameManager.PlayerInfo.inventory[GameManager.Items.Orange] += collectedOranges;
+            }
+            else
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.Apple] = collectedApples;
+                GameManager.PlayerInfo.inventory[GameManager.Items.Cherry] = collectedCherries;
+                GameManager.PlayerInfo.inventory[GameManager.Items.Orange] = collectedOranges;
+            }
+            
             GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
         }else{
             Random rand = new();

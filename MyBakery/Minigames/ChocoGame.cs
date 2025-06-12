@@ -90,7 +90,15 @@ public static class ChocoGame
             gameTimeLeft = 0;
             if(collectedChocolate > quota)
                 collectedChocolate += collectedChocolate/2;
-            GameManager.inventory[1].Quantity += collectedChocolate;
+            if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.ChocoChip))
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.ChocoChip] += collectedChocolate;
+            }
+            else
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.ChocoChip] = collectedChocolate;
+            }
+            
             GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
         }
 
