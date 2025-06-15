@@ -7,19 +7,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MyBakery;
 
-public class BakeryDisplay : Button
+public class BakeryDisplay : Button, ShopObject
 {
 
     public GameManager.Items product {get; set;}
     public ProductSelectorMenu menu;
     private SpriteFont _font;
     public int Quantity { get; set; }
-    public BakeryDisplay(Sprite sprite, Vector2 location, SpriteFont font)
+    public Rectangle InteractZone { get; set; }
+    public Shop.ShopObjectTypes Type { get; set; }
+
+    public BakeryDisplay(Sprite sprite, Vector2 location, SpriteFont font, Rectangle izone)
     {
         Sprite = sprite;
         Location = location;
         _font = font;
-        HitBox = new Rectangle((int)Location.X, (int)Location.Y, Sprite.TextureMapLocation.Width, Sprite.TextureMapLocation.Height);
+        Hitbox = new Rectangle((int)Location.X, (int)Location.Y, Sprite.TextureMapLocation.Width, Sprite.TextureMapLocation.Height);
+        InteractZone = izone;
+        Type = Shop.ShopObjectTypes.Display;
     }
 
     public void Update(GameTime gameTime){

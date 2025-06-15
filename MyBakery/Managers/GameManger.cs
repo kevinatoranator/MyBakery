@@ -35,29 +35,18 @@ public static class GameManager{
         Closing,
         WorldMap
     }
-    public enum MinigameState
-    {
-        Menu,
-        Select,
-        ChocoLatte,
-        Baking,
-        Dough,
-        FruitJump,
-        JellyEater,
-        CoffeeSnake,
-        FlourGrind
-    }
+   
     public enum Items{
         None, Coin, ChocoChip, Dough, Cookie, Orange, Cherry, Apple, Jelly, CoffeeBean, Flour, Wheat
     }
 
     public static Dictionary<Items, Product> ItemDB = new Dictionary<Items, Product>();
     public static Dictionary<Items, Sprite> TextureDB = new Dictionary<Items, Sprite>();
+    public static Dictionary<int, Sprite> ButtonDB = new Dictionary<int, Sprite>();
 
 
     public static GameState CurrentGameState;
     public static BakeryState CurrentBakeryState;
-    public static MinigameState CurrentMinigameState;
     
     public static PlayerProfile PlayerInfo = new PlayerProfile("");
 

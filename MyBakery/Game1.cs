@@ -14,9 +14,8 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private SpriteFont font;
-    private Texture2D whiteBox, spriteSheet, button, progressFront, progressBack, oven, match, wood, ice, matchBox, tempFront, tempBack, whisk, display1, bakery, chocobg;
-    const int spriteSize = 64;
-    
+    private Texture2D whiteBox, spriteSheet, button, display1, bakery, chocobg;
+    const int spriteSize = 64;  
 
     public Game1()
     {
@@ -43,30 +42,13 @@ public class Game1 : Game
         whiteBox.SetData(new[] {Color.White});
         spriteSheet = Content.Load<Texture2D>("SpriteSheet");
         button = Content.Load<Texture2D>("Button"); 
-        progressFront = Content.Load<Texture2D>("ProgressFront"); 
-        progressBack = Content.Load<Texture2D>("ProgressBack");
-        oven = Content.Load<Texture2D>("Oven"); 
-        match = Content.Load<Texture2D>("Match"); 
-        wood = Content.Load<Texture2D>("Wood"); 
-        ice = Content.Load<Texture2D>("Ice");
-        matchBox = Content.Load<Texture2D>("MatchBox"); 
-        tempFront = Content.Load<Texture2D>("TempFront"); 
-        tempBack = Content.Load<Texture2D>("TempBack");
-        whisk = Content.Load<Texture2D>("Whisk"); 
         display1 = Content.Load<Texture2D>("display1");  
         bakery = Content.Load<Texture2D>("Bakery1");
         chocobg = Content.Load<Texture2D>("chocofall_bg");
 
         GameManager.Initialize(spriteSheet);
         BakeryManager.Initialize(GraphicsDevice, button, display1, bakery, font);
-        MinigameManager.Initialize(GraphicsDevice, button);
-        ChocoGame.Initialize(GraphicsDevice, spriteSheet, progressFront, progressBack, chocobg);
-        BakingGame.Initialize(GraphicsDevice, spriteSheet, oven, match, wood, ice, matchBox, progressFront, progressBack, tempFront, tempBack);
-        DoughGame.Initialize(GraphicsDevice, spriteSheet, whisk);
-        FruitJumpGame.Initialize(GraphicsDevice, spriteSheet);
-        JellyGame.Initialize(GraphicsDevice, spriteSheet);
-        CoffeeSnakeGame.Initialize(spriteSheet);
-        FlourGame.Initialize(GraphicsDevice, spriteSheet);
+        MinigameManager.Initialize(GraphicsDevice, button, spriteSheet, chocobg);
         //load vals
         string jsonFilePath = "playerProfile.json";
         if(File.Exists(jsonFilePath)){
@@ -105,7 +87,7 @@ public class Game1 : Game
         }
 
         GameManager.Update(gameTime);
-
+        MinigameManager.Update(gameTime);
 
         //Bakery updates
         if(GameManager.CurrentBakeryState == GameManager.BakeryState.Day){
@@ -113,34 +95,7 @@ public class Game1 : Game
         }else{
             BakeryManager.IsOpen = false;
         }
-        //Minigame updates
-        switch(GameManager.CurrentMinigameState){
-            case GameManager.MinigameState.Select:
-                MinigameManager.Update(gameTime);
-                break;
-            case GameManager.MinigameState.ChocoLatte:
-                ChocoGame.Update(gameTime);
-                break;
-            case GameManager.MinigameState.Baking:
-                BakingGame.Update(gameTime);
-                break;
-            case GameManager.MinigameState.Dough:
-                DoughGame.Update(gameTime);
-                break;
-            case GameManager.MinigameState.FruitJump:
-                FruitJumpGame.Update(gameTime);
-                break;
-            case GameManager.MinigameState.JellyEater:
-                JellyGame.Update(gameTime);
-                break;
-            case GameManager.MinigameState.CoffeeSnake:
-                CoffeeSnakeGame.Update(gameTime);
-                break;
-            case GameManager.MinigameState.FlourGrind:
-                FlourGame.Update(gameTime);
-                break;
-        }
-
+        
         
         BakeryManager.Update(gameTime);
         base.Update(gameTime);
@@ -154,6 +109,11 @@ public class Game1 : Game
 
 
         _spriteBatch.Begin();
+        
+        //Minigame updates
+        MinigameManager.Draw(font, _spriteBatch);
+        BakeryManager.Draw(font, _spriteBatch);
+
         //Inventory BG
         _spriteBatch.Draw(whiteBox, new Rectangle(0, 0, gameXOrigin, _graphics.PreferredBackBufferHeight), Color.Gray);
 
@@ -166,37 +126,6 @@ public class Game1 : Game
             _spriteBatch.DrawString(font,inv.Value.ToString(), new Vector2(90, inventoryNum * 80 + 24), Color.Black);
             inventoryNum++;
         }
-
-        
-
-        //Minigame updates
-        switch(GameManager.CurrentMinigameState){
-            case GameManager.MinigameState.Select:
-                MinigameManager.Draw(font, _spriteBatch);
-                break;
-            case GameManager.MinigameState.ChocoLatte:
-                ChocoGame.Draw(font, _spriteBatch);
-                break;
-            case GameManager.MinigameState.Baking:
-                BakingGame.Draw(font, _spriteBatch);
-                break;
-            case GameManager.MinigameState.Dough:
-                DoughGame.Draw(font, _spriteBatch);
-                break;
-            case GameManager.MinigameState.FruitJump:
-                FruitJumpGame.Draw(font, _spriteBatch);
-                break;
-            case GameManager.MinigameState.JellyEater:
-                JellyGame.Draw(_spriteBatch);
-                break;
-            case GameManager.MinigameState.CoffeeSnake:
-                CoffeeSnakeGame.Draw(_spriteBatch);
-                break;
-            case GameManager.MinigameState.FlourGrind:
-                FlourGame.Draw(font, _spriteBatch);
-                break;
-        }
-        BakeryManager.Draw(font, _spriteBatch);
 
         _spriteBatch.End();
         base.Draw(gameTime);

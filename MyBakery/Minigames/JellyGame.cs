@@ -8,20 +8,18 @@ using Microsoft.Xna.Framework.Input;
 namespace MyBakery;
 
 
-public static class JellyGame{
+public class JellyGame : Minigame{
 
-
-    private static int gameXOrigin = (int)GameManager.bottomScreenOrigin.X;
-    private static int gameYOrigin = (int)GameManager.bottomScreenOrigin.Y;
     const int spriteSize = 64;
     const float startingSize = 0.25f;
-    private static Sprite jellySprite;
-    private static List<Jelly> jellies;
-    private static Jelly player;
-    private static int gameTimeLeft;
-    private static double timePassed, tick;
-    
-    public static void Initialize(GraphicsDevice graphicsDevice, Texture2D spriteSheet){
+    private Sprite jellySprite;
+    private List<Jelly> jellies;
+    private Jelly player;
+    private int gameTimeLeft;
+    private double timePassed, tick;
+
+    public override void Start(Texture2D spriteSheet, Texture2D background)
+    {
         jellySprite = new Sprite(spriteSheet, new Rectangle(64, 192, spriteSize, spriteSize));
         timePassed = tick = 0;
         jellies = new List<Jelly>();
@@ -31,11 +29,16 @@ public static class JellyGame{
         int green = random.Next(255);
         int blue = random.Next(255);
         Color newPlayerColor = new Color(red, green, blue);
-        player = new Jelly(new Vector2(gameXOrigin*2, gameYOrigin + gameYOrigin/2), startingSize, newPlayerColor, jellySprite);
+        player = new Jelly(new Vector2(gameXOrigin * 2, gameYOrigin + gameYOrigin / 2), startingSize, newPlayerColor, jellySprite);
+        
+        timePassed = 0;
+        player.scale = startingSize;
+        player.velocityX = 0;
+        player.velocityY = 0;
 
     }
 
-    public static void Update(GameTime gameTime){
+    public override void Update(GameTime gameTime){
         KBoard.CheckKey();
         if(KBoard.CheckKeyRelease(Keys.Left)){
             player.velocityX -= 1;
@@ -113,13 +116,13 @@ public static class JellyGame{
 
     }
 
-    public static void Draw(SpriteBatch spriteBatch){
+    public override void Draw(SpriteFont font, SpriteBatch spriteBatch){
         player.Draw(spriteBatch);
         foreach(Jelly jelly in jellies)
             jelly.Draw(spriteBatch);
     }
 
-    private static void EndGame(){
+    private void EndGame(){
         if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Jelly))
             {
                 GameManager.PlayerInfo.inventory[GameManager.Items.Jelly] += (int)Math.Ceiling(player.scale*10);
@@ -130,11 +133,7 @@ public static class JellyGame{
             }
         
         jellies.Clear();
-        timePassed = 0;
-        player.scale = startingSize;
-        player.velocityX = 0;
-        player.velocityY = 0;
-        GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
+        MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
     }
 
 
@@ -151,14 +150,14 @@ public static class JellyGame{
 
         public void Update(GameTime gameTime){
             
-            if(_x < gameXOrigin - spriteSize * scale)
+            if(_x < (int)GameManager.bottomScreenOrigin.X - spriteSize * scale)
                 _x = GameManager.gameWidth;
             else if(_x > GameManager.gameWidth + 1)
-                _x = gameXOrigin;
-            if(_y < gameYOrigin - spriteSize * scale)
+                _x = (int)GameManager.bottomScreenOrigin.X;
+            if(_y < (int)GameManager.bottomScreenOrigin.Y - spriteSize * scale)
                 _y = GameManager.gameHeight;
             else if(_y > GameManager.gameHeight + 1)
-                _y = gameYOrigin;
+                _y = (int)GameManager.bottomScreenOrigin.Y;
             UpdateLocation();
             
         }

@@ -2,9 +2,9 @@
   "Name": "NewPlayer",
   "inventory": {
     "Coin": 10,
-    "ChocoChip": 0,
-    "Dough": 33,
-    "Cookie": 42,
+    "ChocoChip": 42,
+    "Dough": 21,
+    "Cookie": 82,
     "Flour": 34,
     "Wheat": 90
   }

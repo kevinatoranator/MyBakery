@@ -9,54 +9,46 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MyBakery;
 
-public static class ChocoGame
+public class ChocoGame : Minigame
 {
-
-    private static int gameXOrigin = (int)GameManager.bottomScreenOrigin.X;
-    private static int gameYOrigin = (int)GameManager.bottomScreenOrigin.Y;
     const int spriteSize = 64;
 
     //Chocogame
-    private static Sprite chocoSprite, playerSprite, emberSprite;
-    private static Texture2D whiteBox, bg;
-    private static List<FallingObject> fallingObjects;
-    private static Player player;
-    private static int collectedChocolate, gameTimeLeft, quota;
-    private static double timePassed;
+    private Sprite chocoSprite, playerSprite, emberSprite, progressFront, progressBack;
+    private Texture2D bg;
+    private List<FallingObject> fallingObjects;
+    private Player player;
+    private int collectedChocolate, gameTimeLeft, quota;
+    private double timePassed;
 
-    private static ProgressBar timerBar, quotaBar;
-    public static void Initialize(GraphicsDevice graphicsDevice, Texture2D spriteSheet, Texture2D progressFront, Texture2D progressBack, Texture2D background)
+    private ProgressBar timerBar, quotaBar;
+
+    public override void Start(Texture2D spriteSheet, Texture2D background)
     {
-
-        //Chocogame
         playerSprite = new Sprite(spriteSheet, new Rectangle(128, 64, 64, 64));
         chocoSprite = new Sprite(spriteSheet, new Rectangle(0, 64, 64, 64));
         emberSprite = new Sprite(spriteSheet, new Rectangle(64, 64, 64, 64));
-        whiteBox = new Texture2D(graphicsDevice, 1, 1);
-        whiteBox.SetData(new[] {Color.White});
+        progressFront = new Sprite(spriteSheet, new Rectangle(512, 256, 128, 64));
+        progressBack = new Sprite(spriteSheet, new Rectangle(192, 192, 128, 64));
         bg = background;
 
         fallingObjects = new List<FallingObject>();
-        player = new Player(){location = new Vector2(gameXOrigin*2, GameManager.gameHeight-100)};
+
+        player = new Player() { location = new Vector2(gameXOrigin * 2, GameManager.gameHeight - 100) };
         collectedChocolate = 0;
         timePassed = 0;
         quota = 20; //Make dynamic based on... average?
 
         timerBar = new ProgressBar(progressFront, progressBack, 60, 60, new Vector2(gameXOrigin + 10, gameYOrigin + 30), false);
         quotaBar = new ProgressBar(progressFront, progressBack, quota, 0, new Vector2(gameXOrigin + 10, gameYOrigin + 130), false);
+
     }
 
-
-    public static void Draw(SpriteFont font, SpriteBatch spriteBatch)
+    public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
     {
                 //Chocogame
 
         spriteBatch.Draw(bg, new Rectangle(gameXOrigin, gameYOrigin, GameManager.gameWidth*2/3, GameManager.gameHeight/2), Color.White);
-        /*if(collectedChocolate < quota)
-            spriteBatch.DrawString(font, "Chocolate collected: " + collectedChocolate +"/"+quota, new Vector2(gameXOrigin + 10, gameYOrigin + 100), Color.Red);
-        else
-            spriteBatch.DrawString(font, "Chocolate collected: " + collectedChocolate +"/"+quota, new Vector2(gameXOrigin + 10, gameYOrigin + 100), Color.Green);*/
-        //spriteBatch.DrawString(font, "Time Left: " + gameTimeLeft, new Vector2(gameXOrigin + 10, gameYOrigin + 30), Color.Black);
         timerBar.Draw(spriteBatch);
         spriteBatch.DrawString(font, "Chocolate Quota: ", new Vector2(gameXOrigin + 10, gameYOrigin + 100), Color.Black);
         quotaBar.Draw(spriteBatch);
@@ -72,7 +64,7 @@ public static class ChocoGame
 
     }
 
-    public static void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         //Chocogame
 
@@ -99,7 +91,7 @@ public static class ChocoGame
                 GameManager.PlayerInfo.inventory[GameManager.Items.ChocoChip] = collectedChocolate;
             }
             
-            GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
+            MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
         }
 
         if(gameTimeLeft > 0){
@@ -132,7 +124,7 @@ public static class ChocoGame
             fallingObjects.Remove(fallingObjects.First());
     }
 
-    public static Boolean Collide(Vector2 vec1, Vector2 vec2, int xsize1, int ysize1, int xsize2, int ysize2){
+    public Boolean Collide(Vector2 vec1, Vector2 vec2, int xsize1, int ysize1, int xsize2, int ysize2){
         Rectangle obj1 = new Rectangle((int)vec1.X, (int)vec1.Y, xsize1, ysize1);
         Rectangle obj2 = new Rectangle((int)vec2.X, (int)vec2.Y, xsize2, ysize2);
 
@@ -146,24 +138,6 @@ public static class ChocoGame
         public Vector2 location{
             get => _location;
             set => _location = value;
-        }
-    }
-    private class FallingObject{
-        Vector2 _location;
-        int _fallSpeed;
-        String _type;
-
-        public Vector2 location{
-            get => _location;
-            set => _location = value;
-        }
-        public int fallSpeed{
-            get => _fallSpeed;
-            set => _fallSpeed = value;
-        }
-        public String type{
-            get => _type;
-            set => _type = value;
         }
     }
 }

@@ -9,27 +9,23 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MyBakery;
 
-public static class FlourGame
+public class FlourGame : Minigame
 {
-
-    private static int gameXOrigin = (int)GameManager.bottomScreenOrigin.X;
-    private static int gameYOrigin = (int)GameManager.bottomScreenOrigin.Y;
     const int spriteSize = 64;
 
     //DoughGame
-    private static Sprite grinderSprite, wheelSprite;
-    private static Texture2D whiteBox;
-    private static int collectedFlour, gameTimeLeft, quota;
-    private static double timePassed;
-    private static Vector2 grinderPos, hopperPos, wheatPilePos, wheelPos;
-    private static Keys lastKey, firstKey;
-    private static bool containsWheat, pickedUp, isTurning;
-    private static MouseState currentMouse;
-    private static Point mousePos;
-    private static List<FallingObject> fallingObjects;
-    private static float wheelRotation, lastWheelRotation, totalRotations;
+    private Sprite grinderSprite, wheelSprite;
+    private int collectedFlour, gameTimeLeft, quota;
+    private double timePassed;
+    private Vector2 grinderPos, hopperPos, wheatPilePos, wheelPos;
+    private Keys lastKey, firstKey;
+    private bool containsWheat, pickedUp, isTurning;
+    private MouseState currentMouse;
+    private Point mousePos;
+    private List<FallingObject> fallingObjects;
+    private float wheelRotation, lastWheelRotation, totalRotations;
 
-    public static void Initialize(GraphicsDevice graphicsDevice, Texture2D spriteSheet)
+    public override void Start(Texture2D spriteSheet, Texture2D background)
     {
 
         //DoughGame
@@ -39,8 +35,6 @@ public static class FlourGame
         wheelPos = new Vector2(grinderPos.X + 128, grinderPos.Y + 128);
         hopperPos = new Vector2(grinderPos.X + 32, grinderPos.Y + 16);
         wheatPilePos = new Vector2(grinderPos.X - 128, grinderPos.Y);
-        whiteBox = new Texture2D(graphicsDevice, 1, 1);
-        whiteBox.SetData(new[] { Color.White });
 
         collectedFlour = 0;
         timePassed = 0;
@@ -55,17 +49,16 @@ public static class FlourGame
     }
 
 
-    public static void Draw(SpriteFont font, SpriteBatch spriteBatch)
+    public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
     {
         //Doughgame
-        spriteBatch.Draw(whiteBox, new Rectangle(gameXOrigin, gameYOrigin, GameManager.gameWidth * 2 / 3, GameManager.gameHeight / 2), Color.Beige);
-        spriteBatch.Draw(whiteBox, new Rectangle((int)wheatPilePos.X, (int)wheatPilePos.Y, 64, 64), Color.Green);
+        spriteBatch.Draw(grinderSprite.Texture, new Rectangle((int)wheatPilePos.X, (int)wheatPilePos.Y, 64, 64), Color.Green);
         if (collectedFlour < quota)
             spriteBatch.DrawString(font, "Flour collected: " + collectedFlour + "/" + quota, new Vector2(gameXOrigin + 10, gameYOrigin + 10), Color.Red);
         else
             spriteBatch.DrawString(font, "Flour collected: " + collectedFlour + "/" + quota, new Vector2(gameXOrigin + 10, gameYOrigin + 10), Color.Green);
-        spriteBatch.DrawString(font, "Time Left: " + gameTimeLeft, new Vector2(gameXOrigin + 10, gameYOrigin + 30), Color.Black);
-        spriteBatch.DrawString(font, "Wheat: " + containsWheat, new Vector2(gameXOrigin + 10, gameYOrigin + 50), Color.Black);
+        spriteBatch.DrawString(font, "Time Left: " + gameTimeLeft, new Vector2(gameXOrigin + 10, gameYOrigin + 30), Color.White);
+        spriteBatch.DrawString(font, "Wheat: " + containsWheat, new Vector2(gameXOrigin + 10, gameYOrigin + 50), Color.White);
 
 
         spriteBatch.Draw(grinderSprite.Texture, grinderPos, grinderSprite.TextureMapLocation, Color.White);
@@ -81,7 +74,7 @@ public static class FlourGame
 
     }
 
-    public static void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         currentMouse = Mouse.GetState();
         mousePos = new Point(currentMouse.X, currentMouse.Y);
@@ -92,7 +85,7 @@ public static class FlourGame
         if (pickedUp && currentMouse.LeftButton == ButtonState.Released)
         {
             pickedUp = false;
-            fallingObjects.Add(new FallingObject() { location = new Vector2(currentMouse.X, currentMouse.Y) });
+            fallingObjects.Add(new FallingObject() { location = new Vector2(currentMouse.X, currentMouse.Y), fallSpeed = 4 });
         }
 
         List<FallingObject> qclist = fallingObjects.ToList();
@@ -197,40 +190,9 @@ public static class FlourGame
             {
                 GameManager.PlayerInfo.inventory[GameManager.Items.Flour] = collectedFlour;
             }
-            GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
+            fallingObjects.Clear();
+            MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
         }
         lastWheelRotation = wheelRotation;
-    }
-    
-    public static void Restart(){
-        fallingObjects.Clear();
-        timePassed = 0;
-        collectedFlour = 0;
-        lastKey = Keys.None;
-        containsWheat = false;
-        pickedUp = false;
-        isTurning = false;
-        wheelRotation = 0.0f;
-    }
-    private class FallingObject
-    {
-        Vector2 _location;
-        int _fallSpeed = 4;
-
-
-        public Vector2 location
-        {
-            get => _location;
-            set => _location = value;
-        }
-        public int fallSpeed
-        {
-            get => _fallSpeed;
-            set => _fallSpeed = value;
-        }
-        public Rectangle hitBox
-        {
-            get => new Rectangle((int)location.X, (int)location.Y, spriteSize, spriteSize);
-        }
     }
 }

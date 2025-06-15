@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 namespace MyBakery;
 
 
-public static class CoffeeSnakeGame{
+public class CoffeeSnakeGame: Minigame{
 
     private enum Direction{
         North,
@@ -17,11 +17,7 @@ public static class CoffeeSnakeGame{
         West,
         None
     };
-    private static int gameXOrigin = (int)GameManager.bottomScreenOrigin.X;
-    private static int gameYOrigin = (int)GameManager.bottomScreenOrigin.Y;
     const int spriteSize = 64;
-
-    private static double timePassed, tick;
 
     private static Player player;
     private static Sprite playerSprite, coffeeSprite;
@@ -29,13 +25,18 @@ public static class CoffeeSnakeGame{
     private static List<PhysicsObject> availableBeans = new List<PhysicsObject>();
     private static List<Player> snake = new List<Player>();
 
-    public static void Initialize(Texture2D spriteSheet){
+    public override void Start(Texture2D spriteSheet, Texture2D background)
+    {
         playerSprite = new Sprite(spriteSheet, new Rectangle(128, 64, spriteSize, spriteSize));
         coffeeSprite = new Sprite(spriteSheet, new Rectangle(256, 128, spriteSize, spriteSize));
+        player = new Player(new Vector2(gameXOrigin*2, gameYOrigin + gameYOrigin/2), playerSprite);
+        snake.Add(player);
+        //snake.Add(new Player(new Vector2(gameXOrigin*2 + 70, gameYOrigin + gameYOrigin/2), coffeeSprite));
+        playerSpeed = 2;
 
     }
 
-    public static void Update(GameTime gameTime){
+    public override void Update(GameTime gameTime){
         KBoard.CheckKey();
         if(KBoard.CheckKeyRelease(Keys.Left) && player.velocityX == 0){
             player.velocityX = -playerSpeed;
@@ -147,7 +148,7 @@ public static class CoffeeSnakeGame{
         }
     }
 
-    public static void Draw(SpriteBatch spriteBatch){
+    public override void Draw(SpriteFont font, SpriteBatch spriteBatch){
         player.Draw(spriteBatch);
         foreach(Player part in snake){
             part.Draw(spriteBatch);
@@ -157,20 +158,20 @@ public static class CoffeeSnakeGame{
         }
     }
 
-    private static void EndGame(){
-        GameManager.PlayerInfo.inventory[GameManager.Items.CoffeeBean] += snake.Count*5;
-        GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
-    }
-
-    public static void Restart(){
+    private void EndGame(){
+         if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.CoffeeBean))
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.CoffeeBean] += snake.Count*5;
+            }
+            else
+            {
+                GameManager.PlayerInfo.inventory[GameManager.Items.CoffeeBean] = snake.Count*5;
+            }
         availableBeans.Clear();
         snake.Clear();
-        timePassed = tick = 0;
-        player = new Player(new Vector2(gameXOrigin*2, gameYOrigin + gameYOrigin/2), playerSprite);
-        snake.Add(player);
-        //snake.Add(new Player(new Vector2(gameXOrigin*2 + 70, gameYOrigin + gameYOrigin/2), coffeeSprite));
-        playerSpeed = 2;
+        MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
     }
+
 
 
     private class Player : PhysicsObject{

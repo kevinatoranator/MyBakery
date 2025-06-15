@@ -9,36 +9,37 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MyBakery;
 
-public static class BakingGame
+public class BakingGame : Minigame
 {
 
-    private static int gameXOrigin = (int)GameManager.bottomScreenOrigin.X;
-    private static int gameYOrigin = (int)GameManager.bottomScreenOrigin.Y;
     const int spriteSize = 64;
 
     //Baking
-    private static Sprite ovenSprite, matchSprite, woodSprite, iceSprite, matchBoxSprite;
-    private static Texture2D whiteBox;
-    private static int bakedGoods, gameTimeLeft, previousTime, quota, idealTemp, currentTemp;//baked cookies needs to be whatever selected good
-    private static double timePassed;
-    private static  MouseState currentMouse;
-    private static Vector2 ovenPos, pilePos;
-    private static Point mousePos;
-    private static Item heldItem;
-    private static ProgressBar timerBar, quotaBar, tempBar;
-    public static void Initialize(GraphicsDevice graphicsDevice, Texture2D spriteSheet, Texture2D oven, Texture2D match, Texture2D wood, Texture2D ice, Texture2D matchBox, Texture2D progressFront, Texture2D progressBack, Texture2D tempFront, Texture2D tempBack)
+    private Sprite ovenSprite, matchSprite, woodSprite, iceSprite, matchBoxSprite, progressFront, progressBack, tempFront, tempBack;
+    private int bakedGoods, gameTimeLeft, previousTime, quota, idealTemp, currentTemp;//baked cookies needs to be whatever selected good
+    private double timePassed;
+    private  MouseState currentMouse;
+    private Vector2 ovenPos, pilePos;
+    private Point mousePos;
+    private Item heldItem;
+    private ProgressBar timerBar, quotaBar, tempBar;
+    Texture2D bg;
+    public override void Start(Texture2D spriteSheet, Texture2D background)
     {
 
         //BakingGame
-        ovenSprite = new Sprite(oven, new Rectangle(0, 0, 256, 256));
-        matchSprite = new Sprite(match, new Rectangle(0, 0, 64, 128));
-        woodSprite = new Sprite(wood, new Rectangle(0, 0, 64, 128));
-        iceSprite = new Sprite(ice, new Rectangle(0, 0, 64, 128));
-        matchBoxSprite = new Sprite(matchBox, new Rectangle(0, 0, 64, 64));
-        whiteBox = new Texture2D(graphicsDevice, 1, 1);
-        whiteBox.SetData(new[] {Color.White});
-        ovenPos = new Vector2(gameXOrigin+100,gameYOrigin+100);
-        pilePos = new Vector2(gameXOrigin+400,gameYOrigin+100);
+        ovenSprite = new Sprite(spriteSheet, new Rectangle(192, 320, 256, 256));
+        matchSprite = new Sprite(spriteSheet, new Rectangle(64, 320, 64, 128));
+        woodSprite = new Sprite(spriteSheet, new Rectangle(128, 320, 64, 128));
+        iceSprite = new Sprite(spriteSheet, new Rectangle(0, 320, 64, 128));
+        matchBoxSprite = new Sprite(spriteSheet, new Rectangle(320, 192, 64, 64));
+        ovenPos = new Vector2(gameXOrigin + 100, gameYOrigin + 100);
+        pilePos = new Vector2(gameXOrigin + 400, gameYOrigin + 100);
+        progressFront = new Sprite(spriteSheet, new Rectangle(512, 256, 128, 64));
+        progressBack = new Sprite(spriteSheet, new Rectangle(192, 192, 128, 64));
+        tempFront = new Sprite(spriteSheet, new Rectangle(480, 320, 32, 128));
+        tempBack = new Sprite(spriteSheet, new Rectangle(448, 320, 32, 128));
+        bg = background;
 
         bakedGoods = 0;
         timePassed = 0;
@@ -53,10 +54,10 @@ public static class BakingGame
     }
 
 
-    public static void Draw(SpriteFont font, SpriteBatch spriteBatch)
+    public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
     {
         //BakingGame
-        spriteBatch.Draw(whiteBox, new Rectangle(gameXOrigin, gameYOrigin, GameManager.gameWidth*2/3, GameManager.gameHeight/2), Color.Beige);
+        spriteBatch.Draw(bg, new Rectangle(gameXOrigin, gameYOrigin, GameManager.gameWidth*2/3, GameManager.gameHeight/2), Color.White);
 
         spriteBatch.Draw(ovenSprite.Texture, ovenPos, ovenSprite.TextureMapLocation, Color.White);
         spriteBatch.Draw(matchBoxSprite.Texture, pilePos, matchBoxSprite.TextureMapLocation, Color.White);
@@ -89,7 +90,7 @@ public static class BakingGame
 
     }
 
-    public static void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
 
         timePassed += gameTime.ElapsedGameTime.TotalSeconds;
@@ -142,7 +143,7 @@ public static class BakingGame
                 GameManager.PlayerInfo.inventory[GameManager.Items.Cookie] = bakedGoods;
             }
             
-            GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
+            MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
         }
 
         quotaBar.Update(bakedGoods);

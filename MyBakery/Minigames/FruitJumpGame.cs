@@ -8,30 +8,26 @@ using Microsoft.Xna.Framework.Input;
 namespace MyBakery;
 
 
-public static class FruitJumpGame{
+public class FruitJumpGame : Minigame{
     
-
-    private static int gameXOrigin = (int)GameManager.bottomScreenOrigin.X;
-    private static int gameYOrigin = (int)GameManager.bottomScreenOrigin.Y;
     const int spriteSize = 64;
     const float fallSpeed = 6.5f;
 
-    private static Sprite orangeSprite, cherrySprite, appleSprite, playerSprite;
-    private static Texture2D whiteBox;
-    private static List<Fruit> fruits;
-    private static Player player1, player2, activePlayer, passivePlayer;
-    private static int collectedOranges, collectedCherries, collectedApples, gameTimeLeft;
-    private static double timePassed, tick;
-    public static void Initialize(GraphicsDevice graphicsDevice, Texture2D spriteSheet)
+    private Sprite orangeSprite, cherrySprite, appleSprite, playerSprite;
+    private Texture2D bg;
+    private List<Fruit> fruits;
+    private Player player1, player2, activePlayer, passivePlayer;
+    private int collectedOranges, collectedCherries, collectedApples, gameTimeLeft;
+    private double timePassed, tick;
+    public override void Start(Texture2D spriteSheet, Texture2D background)
     {
         collectedOranges = collectedCherries = collectedApples = 0;
         orangeSprite = new Sprite(spriteSheet, new Rectangle(128, 0, 64, 64));
         cherrySprite = new Sprite(spriteSheet, new Rectangle(64, 0, 64, 64));
         appleSprite = new Sprite(spriteSheet, new Rectangle(0, 0, 64, 64));
         playerSprite = new Sprite(spriteSheet, new Rectangle(128, 64, 64, 64));
+        bg = background;
 
-        whiteBox = new Texture2D(graphicsDevice, 1, 1);
-        whiteBox.SetData(new[] {Color.White});
 
         player1 = new Player(new Vector2(gameXOrigin*1.5f, GameManager.gameHeight-100), playerSprite, true);
         player2 = new Player(new Vector2(gameXOrigin*2.5f, GameManager.gameHeight-100), playerSprite, false);
@@ -41,10 +37,10 @@ public static class FruitJumpGame{
         passivePlayer = player2;
     }
 
-    public static void Draw(SpriteFont font, SpriteBatch spriteBatch)
+    public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
     {
 
-        spriteBatch.Draw(whiteBox, new Rectangle(gameXOrigin, gameYOrigin, GameManager.gameWidth*2/3, GameManager.gameHeight/2), Color.Beige);
+        spriteBatch.Draw(bg, new Rectangle(gameXOrigin, gameYOrigin, GameManager.gameWidth*2/3, GameManager.gameHeight/2), Color.Beige);
         foreach(Fruit f in fruits){
             f.Draw(spriteBatch);
         }
@@ -57,7 +53,7 @@ public static class FruitJumpGame{
 
     }
 
-    public static void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         if(Keyboard.GetState().IsKeyDown(Keys.Left) && activePlayer.X > gameXOrigin)
             activePlayer.velocityX = -3;
@@ -114,7 +110,7 @@ public static class FruitJumpGame{
                 GameManager.PlayerInfo.inventory[GameManager.Items.Orange] = collectedOranges;
             }
             
-            GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
+            MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
         }else{
             Random rand = new();
             int spawnChance = rand.Next(100)+1;
@@ -177,14 +173,14 @@ public static class FruitJumpGame{
             velocityY = 0; 
             rotation = 0;
             Active = active;
-            rightBound = _x + (GameManager.gameWidth - gameXOrigin)/4;
-            leftBound = _x - (GameManager.gameWidth - gameXOrigin)/4;
+            rightBound = _x + (GameManager.gameWidth - (int)GameManager.bottomScreenOrigin.X)/4;
+            leftBound = _x - (GameManager.gameWidth - (int)GameManager.bottomScreenOrigin.X)/4;
         }
 
         public void Update(GameTime gameTime){
             if((_x < leftBound && velocityX < 0) || (_x > rightBound - 64 && velocityX > 0))
                 velocityX = 0;
-            if((_y < gameYOrigin && velocityY < 0)|| _y > GameManager.gameHeight)
+            if((_y < (int)GameManager.bottomScreenOrigin.Y && velocityY < 0)|| _y > GameManager.gameHeight)
                 velocityY = 0;
             UpdateLocation();
         }

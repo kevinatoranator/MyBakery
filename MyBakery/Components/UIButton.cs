@@ -10,13 +10,15 @@ namespace MyBakery;
 public class UIButton : Button
 {
 
-
-    public UIButton(string name, Sprite sprite, Vector2 location)
+    Texture2D spriteSheet, chocobg;
+    public UIButton(string name, Sprite sprite, Vector2 location, Texture2D spritesheet = null, Texture2D background = null)
     {
         Name = name;
         Sprite = sprite;
         Location = location;
-        HitBox = new Rectangle((int)Location.X, (int)Location.Y, Sprite.TextureMapLocation.Width, Sprite.TextureMapLocation.Height);
+        Hitbox = new Rectangle((int)Location.X, (int)Location.Y, Sprite.TextureMapLocation.Width, Sprite.TextureMapLocation.Height);
+        spriteSheet = spritesheet;
+        chocobg = background;
     }
 
     public void Update(GameTime gameTime)
@@ -27,41 +29,53 @@ public class UIButton : Button
             switch (Name)
             {
                 case "ChocoLatte":
-                    GameManager.CurrentMinigameState = GameManager.MinigameState.ChocoLatte;
+                    MinigameManager.currentGame = new ChocoGame();
+                    MinigameManager.currentGame.Start(spriteSheet, chocobg);
+                    MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.ChocoLatte;
                     break;
                 case "Dough":
                     if (HasIngredients(GameManager.ItemDB[GameManager.Items.Dough].Recipe))
                     {
-                        GameManager.CurrentMinigameState = GameManager.MinigameState.Dough;
+                        MinigameManager.currentGame = new DoughGame();
+                        MinigameManager.currentGame.Start(spriteSheet, chocobg);
+                        MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Dough;
                     }
                     break;
                 case "Baking":
                     if (HasIngredients(GameManager.ItemDB[GameManager.Items.Cookie].Recipe))
                     {
-                        GameManager.CurrentMinigameState = GameManager.MinigameState.Baking;
+                        MinigameManager.currentGame = new BakingGame();
+                        MinigameManager.currentGame.Start(spriteSheet, chocobg);
+                        MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Baking;
                     }
                     break;
                 case "Fruit Jump":
-                    GameManager.CurrentMinigameState = GameManager.MinigameState.FruitJump;
+                    MinigameManager.currentGame = new FruitJumpGame();
+                    MinigameManager.currentGame.Start(spriteSheet, chocobg);
+                    MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.FruitJump;
                     break;
                 case "Jelly Eater":
-                    GameManager.CurrentMinigameState = GameManager.MinigameState.JellyEater;
+                    MinigameManager.currentGame = new JellyGame();
+                    MinigameManager.currentGame.Start(spriteSheet, chocobg);
+                    MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.JellyEater;
                     break;
                 case "Flour Grind":
-                    FlourGame.Restart();
                     if (HasIngredients(GameManager.ItemDB[GameManager.Items.Flour].Recipe))
                     {
-                        GameManager.CurrentMinigameState = GameManager.MinigameState.FlourGrind;
+                        MinigameManager.currentGame = new FlourGame();
+                        MinigameManager.currentGame.Start(spriteSheet, chocobg);
+                        MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.FlourGrind;
                     }
                     break;
                 case "Coffee Snake":
-                    CoffeeSnakeGame.Restart();
-                    GameManager.CurrentMinigameState = GameManager.MinigameState.CoffeeSnake;
+                    MinigameManager.currentGame = new CoffeeSnakeGame();
+                    MinigameManager.currentGame.Start(spriteSheet, chocobg);
+                    MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.CoffeeSnake;
                     break;
                 case "Start Day":
                     GameManager.CurrentGameState = GameManager.GameState.Inventory;//CHANGE when later developed
                     GameManager.CurrentBakeryState = GameManager.BakeryState.Day;
-                    GameManager.CurrentMinigameState = GameManager.MinigameState.Select;
+                    MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
                     break;
             }
 

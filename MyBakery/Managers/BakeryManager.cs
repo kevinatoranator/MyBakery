@@ -18,7 +18,7 @@ public static class BakeryManager
     const int dayLength = 120;
     private static Texture2D bakeryBG;
     public static Boolean IsOpen;
-    private static BakeryDisplay display1;
+    private static BakeryDisplay display1;//temp test
 
     public static void Initialize(GraphicsDevice graphicsDevice, Texture2D Button, Texture2D display, Texture2D bakery,SpriteFont font)
     {
@@ -30,12 +30,12 @@ public static class BakeryManager
         IsOpen = false;
         previousTime = dayLength;
         elapsedDayTime = 0;
-        display1 = new BakeryDisplay(new Sprite(display, new Rectangle(0, 0, 64, 64)), new Vector2(gameXOrigin+10, gameYOrigin+50), font){
+        display1 = new BakeryDisplay(new Sprite(display, new Rectangle(0, 0, 64, 64)), new Vector2(gameXOrigin+10, gameYOrigin+50), font, new Rectangle(0, 64, 64, 64)){
             Name = "dispaly1"
         };
 
         shop = new Shop(new Sprite(bakery, new Rectangle(0, 0, bakery.Width, bakery.Height)), startDayButton, new Sprite(display, new Rectangle(0, 0, 64, 64)), font){
-            displays = new List<BakeryDisplay>(){display1}
+            placedShopObjects = new List<ShopObject>(){display1}
         };
 
     }
@@ -64,11 +64,11 @@ public static class BakeryManager
             dayTimeLeft = dayLength - (int)elapsedDayTime/1000;
             if(dayTimeLeft < 0){
                 GameManager.CurrentBakeryState = GameManager.BakeryState.Menu;
-                GameManager.CurrentMinigameState = GameManager.MinigameState.Menu;
+                MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Menu;
                 dayTimeLeft = dayLength;
                 elapsedDayTime = 0;
             }
-            foreach(BakeryDisplay display in shop.displays){
+            foreach(BakeryDisplay display in shop.placedShopObjects){
 
                 if(previousTime != dayTimeLeft){//remove when sell function is moved to customers
                     if(display.product != GameManager.Items.None){

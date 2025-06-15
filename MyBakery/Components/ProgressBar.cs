@@ -1,6 +1,7 @@
 
 
 using System;
+using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,14 +11,14 @@ namespace MyBakery;
 public class ProgressBar
 {
 
-    Texture2D foreground, background;
+    Sprite foreground, background;
     Vector2 position, vertPosition;
 
     float maxValue, currentValue;
     Boolean vertical;
     Rectangle progress;
 
-    public ProgressBar(Texture2D fg, Texture2D bg, float max, float start, Vector2 pos, Boolean vert){
+    public ProgressBar(Sprite fg, Sprite bg, float max, float start, Vector2 pos, Boolean vert){
         foreground = fg;
         background = bg;
         maxValue = max;
@@ -25,15 +26,15 @@ public class ProgressBar
         position = pos;
         vertPosition = pos;
         vertical = vert;
-        progress = new Rectangle(0, 0, foreground.Width, foreground.Height);
+        progress = new Rectangle(foreground.TextureMapLocation.X, foreground.TextureMapLocation.Y, foreground.TextureMapLocation.Width, foreground.TextureMapLocation.Height);
     }
     public void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(background, position, Color.White);
+        spriteBatch.Draw(background.Texture, position, background.TextureMapLocation, Color.White);
         if(vertical)
-            spriteBatch.Draw(foreground, vertPosition, progress, Color.White);
+            spriteBatch.Draw(foreground.Texture, vertPosition, progress, Color.White);
         else
-            spriteBatch.Draw(foreground, position, progress, Color.White);
+            spriteBatch.Draw(foreground.Texture, position, progress, Color.White);
     }
 
     public void Update(float value)
@@ -44,10 +45,10 @@ public class ProgressBar
         if(currentValue < 0)
             currentValue = 0;
         if(vertical){
-            progress.Y = foreground.Height - progress.Height;
-            progress.Height =  (int)(currentValue / maxValue * foreground.Height);
-            vertPosition.Y = position.Y + foreground.Height - progress.Height;
+            progress.Height =  (int)(currentValue / maxValue * foreground.TextureMapLocation.Height);
+            progress.Y = foreground.TextureMapLocation.Y + foreground.TextureMapLocation.Height - progress.Height;
+            vertPosition.Y = position.Y + foreground.TextureMapLocation.Height - progress.Height;
         }else
-            progress.Width = (int)(currentValue / maxValue * foreground.Width);
+            progress.Width = (int)(currentValue / maxValue * foreground.TextureMapLocation.Width);
     }
 }
