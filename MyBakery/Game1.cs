@@ -14,7 +14,7 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private SpriteFont font;
-    private Texture2D whiteBox, spriteSheet, button, display1, bakery, chocobg;
+    private Texture2D whiteBox, spriteSheet, button, bakery, chocobg;
     const int spriteSize = 64;  
 
     public Game1()
@@ -42,12 +42,11 @@ public class Game1 : Game
         whiteBox.SetData(new[] {Color.White});
         spriteSheet = Content.Load<Texture2D>("SpriteSheet");
         button = Content.Load<Texture2D>("Button"); 
-        display1 = Content.Load<Texture2D>("display1");  
         bakery = Content.Load<Texture2D>("Bakery1");
         chocobg = Content.Load<Texture2D>("chocofall_bg");
 
         GameManager.Initialize(spriteSheet);
-        BakeryManager.Initialize(GraphicsDevice, button, display1, bakery, font);
+        BakeryManager.Initialize(button, spriteSheet, bakery, font);
         MinigameManager.Initialize(GraphicsDevice, button, spriteSheet, chocobg);
         //load vals
         string jsonFilePath = "playerProfile.json";

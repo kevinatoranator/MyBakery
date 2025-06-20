@@ -9,13 +9,11 @@
     <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Green64.png</File>
     <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Red64.png</File>
     <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Button.png</File>
-    <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/display1.png</File>
     <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/SpriteSheet.png</File>
     <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/Bakery1.png</File>
     <File>K:/Programming/Monogame/MyBakery/MyBakery/Content/chocofall_bg.png</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

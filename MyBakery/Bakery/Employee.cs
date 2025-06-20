@@ -1,16 +1,24 @@
 
+using System.Collections.Generic;
 using GeneralUtil;
 
 namespace MyBakery;
 
 
 public class Employee
-{   
-    public string name { get; set; }
-    public Sprite sprite { get; set; }
-    public Employee(string name, Sprite sprite)
+{
+    public string Name { get; set; }
+    public Sprite Sprite { get; set; }
+    public int Cost { get; set; }
+    public Dictionary<string, int> skills { get; set; }//change to enum instead of string
+    public Employee(string name, Sprite sprite, int cost)
     {
-        this.name = name;
-        this.sprite = sprite;
+        Name = name;
+        Sprite = sprite;
+        Cost = cost;
     }
+
+    //FUTURE METHODS
+    //gain xp
+    //level up
 }

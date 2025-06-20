@@ -28,7 +28,6 @@ k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\Green64.xnb
 k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\Red64.xnb
 k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\Font.xnb
 k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\Button.xnb
-k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\display1.xnb
 K:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\SpriteSheet.xnb
 K:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\Bakery1.xnb
 K:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net6.0\Content\chocofall_bg.xnb

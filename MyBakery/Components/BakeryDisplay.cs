@@ -17,26 +17,35 @@ public class BakeryDisplay : Button, ShopObject
     public Rectangle InteractZone { get; set; }
     public Shop.ShopObjectTypes Type { get; set; }
 
-    public BakeryDisplay(Sprite sprite, Vector2 location, SpriteFont font, Rectangle izone)
+    public BakeryDisplay(Sprite sprite, Vector2 location, SpriteFont font, Rectangle izone, Shop.ShopObjectTypes type)
     {
         Sprite = sprite;
         Location = location;
         _font = font;
         Hitbox = new Rectangle((int)Location.X, (int)Location.Y, Sprite.TextureMapLocation.Width, Sprite.TextureMapLocation.Height);
         InteractZone = izone;
-        Type = Shop.ShopObjectTypes.Display;
+        Type = type;
+        onClick = () =>
+        {
+            if (menu == null)
+            {
+                menu = new ProductSelectorMenu(_font, Location);
+            }
+            else if (menu != null)
+            {
+                menu = null;
+            }
+        };
     }
 
-    public void Update(GameTime gameTime){
-        if(IsClicked() && menu == null){
-            menu = new ProductSelectorMenu(_font, Location);
-        }else if(IsClicked() && menu != null){
-            menu = null;
-        }
-        if(menu != null){
+    public void Update(GameTime gameTime)
+    {
+        if (menu != null)
+        {
             menu.Update(gameTime);
             product = menu.selectedProduct;
-            if(menu.Clicked){
+            if (menu.Clicked)
+            {
                 menu = null;
             }
         }

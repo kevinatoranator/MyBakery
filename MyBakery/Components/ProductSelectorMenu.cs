@@ -31,13 +31,27 @@ public class ProductSelectorMenu : Component
             GameManager.PlayerInfo.inventory.TryGetValue(item.Key, out quantity);
             if (item.Value.Sellable && quantity > 0)
             {
-                Button b = new UIButton(item.Key.ToString(), GameManager.TextureDB[item.Key], new Vector2(position.X, position.Y + (GameManager.TextureDB[item.Key].TextureMapLocation.Height * number)));
+                Button b = new UIButton(item.Key.ToString(), GameManager.TextureDB[item.Key], new Vector2(position.X, position.Y + (GameManager.TextureDB[item.Key].TextureMapLocation.Height * number)), () =>
+                {
+                    foreach (KeyValuePair<GameManager.Items, Product> itemdb in GameManager.ItemDB)
+                    {
+                        if (itemdb.Key == item.Key)
+                        {
+                            selectedProduct = item.Key;
+                        }
+                    }
+                    Clicked = true;
+                });
                 b.Hitbox = new Rectangle((int)b.Location.X, (int)b.Location.Y, b.Sprite.TextureMapLocation.Width, b.Sprite.TextureMapLocation.Height);
                 _buttons.Add(b);
                 number += 1;
             }
         }
-        Button cancel = new UIButton("Cancel", GameManager.cancelSprite, new Vector2(position.X, position.Y + (GameManager.cancelSprite.TextureMapLocation.Height*number)));
+        Button cancel = new UIButton("Cancel", GameManager.cancelSprite, new Vector2(position.X, position.Y + (GameManager.cancelSprite.TextureMapLocation.Height*number)), () =>
+        {
+            selectedProduct = GameManager.Items.None;
+            Clicked = true;
+        });
         cancel.Hitbox = new Rectangle((int)cancel.Location.X, (int)cancel.Location.Y, cancel.Sprite.TextureMapLocation.Width,cancel.Sprite.TextureMapLocation.Height);
         _buttons.Add(cancel);
     }
@@ -52,19 +66,7 @@ public class ProductSelectorMenu : Component
     public override void Update(GameTime gameTime)
     {
         foreach(UIButton b in _buttons){
-            b.Update(gameTime);
-            if(b.IsClicked()){
-                if(b.Name == "Cancel"){
-                    selectedProduct = GameManager.Items.None;
-                }else{
-                    foreach(KeyValuePair<GameManager.Items, Product> item in GameManager.ItemDB){
-                        if(item.Key.ToString() == b.Name){
-                            selectedProduct = item.Key;
-                        }
-                    }
-                }
-                Clicked = true;
-            }
+            b.Update();
         }
     }
 }

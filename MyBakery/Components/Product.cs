@@ -8,9 +8,16 @@ namespace MyBakery;
 
 public class Product{
 
-    public int Value{get; set;}
+    public enum ProductQualities
+    {
+        Refrigerated,
+        Stackable
+    }
+    public int Value { get; set; }
     public Boolean Sellable{get; set;}
     public Dictionary<GameManager.Items, int> Recipe {get; set;}
+    public HashSet<ProductQualities> ProductQualitiesSet{get; set;}
+    
 
     public void Sell(GameManager.Items item, int amount)
     {
@@ -34,5 +41,6 @@ public class Product{
         Value = value;
         Sellable = sellable;
         Recipe = recipe;
+        ProductQualitiesSet = new HashSet<ProductQualities>();
     }
 }
