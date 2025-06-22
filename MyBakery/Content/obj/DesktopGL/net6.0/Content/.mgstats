@@ -6,4 +6,4 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "K:/Programming/Monogame/MyBakery/MyBakery/Content/Font.spritefont","K:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2011,21535,0.1446115
 "K:/Programming/Monogame/MyBakery/MyBakery/Content/Green64.png","K:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Green64.xnb","TextureProcessor","Texture2DContent",426,16469,0.0075912
 "K:/Programming/Monogame/MyBakery/MyBakery/Content/Red64.png","K:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Red64.xnb","TextureProcessor","Texture2DContent",414,16469,0.0123954
-"K:/Programming/Monogame/MyBakery/MyBakery/Content/SpriteSheet.png","K:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/SpriteSheet.xnb","TextureProcessor","Texture2DContent",84813,1638485,0.2484751
+"K:/Programming/Monogame/MyBakery/MyBakery/Content/SpriteSheet.png","K:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/SpriteSheet.xnb","TextureProcessor","Texture2DContent",94630,1638485,0.2452299

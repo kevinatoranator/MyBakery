@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -65,7 +64,8 @@ public class Game1 : Game
         }
 
         string itemsFilePath = "items.json";
-        if(File.Exists(itemsFilePath)){
+        if (File.Exists(itemsFilePath))
+        {
             string json = File.ReadAllText(itemsFilePath);
             GameManager.ItemDB = JsonSerializer.Deserialize<Dictionary<GameManager.Items, Product>>(json);
         }
@@ -135,13 +135,48 @@ public class KBoard
 {
     static KeyboardState currentKeyState;
     static KeyboardState previousKeyState;
-    
-    public static KeyboardState CheckKey(){
+
+    public static KeyboardState CheckKey()
+    {
         previousKeyState = currentKeyState;
         currentKeyState = Keyboard.GetState();
         return currentKeyState;
     }
-    public static bool CheckKeyRelease(Keys key){
+    public static bool CheckKeyRelease(Keys key)
+    {
         return currentKeyState.IsKeyDown(key) && !previousKeyState.IsKeyDown(key);
+    }
+}
+
+public class KMouse
+{
+    static MouseState currentMouseState;
+    static MouseState previousMouseState;
+    static Point mousePos;
+    static Point clickPoint;
+
+    public static MouseState CheckMouse()
+    {
+        previousMouseState = currentMouseState;
+        currentMouseState = Mouse.GetState();
+        mousePos = new Point(currentMouseState.X, currentMouseState.Y);
+        return currentMouseState;
+    }
+    public static bool CheckLeftPress()
+    {
+        clickPoint = MouseLocation();
+        return currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released;
+    }
+    public static bool IsDragging()
+    {
+        return currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Pressed;
+    }
+    public static bool CheckLeftRelease()
+    {
+        return currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed;
+    }
+    public static Point MouseLocation()
+    {
+        return mousePos;
     }
 }

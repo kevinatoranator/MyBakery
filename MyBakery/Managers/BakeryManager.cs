@@ -52,7 +52,7 @@ public static class BakeryManager
         if (IsOpen)
         {
             // spriteBatch.Draw(whiteBox, new Rectangle(gameXOrigin, 0, GameManager.gameWidth*2/3, GameManager.gameHeight/2), Color.Green);
-            spriteBatch.DrawString(font, "Time Left in Day: " + dayTimeLeft / 60 + " Minutes " + dayTimeLeft % 60 + " Seconds", new Vector2(gameXOrigin + 10, 30), Color.White);
+            spriteBatch.DrawString(font, "Time Left in Day: " + dayTimeLeft / 60 + " Minutes " + dayTimeLeft % 60 + " Seconds", new Vector2(gameXOrigin + 10, gameYOrigin + 30), Color.White);
 
         }
         shop.Draw(spriteBatch, font);

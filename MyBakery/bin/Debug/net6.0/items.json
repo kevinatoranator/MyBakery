@@ -2,12 +2,14 @@
   "Coin": {
     "Value": 1,
     "Sellable": false,
-    "Recipe": {}
+    "Recipe": {},
+    "ProductQualitiesSet": []
   },
   "ChocoChip": {
     "Value": 1,
     "Sellable": false,
-    "Recipe": {}
+    "Recipe": {},
+    "ProductQualitiesSet": []
   },
   "Dough": {
     "Value": 1,
@@ -15,50 +17,61 @@
     "Recipe": {
       "ChocoChip": 12,
       "Flour": 12
-    }
+    },
+    "ProductQualitiesSet": []
   },
   "Cookie": {
     "Value": 1,
     "Sellable": true,
     "Recipe": {
       "Dough": 12
-    }
+    },
+    "ProductQualitiesSet": [
+      0
+    ]
   },
   "Apple": {
     "Value": 1,
     "Sellable": false,
-    "Recipe": {}
+    "Recipe": {},
+    "ProductQualitiesSet": []
   },
   "Cherry": {
     "Value": 1,
     "Sellable": false,
-    "Recipe": {}
+    "Recipe": {},
+    "ProductQualitiesSet": []
   },
   "Orange": {
     "Value": 1,
     "Sellable": false,
-    "Recipe": {}
+    "Recipe": {},
+    "ProductQualitiesSet": []
   },
   "Jelly": {
     "Value": 1,
     "Sellable": true,
-    "Recipe": {}
+    "Recipe": {},
+    "ProductQualitiesSet": []
   },
   "CoffeeBean": {
     "Value": 1,
     "Sellable": false,
-    "Recipe": {}
+    "Recipe": {},
+    "ProductQualitiesSet": []
   },
   "Flour": {
     "Value": 1,
     "Sellable": false,
     "Recipe": {
       "Wheat": 10
-    }
+    },
+    "ProductQualitiesSet": []
   },
   "Wheat": {
     "Value": 1,
     "Sellable": false,
-    "Recipe": {}
+    "Recipe": {},
+    "ProductQualitiesSet": []
   }
 }

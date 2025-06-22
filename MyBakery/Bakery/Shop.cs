@@ -30,6 +30,7 @@ public class Shop{
         Display,
         Fridge,
         Register,
+        Shelf,
         None
     }
 
@@ -139,7 +140,12 @@ public class Shop{
     }
 
     public void PlaceShopObject(Vector2 location, ShopObjectTypes type){
-        placedShopObjects.Add(new BakeryDisplay(BakeryManager.BakeryTextureDB[type], location, font, new Rectangle((int)location.X, (int)(location.Y + 64), 64, 64), type));
+        HashSet<Product.ProductQualities> qualities = new HashSet<Product.ProductQualities>();
+        if (type == ShopObjectTypes.Fridge)
+            qualities.UnionWith(new[] { Product.ProductQualities.Refrigerated});
+        else if (type == ShopObjectTypes.Shelf)
+            qualities.UnionWith(new[] { Product.ProductQualities.Stackable});
+            placedShopObjects.Add(new BakeryDisplay(BakeryManager.BakeryTextureDB[type], location, font, new Rectangle((int)location.X, (int)(location.Y + 64), 64, 64), type, qualities));
     }
 
 }

@@ -15,21 +15,23 @@ public class ProductSelectorMenu : Component
     private SpriteFont _font;
     public GameManager.Items selectedProduct;
     public Boolean Clicked;
+    private Dictionary<GameManager.Items, Product> _products;
 
     //is Visible bool?
-    public ProductSelectorMenu( SpriteFont font, Vector2 position){
-        
+    public ProductSelectorMenu(SpriteFont font, Vector2 position, Dictionary<GameManager.Items, Product> products) {
+
         _buttons = new List<Button>();
         _position = position;
         _font = font;
+        _products = products;
         selectedProduct = GameManager.Items.None;
         Clicked = false;
 
         int number = 1;
-        foreach(KeyValuePair<GameManager.Items, Product> item in GameManager.ItemDB){
+        foreach (KeyValuePair<GameManager.Items, Product> item in _products) {
             int quantity;
             GameManager.PlayerInfo.inventory.TryGetValue(item.Key, out quantity);
-            if (item.Value.Sellable && quantity > 0)
+            if (quantity > 0)
             {
                 Button b = new UIButton(item.Key.ToString(), GameManager.TextureDB[item.Key], new Vector2(position.X, position.Y + (GameManager.TextureDB[item.Key].TextureMapLocation.Height * number)), () =>
                 {
@@ -47,12 +49,12 @@ public class ProductSelectorMenu : Component
                 number += 1;
             }
         }
-        Button cancel = new UIButton("Cancel", GameManager.cancelSprite, new Vector2(position.X, position.Y + (GameManager.cancelSprite.TextureMapLocation.Height*number)), () =>
+        Button cancel = new UIButton("Cancel", GameManager.cancelSprite, new Vector2(position.X, position.Y + (GameManager.cancelSprite.TextureMapLocation.Height * number)), () =>
         {
             selectedProduct = GameManager.Items.None;
             Clicked = true;
         });
-        cancel.Hitbox = new Rectangle((int)cancel.Location.X, (int)cancel.Location.Y, cancel.Sprite.TextureMapLocation.Width,cancel.Sprite.TextureMapLocation.Height);
+        cancel.Hitbox = new Rectangle((int)cancel.Location.X, (int)cancel.Location.Y, cancel.Sprite.TextureMapLocation.Width, cancel.Sprite.TextureMapLocation.Height);
         _buttons.Add(cancel);
     }
 
