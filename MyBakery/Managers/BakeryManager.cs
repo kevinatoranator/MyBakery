@@ -12,13 +12,21 @@ namespace MyBakery;
 public static class BakeryManager
 {
 
+    public enum Tabs
+    {
+        Shop,
+        Farm
+    }
+
     public static Shop shop;
+    public static Farm farm;
     private static int gameXOrigin, gameYOrigin, dayTimeLeft, previousTime;
     private static double elapsedDayTime;
     const int dayLength = 120;
     private static Texture2D bakeryBG;
     public static Boolean IsOpen;
     public static Dictionary<Shop.ShopObjectTypes, Sprite> BakeryTextureDB = new Dictionary<Shop.ShopObjectTypes,Sprite>();
+    public static Tabs currentTab;
 
     public static void Initialize(Texture2D Button, Texture2D spriteSheet, Texture2D bakery, SpriteFont font)
     {
@@ -39,9 +47,11 @@ public static class BakeryManager
         IsOpen = false;
         previousTime = dayLength;
         elapsedDayTime = 0;
-
+        currentTab = Tabs.Shop;
+        currentTab = Tabs.Farm;
 
         shop = new Shop(new Sprite(bakery, new Rectangle(0, 0, bakery.Width, bakery.Height)), startDayButton, spriteSheet, font);
+        farm = new Farm(spriteSheet, font);
 
     }
 
@@ -55,25 +65,32 @@ public static class BakeryManager
             spriteBatch.DrawString(font, "Time Left in Day: " + dayTimeLeft / 60 + " Minutes " + dayTimeLeft % 60 + " Seconds", new Vector2(gameXOrigin + 10, gameYOrigin + 30), Color.White);
 
         }
-        shop.Draw(spriteBatch, font);
+        if(currentTab == Tabs.Shop)
+            shop.Draw(spriteBatch, font);
+        if(currentTab == Tabs.Farm)
+            farm.Draw(spriteBatch, font);
 
     }
 
     public static void Update(GameTime gameTime)
     {
-        if(IsOpen){
+        if (IsOpen)
+        {
             elapsedDayTime += gameTime.ElapsedGameTime.TotalMilliseconds;
             //Bakery
-            dayTimeLeft = dayLength - (int)elapsedDayTime/1000;
-            if(dayTimeLeft < 0){
+            dayTimeLeft = dayLength - (int)elapsedDayTime / 1000;
+            if (dayTimeLeft < 0)
+            {
                 GameManager.CurrentBakeryState = GameManager.BakeryState.Menu;
                 MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Menu;
                 dayTimeLeft = dayLength;
                 elapsedDayTime = 0;
             }
-            foreach(ShopObject sobject in shop.placedShopObjects){
+            foreach (ShopObject sobject in shop.placedShopObjects)
+            {
 
-                if(previousTime != dayTimeLeft){//remove when sell function is moved to customers
+                if (previousTime != dayTimeLeft)
+                {//remove when sell function is moved to customers
                     if (sobject.Type == Shop.ShopObjectTypes.Display)
                     {
                         BakeryDisplay display = sobject as BakeryDisplay;
@@ -94,8 +111,11 @@ public static class BakeryManager
             }
             shop.Update(gameTime);
             previousTime = dayTimeLeft;
-        }else{
+        }
+        else
+        {
             shop.Update(gameTime);
+            farm.Update(gameTime);
         }
     }
 }

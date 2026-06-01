@@ -30,7 +30,7 @@ public class DoughGame : Minigame
 
     public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(doughSprite.Texture, quota, Color.White);
+        spriteBatch.Draw(doughSprite.Texture, quota, Color.White);//change to actual border
         foreach (Rectangle dough in doughGrid)
             spriteBatch.Draw(doughSprite.Texture, dough, doughSprite.TextureMapLocation, Color.White);
 

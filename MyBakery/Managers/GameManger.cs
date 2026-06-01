@@ -37,7 +37,7 @@ public static class GameManager{
     }
    
     public enum Items{
-        None, Coin, ChocoChip, Dough, Cookie, Orange, Cherry, Apple, Jelly, CoffeeBean, Flour, Wheat
+        None, Coin, ChocoChip, Dough, Cookie, Orange, Cherry, Apple, Jelly, CoffeeBean, Flour, Wheat, BoxedChocolate
     }
 
     public static Dictionary<Items, Product> ItemDB = new Dictionary<Items, Product>();
@@ -63,6 +63,7 @@ public static class GameManager{
         TextureDB[Items.CoffeeBean] = new Sprite(SpriteSheet, new Rectangle(256, 128, 64, 64));
         TextureDB[Items.Flour] = new Sprite(SpriteSheet, new Rectangle(320, 128, 64, 64));
         TextureDB[Items.Wheat] = new Sprite(SpriteSheet, new Rectangle(192, 64, 64, 64));
+        TextureDB[Items.BoxedChocolate] = new Sprite(SpriteSheet, new Rectangle(128, 256, 64, 64));
         cancelSprite = new Sprite(SpriteSheet, new Rectangle(0, 192, 64, 64));
     }
 

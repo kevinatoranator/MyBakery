@@ -24,7 +24,8 @@ public static class MinigameManager
         FruitJump,
         JellyEater,
         CoffeeSnake,
-        FlourGrind
+        FlourGrind,
+        ChocoMine
     }
 
     public static MinigameState CurrentMinigameState;
@@ -89,8 +90,18 @@ public static class MinigameManager
                     }
         });
 
+        UIButton chocoMineButton = new UIButton("Choco Mine", new GeneralUtil.Sprite(button, new Rectangle(0, 0, 128, 64)), new Vector2(_gameXOrigin + 280, _gameYOrigin + 100), () =>
+        {
+            if (HasIngredients(GameManager.ItemDB[GameManager.Items.BoxedChocolate].Recipe))
+            {
+                currentGame = new ChocoMineGame();
+                currentGame.Start(spriteSheet, chocobg);
+                CurrentMinigameState = MinigameState.ChocoMine;
+            }
+        });
+
         _buttons = new List<UIButton>(){
-            chocoGameButton, bakingGameButton, doughGameButton, fruitJumpGameButton, jellyGameButton, coffeeGameButton, flourGameButton
+            chocoGameButton, bakingGameButton, doughGameButton, fruitJumpGameButton, jellyGameButton, coffeeGameButton, flourGameButton, chocoMineButton
         };    
     }
 

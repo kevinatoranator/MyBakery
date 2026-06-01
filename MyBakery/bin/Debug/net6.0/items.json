@@ -73,5 +73,13 @@
     "Sellable": false,
     "Recipe": {},
     "ProductQualitiesSet": []
+  },
+  "BoxedChocolate": {
+    "Value": 1,
+    "Sellable": true,
+    "Recipe": {
+      "ChocoChip": 10
+    },
+    "ProductQualitiesSet": []
   }
 }
