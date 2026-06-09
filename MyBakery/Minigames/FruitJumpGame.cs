@@ -4,6 +4,7 @@ using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
@@ -19,13 +20,13 @@ public class FruitJumpGame : Minigame{
     private Player player1, player2, activePlayer, passivePlayer;
     private int collectedOranges, collectedCherries, collectedApples, gameTimeLeft;
     private double timePassed, tick;
-    public override void Start(Texture2D spriteSheet, Texture2D background)
+    public override void Start(TextureAtlas spriteSheet, Texture2D background)
     {
         collectedOranges = collectedCherries = collectedApples = 0;
-        orangeSprite = new Sprite(spriteSheet, new Rectangle(128, 0, 64, 64));
-        cherrySprite = new Sprite(spriteSheet, new Rectangle(64, 0, 64, 64));
-        appleSprite = new Sprite(spriteSheet, new Rectangle(0, 0, 64, 64));
-        playerSprite = new Sprite(spriteSheet, new Rectangle(128, 64, 64, 64));
+        orangeSprite = spriteSheet.CreateSprite("Orange");
+        cherrySprite = spriteSheet.CreateSprite("Cherry");
+        appleSprite = spriteSheet.CreateSprite("Apple");
+        playerSprite = spriteSheet.CreateSprite("ToastDog");
         bg = background;
 
 
@@ -97,17 +98,17 @@ public class FruitJumpGame : Minigame{
         if(gameTimeLeft < 0){
             fruits.Clear();
             gameTimeLeft = 0;
-            if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Apple) && GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Cherry) && GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Orange))
+            if (GameManager.PlayerInfo.inventory.ContainsKey("Apple") && GameManager.PlayerInfo.inventory.ContainsKey("Cherry") && GameManager.PlayerInfo.inventory.ContainsKey("Orange"))
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.Apple] += collectedApples;
-                GameManager.PlayerInfo.inventory[GameManager.Items.Cherry] += collectedCherries;
-                GameManager.PlayerInfo.inventory[GameManager.Items.Orange] += collectedOranges;
+                GameManager.PlayerInfo.inventory["Apple"] += collectedApples;
+                GameManager.PlayerInfo.inventory["Cherry"] += collectedCherries;
+                GameManager.PlayerInfo.inventory["Orange"] += collectedOranges;
             }
             else
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.Apple] = collectedApples;
-                GameManager.PlayerInfo.inventory[GameManager.Items.Cherry] = collectedCherries;
-                GameManager.PlayerInfo.inventory[GameManager.Items.Orange] = collectedOranges;
+                GameManager.PlayerInfo.inventory["Apple"] = collectedApples;
+                GameManager.PlayerInfo.inventory["Cherry"] = collectedCherries;
+                GameManager.PlayerInfo.inventory["Orange"] = collectedOranges;
             }
             
             MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
@@ -149,7 +150,7 @@ public class FruitJumpGame : Minigame{
             _x = _location.X;
             _y = _location.Y;
             this.sprite = sprite;
-            hitBox = new Rectangle((int)_location.X, (int)_location.Y, sprite.TextureMapLocation.Width, sprite.TextureMapLocation.Height);
+            hitBox = new Rectangle((int)_location.X, (int)_location.Y, sprite.Region.Width, sprite.Region.Height);
         }
         public Vector2 location{
             get => _location;

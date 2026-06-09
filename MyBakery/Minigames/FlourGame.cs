@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
@@ -14,7 +15,7 @@ public class FlourGame : Minigame
     const int spriteSize = 64;
 
     //DoughGame
-    private Sprite grinderSprite, wheelSprite;
+    private Sprite grinderSprite, wheelSprite, _wheat;
     private int collectedFlour, gameTimeLeft, quota;
     private double timePassed;
     private Vector2 grinderPos, hopperPos, wheatPilePos, wheelPos;
@@ -25,12 +26,13 @@ public class FlourGame : Minigame
     private List<FallingObject> fallingObjects;
     private float wheelRotation, lastWheelRotation, totalRotations;
 
-    public override void Start(Texture2D spriteSheet, Texture2D background)
+    public override void Start(TextureAtlas spriteSheet, Texture2D background)
     {
 
         //DoughGame
-        grinderSprite = new Sprite(spriteSheet, new Rectangle(384, 0, 256, 256));
-        wheelSprite = new Sprite(spriteSheet, new Rectangle(256, 0, 128, 128));
+        grinderSprite = spriteSheet.CreateSprite("Grinder");
+        wheelSprite = spriteSheet.CreateSprite("Wheel");
+        _wheat = spriteSheet.CreateSprite("Wheat");
         grinderPos = new Vector2(gameXOrigin + 300, gameYOrigin + 100);
         wheelPos = new Vector2(grinderPos.X + 128, grinderPos.Y + 128);
         hopperPos = new Vector2(grinderPos.X + 32, grinderPos.Y + 16);
@@ -52,7 +54,7 @@ public class FlourGame : Minigame
     public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
     {
         //Doughgame
-        spriteBatch.Draw(grinderSprite.Texture, new Rectangle((int)wheatPilePos.X, (int)wheatPilePos.Y, 64, 64), Color.Green);
+        spriteBatch.Draw(grinderSprite.Region.Texture, new Rectangle((int)wheatPilePos.X, (int)wheatPilePos.Y, 64, 64), Color.Green);
         if (collectedFlour < quota)
             spriteBatch.DrawString(font, "Flour collected: " + collectedFlour + "/" + quota, new Vector2(gameXOrigin + 10, gameYOrigin + 10), Color.Red);
         else
@@ -61,14 +63,14 @@ public class FlourGame : Minigame
         spriteBatch.DrawString(font, "Wheat: " + containsWheat, new Vector2(gameXOrigin + 10, gameYOrigin + 50), Color.White);
 
 
-        spriteBatch.Draw(grinderSprite.Texture, grinderPos, grinderSprite.TextureMapLocation, Color.White);
-        spriteBatch.Draw(wheelSprite.Texture, wheelPos, wheelSprite.TextureMapLocation, Color.White, wheelRotation, new Vector2(64, 64), 1.0f, SpriteEffects.None, 1);
+        grinderSprite.Draw(spriteBatch, grinderPos);
+        spriteBatch.Draw(wheelSprite.Region.Texture, wheelPos, wheelSprite.Region.SourceRectangle, Color.White, wheelRotation, new Vector2(64, 64), 1.0f, SpriteEffects.None, 1);
         if (pickedUp)
         {
-            spriteBatch.Draw(GameManager.TextureDB[GameManager.Items.Wheat].Texture, new Vector2(mousePos.X, mousePos.Y), GameManager.TextureDB[GameManager.Items.Wheat].TextureMapLocation, Color.White);
+            _wheat.Draw(spriteBatch, new Vector2(mousePos.X, mousePos.Y));
         }
         foreach(FallingObject o in fallingObjects){
-            spriteBatch.Draw(GameManager.TextureDB[GameManager.Items.Wheat].Texture, o.location, GameManager.TextureDB[GameManager.Items.Wheat].TextureMapLocation, Color.White);
+            _wheat.Draw(spriteBatch, o.location);
         }
 
 
@@ -182,13 +184,13 @@ public class FlourGame : Minigame
             if (collectedFlour > quota)
                 collectedFlour += collectedFlour / 2;
 
-            if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Flour))
+            if (GameManager.PlayerInfo.inventory.ContainsKey("Flour"))
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.Flour] += collectedFlour;
+                GameManager.PlayerInfo.inventory["Flour"] += collectedFlour;
             }
             else
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.Flour] = collectedFlour;
+                GameManager.PlayerInfo.inventory["Flour"] = collectedFlour;
             }
             fallingObjects.Clear();
             MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;

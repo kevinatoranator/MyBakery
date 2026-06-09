@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using CoreLibrary.Graphics;
 using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,29 +14,29 @@ public class ProductSelectorMenu : Component
     private List<Button> _buttons;
     private Vector2 _position;
     private SpriteFont _font;
-    public GameManager.Items selectedProduct;
+    public String selectedProduct;
     public Boolean Clicked;
-    private Dictionary<GameManager.Items, Product> _products;
+    private Dictionary<String, Product> _products;
 
     //is Visible bool?
-    public ProductSelectorMenu(SpriteFont font, Vector2 position, Dictionary<GameManager.Items, Product> products) {
+    public ProductSelectorMenu(SpriteFont font, Vector2 position, Dictionary<String, Product> products) {
 
         _buttons = new List<Button>();
         _position = position;
         _font = font;
         _products = products;
-        selectedProduct = GameManager.Items.None;
+        selectedProduct = "None";
         Clicked = false;
 
         int number = 1;
-        foreach (KeyValuePair<GameManager.Items, Product> item in _products) {
+        foreach (KeyValuePair<String, Product> item in _products) {
             int quantity;
             GameManager.PlayerInfo.inventory.TryGetValue(item.Key, out quantity);
             if (quantity > 0)
             {
-                Button b = new UIButton(item.Key.ToString(), GameManager.TextureDB[item.Key], new Vector2(position.X, position.Y + (GameManager.TextureDB[item.Key].TextureMapLocation.Height * number)), () =>
+                Button b = new UIButton(item.Key.ToString(), new Vector2(position.X, position.Y + 64 * number), 64, 64, () =>
                 {
-                    foreach (KeyValuePair<GameManager.Items, Product> itemdb in GameManager.ItemDB)
+                    foreach (KeyValuePair<String, Product> itemdb in GameManager.ItemDB)
                     {
                         if (itemdb.Key == item.Key)
                         {
@@ -44,24 +45,22 @@ public class ProductSelectorMenu : Component
                     }
                     Clicked = true;
                 });
-                b.Hitbox = new Rectangle((int)b.Location.X, (int)b.Location.Y, b.Sprite.TextureMapLocation.Width, b.Sprite.TextureMapLocation.Height);
                 _buttons.Add(b);
                 number += 1;
             }
         }
-        Button cancel = new UIButton("Cancel", GameManager.cancelSprite, new Vector2(position.X, position.Y + (GameManager.cancelSprite.TextureMapLocation.Height * number)), () =>
+        Button cancel = new UIButton("Cancel", new Vector2(position.X, position.Y + (GameManager.cancelSprite.Height * number)), 128, 64, () =>
         {
-            selectedProduct = GameManager.Items.None;
+            selectedProduct = "None";
             Clicked = true;
         });
-        cancel.Hitbox = new Rectangle((int)cancel.Location.X, (int)cancel.Location.Y, cancel.Sprite.TextureMapLocation.Width, cancel.Sprite.TextureMapLocation.Height);
         _buttons.Add(cancel);
     }
 
-    public override void Draw(SpriteBatch spriteBatch)
+    public override void Draw(SpriteBatch spriteBatch, TextureAtlas _spriteSheet)
     {
         foreach(UIButton b in _buttons){
-            b.Draw(spriteBatch, _font);
+            b.Draw(spriteBatch, _font, _spriteSheet.CreateSprite("Button"));
         }
     }
 

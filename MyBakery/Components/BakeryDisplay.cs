@@ -5,32 +5,32 @@ using System.Collections.Generic;
 using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
 public class BakeryDisplay : Button, ShopObject
 {
 
-    public GameManager.Items product {get; set;}
+    public String product {get; set;}
     public ProductSelectorMenu menu;
     private SpriteFont _font;
     public int Quantity { get; set; }
-    public Rectangle InteractZone { get; set; }
-    public Shop.ShopObjectTypes Type { get; set; }
+    public Rectangle InteractZone { get; set; } 
+    public String Type { get; set; }
     public HashSet<Product.ProductQualities> DisplayQualities { get; set; }
-    private Dictionary<GameManager.Items, Product> _products;
+    private Dictionary<String, Product> _products;
 
-    public BakeryDisplay(Sprite sprite, Vector2 location, SpriteFont font, Rectangle izone, Shop.ShopObjectTypes type, HashSet<Product.ProductQualities> displayQualities)
+    public BakeryDisplay(Vector2 location, SpriteFont font, Rectangle izone, String type, HashSet<Product.ProductQualities> displayQualities)
     {
-        Sprite = sprite;
         Location = location;
         _font = font;
-        Hitbox = new Rectangle((int)Location.X, (int)Location.Y, Sprite.TextureMapLocation.Width, Sprite.TextureMapLocation.Height);
+        Hitbox = new Rectangle((int)Location.X, (int)Location.Y, 64, 64);
         InteractZone = izone;
         Type = type;
         DisplayQualities = displayQualities;
-        _products = new Dictionary<GameManager.Items, Product>();
-        foreach (KeyValuePair<GameManager.Items, Product> values in GameManager.ItemDB)
+        _products = new Dictionary<String, Product>();
+        foreach (KeyValuePair<String, Product> values in GameManager.ItemDB)
         {
             bool valid = true;
             foreach (Product.ProductQualities qual in values.Value.ProductQualitiesSet)
@@ -68,14 +68,14 @@ public class BakeryDisplay : Button, ShopObject
         }
     }
 
-    public void Draw(SpriteBatch spriteBatch){
-        spriteBatch.Draw(Sprite.Texture, Location, Sprite.TextureMapLocation, Color.White);
+    public void Draw(SpriteBatch spriteBatch, TextureAtlas spriteSheet){
+        spriteSheet.CreateSprite(Type).Draw(spriteBatch, Location);
         if(menu != null){
-            menu.Draw(spriteBatch);
+            menu.Draw(spriteBatch, spriteSheet);
         }
         
-        if(product is not GameManager.Items.None){
-            spriteBatch.Draw(GameManager.TextureDB[product].Texture, Location, GameManager.TextureDB[product].TextureMapLocation, Color.White);
+        if(product is not "None"){
+            spriteSheet.CreateSprite(product).Draw(spriteBatch, Location);
         }
     }
 }

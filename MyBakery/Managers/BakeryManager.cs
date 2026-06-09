@@ -6,6 +6,8 @@ using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using CoreLibrary;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
@@ -25,18 +27,18 @@ public static class BakeryManager
     const int dayLength = 120;
     private static Texture2D bakeryBG;
     public static Boolean IsOpen;
-    public static Dictionary<Shop.ShopObjectTypes, Sprite> BakeryTextureDB = new Dictionary<Shop.ShopObjectTypes,Sprite>();
     public static Tabs currentTab;
+    private static TextureAtlas _spriteSheet;
+    private static Sprite _button;
 
-    public static void Initialize(Texture2D Button, Texture2D spriteSheet, Texture2D bakery, SpriteFont font)
+    public static void Initialize(Texture2D Button, TextureAtlas spriteSheet, Texture2D bakery, SpriteFont font)
     {
         gameXOrigin = GameManager.gameWidth / 3;
         gameYOrigin = 0;
-        BakeryTextureDB[Shop.ShopObjectTypes.Display] = new Sprite(spriteSheet, new Rectangle(0, 448, 64, 64));
-        BakeryTextureDB[Shop.ShopObjectTypes.Fridge] = new Sprite(spriteSheet, new Rectangle(0, 512, 64, 64));
-        BakeryTextureDB[Shop.ShopObjectTypes.Register] = new Sprite(spriteSheet, new Rectangle(64, 448, 64, 64));
+        _spriteSheet = spriteSheet;
+        _button = new Sprite(new TextureRegion(Button, 0, 0, 128, 64));
 
-        UIButton startDayButton = new UIButton("Start Day", new Sprite(Button, new Rectangle(0, 0, 128, 64)), new Vector2(GameManager.gameWidth * 2 / 3, GameManager.gameHeight / 2), () =>
+        UIButton startDayButton = new UIButton("Start Day", new Vector2(GameManager.gameWidth * 2 / 3, GameManager.gameHeight / 2), (int)_button.Width, (int)_button.Height,  () =>
         {
             GameManager.CurrentGameState = GameManager.GameState.Inventory;//CHANGE when later developed
             GameManager.CurrentBakeryState = GameManager.BakeryState.Day;
@@ -48,9 +50,9 @@ public static class BakeryManager
         previousTime = dayLength;
         elapsedDayTime = 0;
         currentTab = Tabs.Shop;
-        currentTab = Tabs.Farm;
+        //currentTab = Tabs.Farm;
 
-        shop = new Shop(new Sprite(bakery, new Rectangle(0, 0, bakery.Width, bakery.Height)), startDayButton, spriteSheet, font);
+        shop = new Shop(new Sprite(new TextureRegion(bakery, 0, 0, bakery.Width, bakery.Height)), startDayButton, spriteSheet, font);
         farm = new Farm(spriteSheet, font);
 
     }
@@ -91,14 +93,14 @@ public static class BakeryManager
 
                 if (previousTime != dayTimeLeft)
                 {//remove when sell function is moved to customers
-                    if (sobject.Type == Shop.ShopObjectTypes.Display)
+                    if (sobject.Type == "Display")
                     {
                         BakeryDisplay display = sobject as BakeryDisplay;
-                        if (display.product != GameManager.Items.None)
+                        if (display.product != "None")
                         {
                             if (GameManager.PlayerInfo.inventory[display.product] < 1)
                             {
-                                display.product = GameManager.Items.None;
+                                display.product = "None";
                                 //display.Text = "Select\nProduct";
                             }
                             else

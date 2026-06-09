@@ -6,25 +6,26 @@ using System.Collections.Generic;
 using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
 public class Farm
 {
     private List<List<Plot>> plots;
-    private Texture2D spriteSheet;
+    private TextureAtlas spriteSheet;
     SpriteFont font;
-    private Sprite dirt;
+    private Sprite _dirt;
     private Vector2 farmOrigin;
     private Crop wheat;
 
 
-    public Farm(Texture2D spriteSheet, SpriteFont font)
+    public Farm(TextureAtlas spriteSheet, SpriteFont font)
     {
 
         this.spriteSheet = spriteSheet;
         this.font = font;
-        dirt = new Sprite(spriteSheet, new Rectangle(128, 512, 64, 64));
+        _dirt = spriteSheet.CreateSprite("Dirt");
         wheat = new Crop(1, 4, new int[5] {10, 10, 10, 10, 10}, new Vector2(0, 576));
 
         farmOrigin = new Vector2(GameManager.gameWidth / 3 + 64, 64);
@@ -80,10 +81,10 @@ public class Farm
         {
             foreach (Plot plot in row)
             {
-                spriteBatch.Draw(dirt.Texture, plot.location, dirt.TextureMapLocation, Color.White);
+                _dirt.Draw(spriteBatch, plot.location);
                 if (plot.crop != null)
                 {
-                    spriteBatch.Draw(spriteSheet, plot.location, new Rectangle((int)(plot.crop.animationStart.X + 64 * plot.currentStage), (int)plot.crop.animationStart.Y, 64, 64), Color.White);
+                    spriteBatch.Draw(spriteSheet.Texture, plot.location, new Rectangle((int)(plot.crop.animationStart.X + 64 * plot.currentStage), (int)plot.crop.animationStart.Y, 64, 64), Color.White);
                 }
             }
         }

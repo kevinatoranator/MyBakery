@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
@@ -23,13 +24,13 @@ public class ChocoGame : Minigame
 
     private ProgressBar timerBar, quotaBar;
 
-    public override void Start(Texture2D spriteSheet, Texture2D background)
+    public override void Start(TextureAtlas spriteSheet, Texture2D background)
     {
-        playerSprite = new Sprite(spriteSheet, new Rectangle(128, 64, 64, 64));
-        chocoSprite = new Sprite(spriteSheet, new Rectangle(0, 64, 64, 64));
-        emberSprite = new Sprite(spriteSheet, new Rectangle(64, 64, 64, 64));
-        progressFront = new Sprite(spriteSheet, new Rectangle(512, 256, 128, 64));
-        progressBack = new Sprite(spriteSheet, new Rectangle(192, 192, 128, 64));
+        playerSprite = spriteSheet.CreateSprite("ToastDog");
+        chocoSprite = spriteSheet.CreateSprite("ChocoChip");
+        emberSprite = spriteSheet.CreateSprite("Ember");
+        progressFront = spriteSheet.CreateSprite("ProgressFront");
+        progressBack = spriteSheet.CreateSprite("ProgressBack");
         bg = background;
 
         fallingObjects = new List<FallingObject>();
@@ -55,12 +56,12 @@ public class ChocoGame : Minigame
 
         foreach(FallingObject o in fallingObjects){
             if(o.type == "chocolate")
-                spriteBatch.Draw(chocoSprite.Texture, o.location, chocoSprite.TextureMapLocation, Color.White);
+                chocoSprite.Draw(spriteBatch, o.location);
             else if(o.type == "ember")
-                spriteBatch.Draw(emberSprite.Texture, o.location, emberSprite.TextureMapLocation, Color.White);
+                emberSprite.Draw(spriteBatch, o.location);
         }
 
-        spriteBatch.Draw(playerSprite.Texture, player.location, playerSprite.TextureMapLocation, Color.White);
+        playerSprite.Draw(spriteBatch, player.location);
 
     }
 
@@ -82,13 +83,13 @@ public class ChocoGame : Minigame
             gameTimeLeft = 0;
             if(collectedChocolate > quota)
                 collectedChocolate += collectedChocolate/2;
-            if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.ChocoChip))
+            if (GameManager.PlayerInfo.inventory.ContainsKey("ChocoChip"))
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.ChocoChip] += collectedChocolate;
+                GameManager.PlayerInfo.inventory["ChocoChip"] += collectedChocolate;
             }
             else
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.ChocoChip] = collectedChocolate;
+                GameManager.PlayerInfo.inventory["ChocoChip"] = collectedChocolate;
             }
             
             MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;

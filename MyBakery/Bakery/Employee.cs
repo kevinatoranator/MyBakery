@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using GeneralUtil;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
@@ -8,13 +9,11 @@ namespace MyBakery;
 public class Employee
 {
     public string Name { get; set; }
-    public Sprite Sprite { get; set; }
     public int Cost { get; set; }
     public Dictionary<string, int> skills { get; set; }//change to enum instead of string
-    public Employee(string name, Sprite sprite, int cost)
+    public Employee(string name, int cost)
     {
         Name = name;
-        Sprite = sprite;
         Cost = cost;
     }
 

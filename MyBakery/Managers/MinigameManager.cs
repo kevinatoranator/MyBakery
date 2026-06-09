@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using CoreLibrary;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
@@ -12,7 +14,7 @@ public static class MinigameManager
 
     private static List<UIButton> _buttons;
     private static int _gameXOrigin, _gameYOrigin;
-    public static Texture2D SpriteSheet, whiteBox;
+    public static TextureAtlas SpriteSheet;
 
     public enum MinigameState
     {
@@ -30,59 +32,59 @@ public static class MinigameManager
 
     public static MinigameState CurrentMinigameState;
     public static Minigame currentGame;
+    private static TextureRegion _buttonSprite;
 
-    public static void Initialize(GraphicsDevice graphicsDevice, Texture2D button, Texture2D spriteSheet, Texture2D chocobg)
+    public static void Initialize(Texture2D button, TextureAtlas spriteSheet, Texture2D chocobg)
     {
         _gameXOrigin = (int)GameManager.bottomScreenOrigin.X;
         _gameYOrigin = (int)GameManager.bottomScreenOrigin.Y;
+        _buttonSprite = new TextureRegion(button, 0, 0, 128, 64);
 
-        whiteBox = new Texture2D(graphicsDevice, 1, 1);
-        whiteBox.SetData(new[] { Color.White });
-        UIButton chocoGameButton = new UIButton("ChocoLatte", new GeneralUtil.Sprite(button, new Rectangle(0, 0, 128, 64)), new Vector2(_gameXOrigin + 20, _gameYOrigin + 20), () =>
+        UIButton chocoGameButton = new UIButton("ChocoLatte", new Vector2(_gameXOrigin + 20, _gameYOrigin + 20), _buttonSprite.Width, _buttonSprite.Height, () =>
         {
             currentGame = new ChocoGame();
             currentGame.Start(spriteSheet, chocobg);
             CurrentMinigameState = MinigameState.ChocoLatte;
         });
-        UIButton bakingGameButton = new UIButton("Baking", new GeneralUtil.Sprite(button, new Rectangle(0, 0, 128, 64)), new Vector2(_gameXOrigin + 150, _gameYOrigin + 20), () =>
+        UIButton bakingGameButton = new UIButton("Baking", new Vector2(_gameXOrigin + 150, _gameYOrigin + 20), _buttonSprite.Width, _buttonSprite.Height, () =>
         {
-            if (HasIngredients(GameManager.ItemDB[GameManager.Items.Cookie].Recipe))
+            if (HasIngredients(GameManager.ItemDB["Cookie"].Recipe))
             {
                 currentGame = new BakingGame();
                 currentGame.Start(spriteSheet, chocobg);
                 CurrentMinigameState = MinigameState.Baking;
             }
         });
-        UIButton doughGameButton = new UIButton("Dough", new GeneralUtil.Sprite(button, new Rectangle(0, 0, 128, 64)), new Vector2(_gameXOrigin + 280, _gameYOrigin + 20), () =>
+        UIButton doughGameButton = new UIButton("Dough", new Vector2(_gameXOrigin + 280, _gameYOrigin + 20), _buttonSprite.Width, _buttonSprite.Height, () =>
         {
-            if (HasIngredients(GameManager.ItemDB[GameManager.Items.Dough].Recipe))
+            if (HasIngredients(GameManager.ItemDB["Dough"].Recipe))
             {
                 currentGame = new DoughGame();
                 currentGame.Start(spriteSheet, chocobg);
                 CurrentMinigameState = MinigameState.Dough;
             }
         });
-        UIButton fruitJumpGameButton = new UIButton("Fruit Jump", new GeneralUtil.Sprite(button, new Rectangle(0, 0, 128, 64)), new Vector2(_gameXOrigin + 410, _gameYOrigin + 20), () =>
+        UIButton fruitJumpGameButton = new UIButton("Fruit Jump", new Vector2(_gameXOrigin + 410, _gameYOrigin + 20), _buttonSprite.Width, _buttonSprite.Height, () =>
         {
             currentGame = new FruitJumpGame();
             currentGame.Start(spriteSheet, chocobg);
             CurrentMinigameState = MinigameState.FruitJump;
         });
-        UIButton jellyGameButton = new UIButton("Jelly Eater", new GeneralUtil.Sprite(button, new Rectangle(0, 0, 128, 64)), new Vector2(_gameXOrigin + 540, _gameYOrigin + 20), () =>
+        UIButton jellyGameButton = new UIButton("Jelly Eater", new Vector2(_gameXOrigin + 540, _gameYOrigin + 20), _buttonSprite.Width, _buttonSprite.Height, () =>
         {
             currentGame = new JellyGame();
             currentGame.Start(spriteSheet, chocobg);
             CurrentMinigameState = MinigameState.JellyEater;
         });
-        UIButton coffeeGameButton = new UIButton("Coffee Snake", new GeneralUtil.Sprite(button, new Rectangle(0, 0, 128, 64)), new Vector2(_gameXOrigin + 20, _gameYOrigin + 100), () =>
+        UIButton coffeeGameButton = new UIButton("Coffee Snake", new Vector2(_gameXOrigin + 20, _gameYOrigin + 100), _buttonSprite.Width, _buttonSprite.Height, () =>
         {
             currentGame = new CoffeeSnakeGame();
             currentGame.Start(spriteSheet, chocobg);
             CurrentMinigameState = MinigameState.CoffeeSnake;
         });
-        UIButton flourGameButton = new UIButton("Flour Grind", new GeneralUtil.Sprite(button, new Rectangle(0, 0, 128, 64)), new Vector2(_gameXOrigin + 150, _gameYOrigin + 100), () =>
+        UIButton flourGameButton = new UIButton("Flour Grind", new Vector2(_gameXOrigin + 150, _gameYOrigin + 100), _buttonSprite.Width, _buttonSprite.Height, () =>
         {
-            if (HasIngredients(GameManager.ItemDB[GameManager.Items.Flour].Recipe))
+            if (HasIngredients(GameManager.ItemDB["Flour"].Recipe))
                     {
                         currentGame = new FlourGame();
                         currentGame.Start(spriteSheet, chocobg);
@@ -90,9 +92,9 @@ public static class MinigameManager
                     }
         });
 
-        UIButton chocoMineButton = new UIButton("Choco Mine", new GeneralUtil.Sprite(button, new Rectangle(0, 0, 128, 64)), new Vector2(_gameXOrigin + 280, _gameYOrigin + 100), () =>
+        UIButton chocoMineButton = new UIButton("Choco Mine", new Vector2(_gameXOrigin + 280, _gameYOrigin + 100), _buttonSprite.Width, _buttonSprite.Height, () =>
         {
-            if (HasIngredients(GameManager.ItemDB[GameManager.Items.BoxedChocolate].Recipe))
+            if (HasIngredients(GameManager.ItemDB["BoxedChocolate"].Recipe))
             {
                 currentGame = new ChocoMineGame();
                 currentGame.Start(spriteSheet, chocobg);
@@ -111,10 +113,10 @@ public static class MinigameManager
         switch (CurrentMinigameState)
         {
             case MinigameState.Select:
-                spriteBatch.Draw(whiteBox, new Rectangle(_gameXOrigin, _gameYOrigin, GameManager.gameWidth / 2 * 3, GameManager.gameHeight / 2), Color.CornflowerBlue);
+                //spriteBatch.Draw(whiteBox, new Rectangle(_gameXOrigin, _gameYOrigin, GameManager.gameWidth / 2 * 3, GameManager.gameHeight / 2), Color.CornflowerBlue);
                 foreach (UIButton c in _buttons)
                 {
-                    c.Draw(spriteBatch, font);
+                    c.Draw(spriteBatch, font, new Sprite(_buttonSprite));
                 }
                 break;
             case MinigameState.Menu:
@@ -150,8 +152,8 @@ public static class MinigameManager
         return obj1.Contains(p1);
     }
     
-    private static bool HasIngredients(Dictionary<GameManager.Items, int> recipe) {
-        foreach (KeyValuePair<GameManager.Items, int> ingredient in recipe)
+    private static bool HasIngredients(Dictionary<string, int> recipe) {
+        foreach (KeyValuePair<string, int> ingredient in recipe)
         {
             int quantity;
              GameManager.PlayerInfo.inventory.TryGetValue(ingredient.Key, out quantity);

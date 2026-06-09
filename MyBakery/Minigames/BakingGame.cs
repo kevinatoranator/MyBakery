@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
@@ -24,21 +25,21 @@ public class BakingGame : Minigame
     private Item heldItem;
     private ProgressBar timerBar, quotaBar, tempBar;
     Texture2D bg;
-    public override void Start(Texture2D spriteSheet, Texture2D background)
+    public override void Start(TextureAtlas spriteSheet, Texture2D background)
     {
 
         //BakingGame
-        ovenSprite = new Sprite(spriteSheet, new Rectangle(192, 320, 256, 256));
-        matchSprite = new Sprite(spriteSheet, new Rectangle(64, 320, 64, 128));
-        woodSprite = new Sprite(spriteSheet, new Rectangle(128, 320, 64, 128));
-        iceSprite = new Sprite(spriteSheet, new Rectangle(0, 320, 64, 128));
-        matchBoxSprite = new Sprite(spriteSheet, new Rectangle(320, 192, 64, 64));
+        ovenSprite = spriteSheet.CreateSprite("Oven");
+        matchSprite = spriteSheet.CreateSprite("Match");
+        woodSprite = spriteSheet.CreateSprite("Wood");
+        iceSprite = spriteSheet.CreateSprite("Ice");
+        matchBoxSprite = spriteSheet.CreateSprite("MatchBox");
         ovenPos = new Vector2(gameXOrigin + 100, gameYOrigin + 100);
         pilePos = new Vector2(gameXOrigin + 400, gameYOrigin + 100);
-        progressFront = new Sprite(spriteSheet, new Rectangle(512, 256, 128, 64));
-        progressBack = new Sprite(spriteSheet, new Rectangle(192, 192, 128, 64));
-        tempFront = new Sprite(spriteSheet, new Rectangle(480, 320, 32, 128));
-        tempBack = new Sprite(spriteSheet, new Rectangle(448, 320, 32, 128));
+        progressFront = spriteSheet.CreateSprite("ProgressFront");
+        progressBack = spriteSheet.CreateSprite("ProgressBack");
+        tempFront = spriteSheet.CreateSprite("TempFront");
+        tempBack = spriteSheet.CreateSprite("TempBack");
         bg = background;
 
         bakedGoods = 0;
@@ -59,17 +60,17 @@ public class BakingGame : Minigame
         //BakingGame
         spriteBatch.Draw(bg, new Rectangle(gameXOrigin, gameYOrigin, GameManager.gameWidth*2/3, GameManager.gameHeight/2), Color.White);
 
-        spriteBatch.Draw(ovenSprite.Texture, ovenPos, ovenSprite.TextureMapLocation, Color.White);
-        spriteBatch.Draw(matchBoxSprite.Texture, pilePos, matchBoxSprite.TextureMapLocation, Color.White);
+        ovenSprite.Draw(spriteBatch, ovenPos);
+        matchBoxSprite.Draw(spriteBatch, pilePos);
 
         Vector2 itemPos = new Vector2(mousePos.X-spriteSize/2, mousePos.Y-spriteSize);
         if(heldItem is not null){
             if(heldItem.type == "ice")
-                spriteBatch.Draw(iceSprite.Texture, itemPos, iceSprite.TextureMapLocation, Color.White);
+                iceSprite.Draw(spriteBatch, itemPos);
             else if(heldItem.type == "wood")
-                spriteBatch.Draw(woodSprite.Texture, itemPos, woodSprite.TextureMapLocation, Color.White);
+                woodSprite.Draw(spriteBatch, itemPos);
             else
-                spriteBatch.Draw(matchSprite.Texture, itemPos, matchSprite.TextureMapLocation, Color.White);
+                matchSprite.Draw(spriteBatch, itemPos);
         }
 
         /*if(bakedGoods < quota)
@@ -110,7 +111,7 @@ public class BakingGame : Minigame
             }
         }
         if(heldItem is not null){
-            if(MinigameManager.isInside(mousePos, ovenPos, ovenSprite.TextureMapLocation.Width, ovenSprite.TextureMapLocation.Height) && currentMouse.LeftButton == ButtonState.Released){
+            if(MinigameManager.isInside(mousePos, ovenPos, ovenSprite.Region.Width, ovenSprite.Region.Height) && currentMouse.LeftButton == ButtonState.Released){
                 if(heldItem.type == "ice")
                     currentTemp -= 125;
                 else if(heldItem.type == "wood")
@@ -118,7 +119,7 @@ public class BakingGame : Minigame
                 else
                     currentTemp += 175;
                 heldItem = null;
-            }else if(!MinigameManager.isInside(mousePos, ovenPos, ovenSprite.TextureMapLocation.Width, ovenSprite.TextureMapLocation.Height) && currentMouse.LeftButton == ButtonState.Released){
+            }else if(!MinigameManager.isInside(mousePos, ovenPos, ovenSprite.Region.Width, ovenSprite.Region.Height) && currentMouse.LeftButton == ButtonState.Released){
                 heldItem = null;
             }
         }
@@ -134,13 +135,13 @@ public class BakingGame : Minigame
             gameTimeLeft = 0;
             if(bakedGoods > quota)
                 bakedGoods += bakedGoods/2;
-            if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Cookie))
+            if (GameManager.PlayerInfo.inventory.ContainsKey("Cookie"))
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.Cookie] += bakedGoods;
+                GameManager.PlayerInfo.inventory["Cookie"] += bakedGoods;
             }
             else
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.Cookie] = bakedGoods;
+                GameManager.PlayerInfo.inventory["Cookie"] = bakedGoods;
             }
             
             MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;

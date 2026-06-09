@@ -15,28 +15,28 @@ public class Product{
     }
     public int Value { get; set; }
     public Boolean Sellable{get; set;}
-    public Dictionary<GameManager.Items, int> Recipe {get; set;}
+    public Dictionary<String, int> Recipe {get; set;}
     public HashSet<ProductQualities> ProductQualitiesSet{get; set;}
     
 
-    public void Sell(GameManager.Items item, int amount)
+    public void Sell(String item, int amount)
     {
         if (GameManager.PlayerInfo.inventory[item] >= amount)
         {
             GameManager.PlayerInfo.inventory[item] -= amount;
-            GameManager.PlayerInfo.inventory[GameManager.Items.Coin] += amount * Value;
+            GameManager.PlayerInfo.inventory["Coin"] += amount * Value;
         }
 
     }
-    public void Buy(GameManager.Items item, int amount){
-        if(GameManager.PlayerInfo.inventory[GameManager.Items.Coin] >= amount*Value){
+    public void Buy(String item, int amount){
+        if(GameManager.PlayerInfo.inventory["Coin"] >= amount*Value){
              GameManager.PlayerInfo.inventory[item] += amount;
-            GameManager.PlayerInfo.inventory[GameManager.Items.Coin] -= amount*Value;
+            GameManager.PlayerInfo.inventory["Coin"] -= amount*Value;
         }else
             Console.WriteLine("Out of money");
     }
 
-    public Product(int value, Boolean sellable, Dictionary<GameManager.Items, int> recipe)
+    public Product(int value, Boolean sellable, Dictionary<String, int> recipe)
     {
         Value = value;
         Sellable = sellable;

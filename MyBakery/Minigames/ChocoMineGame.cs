@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
@@ -16,12 +17,12 @@ public class ChocoMineGame : Minigame
         Hammer,
         Pick
     }
-    private Dictionary<Sprite, (int, int)> buriedItems;
+    private Dictionary<string, (int, int)> buriedItems;
     private (int, int, int)[] toolPower; 
     private List<List<Tile>> tiles;
 
     private Sprite layer1, layer2, layer3, layer0;
-    private Sprite circle, square, star;
+    private TextureAtlas _spriteSheet;
     private Sprite pick, hammer, stabilityFront, stabilityBack;
     private Vector2 mapOrigin;
     private int depthMined, chocoUncovered;
@@ -33,20 +34,18 @@ public class ChocoMineGame : Minigame
     //Layer mineable choco on top of background
     //Grid of tiles, tiles have layers, sprite(could be enum), 
 
-    public override void Start(Texture2D spriteSheet, Texture2D background)
+    public override void Start(TextureAtlas spriteSheet, Texture2D background)
     {
-        pick = new Sprite(spriteSheet, new Rectangle(0, 256, 64, 64));
-        hammer = new Sprite(spriteSheet, new Rectangle(64, 256, 64, 64));
-        layer1 = new Sprite(spriteSheet, new Rectangle(128, 448, 32, 32));
-        layer2 = new Sprite(spriteSheet, new Rectangle(160, 448, 32, 32));
-        layer3 = new Sprite(spriteSheet, new Rectangle(128, 480, 32, 32));
-        layer0 = new Sprite(spriteSheet, new Rectangle(160, 480, 32, 32));
-        circle = new Sprite(spriteSheet, new Rectangle(320, 256, 64, 64));
-        square = new Sprite(spriteSheet, new Rectangle(384, 256, 64, 64));
-        star = new Sprite(spriteSheet, new Rectangle(448, 256, 64, 64));
+        pick = spriteSheet.CreateSprite("Pick");
+        hammer = spriteSheet.CreateSprite("Hammer");
+        layer1 = spriteSheet.CreateSprite("Layer1");
+        layer2 = spriteSheet.CreateSprite("Layer2");
+        layer3 = spriteSheet.CreateSprite("Layer3");
+        layer0 = spriteSheet.CreateSprite("Layer0");
+        _spriteSheet = spriteSheet;
 
-        stabilityFront = new Sprite(spriteSheet, new Rectangle(512, 256, 128, 64));
-        stabilityBack = new Sprite(spriteSheet, new Rectangle(192, 192, 128, 64));
+        stabilityFront = spriteSheet.CreateSprite("ProgressFront");
+        stabilityBack = spriteSheet.CreateSprite("ProgressBack");
         started = false;
         currentTool = Tool.None;
         toolPower = new (int, int, int)[1] { (0, 0, 1) };
@@ -58,8 +57,8 @@ public class ChocoMineGame : Minigame
         depthMined = 0;
         stabilityBar = new ProgressBar(stabilityFront, stabilityBack, 14, 0, new Vector2(gameXOrigin + 400, gameYOrigin + 2), false);
 
-        pickButton = new UIButton("", pick, new Vector2(mapOrigin.X + 832, mapOrigin.Y + 64), () => { currentTool = Tool.Pick; toolPower = new (int, int, int)[5]{ (0, -1, 1), (-1, 0, 1), (0, 0, 2), (1, 0, 1), (0, 1, 1)};});
-        hammerButton = new UIButton("", hammer, new Vector2(mapOrigin.X + 832, mapOrigin.Y + 128), () => { currentTool = Tool.Hammer; toolPower = new (int, int, int)[9] { (-1, -1, 1), (0, -1, 1), (1, -1, 1), (-1, 0, 1), (0, 0, 1), (1, 0, 1), (-1, 1, 1), (0, 1, 1), (1, 1, 1) };});
+        pickButton = new UIButton("", new Vector2(mapOrigin.X + 832, mapOrigin.Y + 64), (int)pick.Width, (int)pick.Width, () => { currentTool = Tool.Pick; toolPower = new (int, int, int)[5]{ (0, -1, 1), (-1, 0, 1), (0, 0, 2), (1, 0, 1), (0, 1, 1)};});
+        hammerButton = new UIButton("", new Vector2(mapOrigin.X + 832, mapOrigin.Y + 128), (int)hammer.Width, (int)hammer.Height, () => { currentTool = Tool.Hammer; toolPower = new (int, int, int)[9] { (-1, -1, 1), (0, -1, 1), (1, -1, 1), (-1, 0, 1), (0, 0, 1), (1, 0, 1), (-1, 1, 1), (0, 1, 1), (1, 1, 1) };});
 
         float[,] test = GenerateWhiteNoise(height, width);
         float[,] perlin = GeneratePerlinNoise(test, 4);
@@ -73,8 +72,8 @@ public class ChocoMineGame : Minigame
             tiles.Add(row);
         }
 
-        buriedItems = new Dictionary<Sprite, (int, int)>();
-        buriedItems[circle] = (2, 1);
+        buriedItems = new Dictionary<string, (int, int)>();
+        buriedItems["Circle"] = (2, 1);
     }
 
     public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
@@ -83,12 +82,12 @@ public class ChocoMineGame : Minigame
         {
             for (int j = 0; j < tiles[0].Count; j++)
             {
-                spriteBatch.Draw(layer0.Texture, new Vector2(mapOrigin.X + j * 32, mapOrigin.Y + i * 32), layer0.TextureMapLocation, Color.White);
+                layer0.Draw(spriteBatch, new Vector2(mapOrigin.X + j * 32, mapOrigin.Y + i * 32));
             }
         }
-        foreach (KeyValuePair<Sprite, (int, int)> item in buriedItems)
+        foreach (KeyValuePair<string, (int, int)> item in buriedItems)
         {
-            spriteBatch.Draw(item.Key.Texture, new Vector2(mapOrigin.X + item.Value.Item1 * 32, mapOrigin.Y + item.Value.Item2 * 32), item.Key.TextureMapLocation, Color.White);
+            _spriteSheet.CreateSprite(item.Key).Draw(spriteBatch, new Vector2(mapOrigin.X + item.Value.Item1 * 32, mapOrigin.Y + item.Value.Item2 * 32));
         }
 
 
@@ -113,21 +112,21 @@ public class ChocoMineGame : Minigame
                 {
                     continue;
                 }
-                spriteBatch.Draw(sprite.Texture, tile.location, sprite.TextureMapLocation, Color.White);
+                sprite.Draw(spriteBatch, tile.location);
             }
         }
         stabilityBar.Draw(spriteBatch);
         spriteBatch.DrawString(font, "Items Found: " + chocoUncovered, new Vector2(gameXOrigin + 10, gameYOrigin + 50), Color.White);
 
-        pickButton.Draw(spriteBatch, font);
-        hammerButton.Draw(spriteBatch, font);
+        pickButton.Draw(spriteBatch, font, pick);
+        hammerButton.Draw(spriteBatch, font, hammer);
         if (currentTool == Tool.Hammer)
         {
-            spriteBatch.Draw(hammer.Texture, new Vector2(KMouse.MouseLocation().X - 32, KMouse.MouseLocation().Y - 32), hammer.TextureMapLocation, Color.White);
+            hammer.Draw(spriteBatch, new Vector2(KMouse.MouseLocation().X - 32, KMouse.MouseLocation().Y - 32));
         }
         else if (currentTool == Tool.Pick)
         {
-            spriteBatch.Draw(pick.Texture, new Vector2(KMouse.MouseLocation().X - 32, KMouse.MouseLocation().Y - 32), pick.TextureMapLocation, Color.White);
+            pick.Draw(spriteBatch, new Vector2(KMouse.MouseLocation().X - 32, KMouse.MouseLocation().Y - 32));
         }
     }
 
@@ -158,7 +157,7 @@ public class ChocoMineGame : Minigame
                             currentTile.depth -= toolPower[i].Item3;
                             if (currentTile.depth < 0)
                                 currentTile.depth = 0;
-                            foreach (KeyValuePair<Sprite, (int, int)> item in buriedItems)
+                            foreach (KeyValuePair<string, (int, int)> item in buriedItems)
                                 {
                                     if (currentX >= item.Value.Item1 && currentX <= item.Value.Item1 + 1 && currentY >= item.Value.Item2 && currentY <= item.Value.Item2 + 1)
                                     {
@@ -175,13 +174,13 @@ public class ChocoMineGame : Minigame
                 depthMined++;
                 if (depthMined > 14)
                 {
-                    if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.BoxedChocolate))
+                    if (GameManager.PlayerInfo.inventory.ContainsKey("BoxedChocolate"))
                     {
-                        GameManager.PlayerInfo.inventory[GameManager.Items.BoxedChocolate] += 1;
+                        GameManager.PlayerInfo.inventory["BoxedChocolate"] += 1;
                     }
                     else
                     {
-                        GameManager.PlayerInfo.inventory[GameManager.Items.BoxedChocolate] = 1;
+                        GameManager.PlayerInfo.inventory["BoxedChocolate"] = 1;
                     }
                     MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
                 }

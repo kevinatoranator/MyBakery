@@ -4,6 +4,7 @@ using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
@@ -25,10 +26,10 @@ public class CoffeeSnakeGame: Minigame{
     private static List<PhysicsObject> availableBeans = new List<PhysicsObject>();
     private static List<Player> snake = new List<Player>();
 
-    public override void Start(Texture2D spriteSheet, Texture2D background)
+    public override void Start(TextureAtlas spriteSheet, Texture2D background)
     {
-        playerSprite = new Sprite(spriteSheet, new Rectangle(128, 64, spriteSize, spriteSize));
-        coffeeSprite = new Sprite(spriteSheet, new Rectangle(256, 128, spriteSize, spriteSize));
+        playerSprite = spriteSheet.CreateSprite("ToastDog");
+        coffeeSprite = spriteSheet.CreateSprite("CoffeeBean");
         player = new Player(new Vector2(gameXOrigin*2, gameYOrigin + gameYOrigin/2), playerSprite);
         snake.Add(player);
         //snake.Add(new Player(new Vector2(gameXOrigin*2 + 70, gameYOrigin + gameYOrigin/2), coffeeSprite));
@@ -159,13 +160,13 @@ public class CoffeeSnakeGame: Minigame{
     }
 
     private void EndGame(){
-         if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.CoffeeBean))
+         if (GameManager.PlayerInfo.inventory.ContainsKey("CoffeeBean"))
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.CoffeeBean] += snake.Count*5;
+                GameManager.PlayerInfo.inventory["CoffeeBean"] += snake.Count*5;
             }
             else
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.CoffeeBean] = snake.Count*5;
+                GameManager.PlayerInfo.inventory["CoffeeBean"] = snake.Count*5;
             }
         availableBeans.Clear();
         snake.Clear();

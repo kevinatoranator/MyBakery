@@ -1,0 +1,13 @@
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\bin\Debug\net8.0\CoreLibrary.deps.json
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\bin\Debug\net8.0\CoreLibrary.dll
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\bin\Debug\net8.0\CoreLibrary.pdb
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\obj\Debug\net8.0\CoreLibrary.csproj.AssemblyReference.cache
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\obj\Debug\net8.0\CoreLibrary.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\obj\Debug\net8.0\CoreLibrary.AssemblyInfoInputs.cache
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\obj\Debug\net8.0\CoreLibrary.AssemblyInfo.cs
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\obj\Debug\net8.0\CoreLibrary.csproj.CoreCompileInputs.cache
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\obj\Debug\net8.0\CoreLibrary.sourcelink.json
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\obj\Debug\net8.0\CoreLibrary.dll
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\obj\Debug\net8.0\refint\CoreLibrary.dll
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\obj\Debug\net8.0\CoreLibrary.pdb
+c:\Users\krinald\Desktop\CompSci\MyBakery\CoreLibrary\obj\Debug\net8.0\ref\CoreLibrary.dll

@@ -4,6 +4,7 @@ using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
@@ -18,9 +19,9 @@ public class JellyGame : Minigame{
     private int gameTimeLeft;
     private double timePassed, tick;
 
-    public override void Start(Texture2D spriteSheet, Texture2D background)
+    public override void Start(TextureAtlas spriteSheet, Texture2D background)
     {
-        jellySprite = new Sprite(spriteSheet, new Rectangle(64, 192, spriteSize, spriteSize));
+        jellySprite = spriteSheet.CreateSprite("Jelly");
         timePassed = tick = 0;
         jellies = new List<Jelly>();
 
@@ -123,13 +124,13 @@ public class JellyGame : Minigame{
     }
 
     private void EndGame(){
-        if (GameManager.PlayerInfo.inventory.ContainsKey(GameManager.Items.Jelly))
+        if (GameManager.PlayerInfo.inventory.ContainsKey("Jelly"))
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.Jelly] += (int)Math.Ceiling(player.scale*10);
+                GameManager.PlayerInfo.inventory["Jelly"] += (int)Math.Ceiling(player.scale*10);
             }
             else
             {
-                GameManager.PlayerInfo.inventory[GameManager.Items.Jelly] = (int)Math.Ceiling(player.scale*10);
+                GameManager.PlayerInfo.inventory["Jelly"] = (int)Math.Ceiling(player.scale*10);
             }
         
         jellies.Clear();

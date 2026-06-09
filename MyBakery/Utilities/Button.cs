@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MyBakery;
+using CoreLibrary.Graphics;
 
 namespace GeneralUtil;
 
@@ -11,7 +12,6 @@ public abstract class Button{
 
     public Rectangle Hitbox { get; set;}
     public string Name { get; set;}//character name
-    public Sprite Sprite { get; set;}
     public Vector2 Location { get; set;}
     
     public Action onClick;
@@ -36,9 +36,9 @@ public abstract class Button{
         }
     }
 
-    public void Draw(SpriteBatch spriteBatch, SpriteFont font)
+    public void Draw(SpriteBatch spriteBatch, SpriteFont font, Sprite sprite)
     {
-        spriteBatch.Draw(Sprite.Texture, Location, Sprite.TextureMapLocation, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
+        sprite.Draw(spriteBatch, Location);
         spriteBatch.DrawString(font, Name, new Vector2(Location.X + Hitbox.Width / 6, Location.Y + Hitbox.Height / 3), Color.Black);//TEMP TEXT
     }
 }

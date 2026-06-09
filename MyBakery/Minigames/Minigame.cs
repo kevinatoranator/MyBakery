@@ -4,6 +4,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
@@ -41,7 +42,7 @@ public abstract class Minigame
         }
     }
 
-    public abstract void Start(Texture2D spriteSheet, Texture2D background);
+    public abstract void Start(TextureAtlas spriteSheet, Texture2D background);
     public abstract void Draw(SpriteFont font, SpriteBatch spriteBatch);
     public abstract void Update(GameTime gameTime);
 }
