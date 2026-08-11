@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/Font.spritefont</SourceFile>
-  <SourceTime>2025-05-29T10:30:54.8640703-04:00</SourceTime>
-  <DestFile>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Font.xnb</DestFile>
-  <DestTime>2026-06-06T21:19:32.8081633-04:00</DestTime>
+  <SourceFile>k:/Programming/Monogame/MyBakery/MyBakery/Content/Font.spritefont</SourceFile>
+  <SourceTime>2024-02-03T17:38:49.3192971-05:00</SourceTime>
+  <DestFile>k:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Font.xnb</DestFile>
+  <DestTime>2026-06-09T21:41:40.0837346-04:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2025-06-02T06:31:02-04:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

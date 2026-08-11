@@ -4,11 +4,15 @@ using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CoreLibrary.Graphics;
+using CoreLibrary.Input;
+using CoreLibrary;
+using CoreLibrary.Scenes;
+using MyBakery.Scenes;
 
 namespace MyBakery;
 
 
-public class ChocoMineGame : Minigame
+public class ChocoMineGame : Scene
 {
 
     private enum Tool
@@ -22,7 +26,6 @@ public class ChocoMineGame : Minigame
     private List<List<Tile>> tiles;
 
     private Sprite layer1, layer2, layer3, layer0;
-    private TextureAtlas _spriteSheet;
     private Sprite pick, hammer, stabilityFront, stabilityBack;
     private Vector2 mapOrigin;
     private int depthMined, chocoUncovered;
@@ -30,36 +33,30 @@ public class ChocoMineGame : Minigame
     private Boolean started;
     private Tool currentTool;
     private Button pickButton, hammerButton;
+    private DayScene _mainScene;
+    private SpriteFont _font;
+    const int MAX_STABILITY = 20;
     //Base bg
     //Layer mineable choco on top of background
     //Grid of tiles, tiles have layers, sprite(could be enum), 
 
-    public override void Start(TextureAtlas spriteSheet, Texture2D background)
+    public ChocoMineGame(DayScene main) : base()
     {
-        pick = spriteSheet.CreateSprite("Pick");
-        hammer = spriteSheet.CreateSprite("Hammer");
-        layer1 = spriteSheet.CreateSprite("Layer1");
-        layer2 = spriteSheet.CreateSprite("Layer2");
-        layer3 = spriteSheet.CreateSprite("Layer3");
-        layer0 = spriteSheet.CreateSprite("Layer0");
-        _spriteSheet = spriteSheet;
-
-        stabilityFront = spriteSheet.CreateSprite("ProgressFront");
-        stabilityBack = spriteSheet.CreateSprite("ProgressBack");
+        _mainScene = main;
+    }
+    public override void Initialize()
+    {
+        
         started = false;
         currentTool = Tool.None;
         toolPower = new (int, int, int)[1] { (0, 0, 1) };
 
-        mapOrigin = new Vector2(gameXOrigin + 64, gameYOrigin + 72);
+        mapOrigin = new Vector2(_mainScene.GameBounds.X + 64, _mainScene.GameBounds.Y + 72);
         tiles = new List<List<Tile>>();
         int width = 25;
         int height = 12;
         depthMined = 0;
-        stabilityBar = new ProgressBar(stabilityFront, stabilityBack, 14, 0, new Vector2(gameXOrigin + 400, gameYOrigin + 2), false);
-
-        pickButton = new UIButton("", new Vector2(mapOrigin.X + 832, mapOrigin.Y + 64), (int)pick.Width, (int)pick.Width, () => { currentTool = Tool.Pick; toolPower = new (int, int, int)[5]{ (0, -1, 1), (-1, 0, 1), (0, 0, 2), (1, 0, 1), (0, 1, 1)};});
-        hammerButton = new UIButton("", new Vector2(mapOrigin.X + 832, mapOrigin.Y + 128), (int)hammer.Width, (int)hammer.Height, () => { currentTool = Tool.Hammer; toolPower = new (int, int, int)[9] { (-1, -1, 1), (0, -1, 1), (1, -1, 1), (-1, 0, 1), (0, 0, 1), (1, 0, 1), (-1, 1, 1), (0, 1, 1), (1, 1, 1) };});
-
+        
         float[,] test = GenerateWhiteNoise(height, width);
         float[,] perlin = GeneratePerlinNoise(test, 4);
         for (int i = 0; i < height; i++)
@@ -74,20 +71,41 @@ public class ChocoMineGame : Minigame
 
         buriedItems = new Dictionary<string, (int, int)>();
         buriedItems["Circle"] = (2, 1);
+        base.Initialize();
     }
 
-    public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
+    public override void LoadContent()
+    {
+        pick = _mainScene.Atlas.CreateSprite("Pick");
+        hammer = _mainScene.Atlas.CreateSprite("Hammer");
+        layer1 = _mainScene.Atlas.CreateSprite("Layer1");
+        layer2 = _mainScene.Atlas.CreateSprite("Layer2");
+        layer3 = _mainScene.Atlas.CreateSprite("Layer3");
+        layer0 = _mainScene.Atlas.CreateSprite("Layer0");
+
+        _font = Content.Load<SpriteFont>("font");
+
+        stabilityFront = _mainScene.Atlas.CreateSprite("ProgressFront");
+        stabilityBack = _mainScene.Atlas.CreateSprite("ProgressBack");
+
+        stabilityBar = new ProgressBar(stabilityFront, stabilityBack, MAX_STABILITY, 0, new Vector2(_mainScene.GameBounds.X + 400, _mainScene.GameBounds.Y + 2), false);
+
+        pickButton = new UIButton("", new Vector2(mapOrigin.X + 832, mapOrigin.Y + 64), (int)pick.Width, (int)pick.Width, () => { currentTool = Tool.Pick; toolPower = new (int, int, int)[5]{ (0, -1, 1), (-1, 0, 1), (0, 0, 2), (1, 0, 1), (0, 1, 1)};});
+        hammerButton = new UIButton("", new Vector2(mapOrigin.X + 832, mapOrigin.Y + 128), (int)hammer.Width, (int)hammer.Height, () => { currentTool = Tool.Hammer; toolPower = new (int, int, int)[9] { (-1, -1, 1), (0, -1, 1), (1, -1, 1), (-1, 0, 1), (0, 0, 1), (1, 0, 1), (-1, 1, 1), (0, 1, 1), (1, 1, 1) };});
+    }
+
+    public override void Draw(GameTime gameTime)
     {
         for (int i = 0; i < tiles.Count; i++)//Base Tiles
         {
             for (int j = 0; j < tiles[0].Count; j++)
             {
-                layer0.Draw(spriteBatch, new Vector2(mapOrigin.X + j * 32, mapOrigin.Y + i * 32));
+                layer0.Draw(Core.SpriteBatch, new Vector2(mapOrigin.X + j * 32, mapOrigin.Y + i * 32));
             }
         }
         foreach (KeyValuePair<string, (int, int)> item in buriedItems)
         {
-            _spriteSheet.CreateSprite(item.Key).Draw(spriteBatch, new Vector2(mapOrigin.X + item.Value.Item1 * 32, mapOrigin.Y + item.Value.Item2 * 32));
+            _mainScene.Atlas.CreateSprite(item.Key).Draw(Core.SpriteBatch, new Vector2(mapOrigin.X + item.Value.Item1 * 32, mapOrigin.Y + item.Value.Item2 * 32));
         }
 
 
@@ -112,21 +130,21 @@ public class ChocoMineGame : Minigame
                 {
                     continue;
                 }
-                sprite.Draw(spriteBatch, tile.location);
+                sprite.Draw(Core.SpriteBatch, tile.location);
             }
         }
-        stabilityBar.Draw(spriteBatch);
-        spriteBatch.DrawString(font, "Items Found: " + chocoUncovered, new Vector2(gameXOrigin + 10, gameYOrigin + 50), Color.White);
+        stabilityBar.Draw(Core.SpriteBatch);
+        Core.SpriteBatch.DrawString(_font, "Items Found: " + chocoUncovered, new Vector2(_mainScene.GameBounds.X + 10, _mainScene.GameBounds.Y + 50), Color.White);
 
-        pickButton.Draw(spriteBatch, font, pick);
-        hammerButton.Draw(spriteBatch, font, hammer);
+        pickButton.Draw(Core.SpriteBatch, _font, pick);
+        hammerButton.Draw(Core.SpriteBatch, _font, hammer);
         if (currentTool == Tool.Hammer)
         {
-            hammer.Draw(spriteBatch, new Vector2(KMouse.MouseLocation().X - 32, KMouse.MouseLocation().Y - 32));
+            hammer.Draw(Core.SpriteBatch, new Vector2(Core.Input.Mouse.MouseLocation().X - 32, Core.Input.Mouse.MouseLocation().Y - 32));
         }
         else if (currentTool == Tool.Pick)
         {
-            pick.Draw(spriteBatch, new Vector2(KMouse.MouseLocation().X - 32, KMouse.MouseLocation().Y - 32));
+            pick.Draw(Core.SpriteBatch, new Vector2(Core.Input.Mouse.MouseLocation().X - 32, Core.Input.Mouse.MouseLocation().Y - 32));
         }
     }
 
@@ -134,14 +152,13 @@ public class ChocoMineGame : Minigame
     {
         pickButton.Update();
         hammerButton.Update();
-        KMouse.CheckMouse();
-        if (KMouse.CheckLeftPress() && started)
+        if (Core.Input.Mouse.CheckLeftPress() && started)
         {
-            if (KMouse.MouseLocation().X > mapOrigin.X && KMouse.MouseLocation().X < mapOrigin.X + tiles[0].Count * 32 &&
-            KMouse.MouseLocation().Y > mapOrigin.Y && KMouse.MouseLocation().Y < mapOrigin.Y + tiles.Count * 32)
+            if (Core.Input.Mouse.MouseLocation().X > mapOrigin.X && Core.Input.Mouse.MouseLocation().X < mapOrigin.X + tiles[0].Count * 32 &&
+            Core.Input.Mouse.MouseLocation().Y > mapOrigin.Y && Core.Input.Mouse.MouseLocation().Y < mapOrigin.Y + tiles.Count * 32)
             {
-                int clickedTileX = (int)(KMouse.MouseLocation().X - mapOrigin.X) / 32;
-                int clickedTileY = (int)(KMouse.MouseLocation().Y - mapOrigin.Y) / 32;
+                int clickedTileX = (int)(Core.Input.Mouse.MouseLocation().X - mapOrigin.X) / 32;
+                int clickedTileY = (int)(Core.Input.Mouse.MouseLocation().Y - mapOrigin.Y) / 32;
 
 
                 for (int i = 0; i < toolPower.Length; i++)
@@ -172,17 +189,17 @@ public class ChocoMineGame : Minigame
                     }
                 }
                 depthMined++;
-                if (depthMined > 14)
+                if (depthMined > MAX_STABILITY)
                 {
                     if (GameManager.PlayerInfo.inventory.ContainsKey("BoxedChocolate"))
                     {
-                        GameManager.PlayerInfo.inventory["BoxedChocolate"] += 1;
+                        GameManager.PlayerInfo.inventory["BoxedChocolate"] += chocoUncovered;
                     }
                     else
                     {
-                        GameManager.PlayerInfo.inventory["BoxedChocolate"] = 1;
+                        GameManager.PlayerInfo.inventory["BoxedChocolate"] = chocoUncovered;
                     }
-                    MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
+                    _mainScene.ChangeLowerTab(new SelectionScene(_mainScene));
                 }
             }        
         }

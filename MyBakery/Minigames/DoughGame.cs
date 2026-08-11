@@ -4,62 +4,75 @@ using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CoreLibrary.Graphics;
+using CoreLibrary.Input;
+using CoreLibrary;
+using CoreLibrary.Scenes;
+using MyBakery.Scenes;
 
 namespace MyBakery;
 
-public class DoughGame : Minigame
+public class DoughGame : Scene
 {
 
     const int spriteSize = 64;
-
+    private SpriteFont _font;
     //DoughGame
     private int collectedDough, gameTimeLeft;
     private double timePassed;
     private Sprite doughSprite;
     private List<Rectangle> doughGrid;
     private Rectangle clickedDough, quota;
-    public override void Start(TextureAtlas spriteSheet, Texture2D background)
+    private DayScene _mainScene;
+    public DoughGame(DayScene main) : base()
+    {
+        _mainScene = main;
+    }
+    public override void Initialize()
     {
 
         collectedDough = 0;
         timePassed = 0;
-        doughSprite = spriteSheet.CreateSprite("Dough");
-        doughGrid = new List<Rectangle>() { new Rectangle(gameXOrigin + 500, gameYOrigin + 200, spriteSize, spriteSize) };
-        quota = new Rectangle(gameXOrigin + 400, gameYOrigin + 100, 300, 300);
+        
+        doughGrid = new List<Rectangle>() { new Rectangle(_mainScene.GameBounds.X + 500, _mainScene.GameBounds.Y + 200, spriteSize, spriteSize) };
+        quota = new Rectangle(_mainScene.GameBounds.X + 400, _mainScene.GameBounds.Y + 100, 300, 300);
+        base.Initialize();
     }
 
-
-    public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
+    public override void LoadContent()
     {
-        spriteBatch.Draw(doughSprite.Region.Texture, quota, Color.White);//change to actual border
-        foreach (Rectangle dough in doughGrid)
-            spriteBatch.Draw(doughSprite.Region.Texture, dough, Color.White);
+        doughSprite = _mainScene.Atlas.CreateSprite("Dough");
+        _font = Content.Load<SpriteFont>("font");
+    }
 
-        spriteBatch.DrawString(font, "Time Left: " + gameTimeLeft, new Vector2(gameXOrigin + 10, gameYOrigin + 30), Color.White);
+    public override void Draw(GameTime gameTime)
+    {
+        //Core.SpriteBatch.Draw(doughSprite.Region.Texture, quota, Color.White);//change to actual border
+        foreach (Rectangle dough in doughGrid)
+            doughSprite.Draw(Core.SpriteBatch, new Vector2(dough.X, dough.Y));
+
+        Core.SpriteBatch.DrawString(_font, "Time Left: " + gameTimeLeft, new Vector2(_mainScene.GameBounds.X + 10, _mainScene.GameBounds.Y + 30), Color.White);
         
     }
 
     public override void Update(GameTime gameTime)
     {
-        
-        KMouse.CheckMouse();
-        if (KMouse.CheckLeftPress())
+        if (Core.Input.Mouse.CheckLeftPress())
         {
             foreach (Rectangle dough in doughGrid)
             {
-                if (dough.Contains(KMouse.MouseLocation()))
+                if (dough.Contains(Core.Input.Mouse.MouseLocation()))
                 {
                     clickedDough = dough;
                     break;
                 }
             }
         }
-        if (KMouse.CheckLeftRelease())
+        if (Core.Input.Mouse.CheckLeftRelease())
         {
-            if (IsAdjacentTile(KMouse.MouseLocation()) && clickedDough != Rectangle.Empty)
+            if (IsAdjacentTile(Core.Input.Mouse.MouseLocation()) && clickedDough != Rectangle.Empty)
             {
-                int newX = (int)(clickedDough.X + Math.Clamp(spriteSize * ((KMouse.MouseLocation().X - clickedDough.X - spriteSize / 2) / 200.0), -spriteSize, spriteSize));
-                int newY = (int)(clickedDough.Y + Math.Clamp(spriteSize * ((KMouse.MouseLocation().Y - clickedDough.Y - spriteSize / 2) / 200.0), -spriteSize, spriteSize));
+                int newX = (int)(clickedDough.X + Math.Clamp(spriteSize * ((Core.Input.Mouse.MouseLocation().X - clickedDough.X - spriteSize / 2) / 200.0), -spriteSize, spriteSize));
+                int newY = (int)(clickedDough.Y + Math.Clamp(spriteSize * ((Core.Input.Mouse.MouseLocation().Y - clickedDough.Y - spriteSize / 2) / 200.0), -spriteSize, spriteSize));
                 doughGrid.Add(new Rectangle(newX, newY, spriteSize, spriteSize));
             }
 
@@ -86,7 +99,7 @@ public class DoughGame : Minigame
             {
                 GameManager.PlayerInfo.inventory["Dough"] = collectedDough;
             }
-            MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
+            _mainScene.ChangeLowerTab(new SelectionScene(_mainScene));
         }
     }
     private bool IsAdjacentTile(Point point)

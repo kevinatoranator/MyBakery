@@ -36,20 +36,14 @@ public class ProductSelectorMenu : Component
             {
                 Button b = new UIButton(item.Key.ToString(), new Vector2(position.X, position.Y + 64 * number), 64, 64, () =>
                 {
-                    foreach (KeyValuePair<String, Product> itemdb in GameManager.ItemDB)
-                    {
-                        if (itemdb.Key == item.Key)
-                        {
-                            selectedProduct = item.Key;
-                        }
-                    }
+                    selectedProduct = item.Key;
                     Clicked = true;
                 });
                 _buttons.Add(b);
                 number += 1;
             }
         }
-        Button cancel = new UIButton("Cancel", new Vector2(position.X, position.Y + (GameManager.cancelSprite.Height * number)), 128, 64, () =>
+        Button cancel = new UIButton("Cancel", new Vector2(position.X, position.Y + (64 * number)), 128, 64, () =>
         {
             selectedProduct = "None";
             Clicked = true;

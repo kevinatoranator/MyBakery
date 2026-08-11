@@ -84,3 +84,11 @@ c:\Users\krinald\Desktop\CompSci\MyBakery\MyBakery\obj\Debug\net8.0\refint\MyBak
 c:\Users\krinald\Desktop\CompSci\MyBakery\MyBakery\obj\Debug\net8.0\MyBakery.pdb
 c:\Users\krinald\Desktop\CompSci\MyBakery\MyBakery\obj\Debug\net8.0\MyBakery.genruntimeconfig.cache
 c:\Users\krinald\Desktop\CompSci\MyBakery\MyBakery\obj\Debug\net8.0\ref\MyBakery.dll
+k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\Content\atlas-definition.xml
+k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\CoreLibrary.dll
+k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\CoreLibrary.pdb
+k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\Data\items.json
+k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\runtimes\win-arm64\native\openal.dll
+k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\runtimes\linux-arm64\native\libSDL2-2.0.so.0
+k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\runtimes\win-arm64\native\SDL2.dll
+k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\Data\playerProfile.json

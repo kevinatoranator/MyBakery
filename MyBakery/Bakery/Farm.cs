@@ -7,48 +7,56 @@ using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CoreLibrary.Graphics;
+using CoreLibrary.Input;
+using CoreLibrary;
+using CoreLibrary.Scenes;
+using MyBakery.Scenes;
 
 namespace MyBakery;
 
-public class Farm
+public class Farm : Scene
 {
     private List<List<Plot>> plots;
-    private TextureAtlas spriteSheet;
-    SpriteFont font;
+    private SpriteFont _font;
     private Sprite _dirt;
     private Vector2 farmOrigin;
-    private Crop wheat;
+    private DayScene _dayScene;
 
 
-    public Farm(TextureAtlas spriteSheet, SpriteFont font)
+    public Farm(DayScene dayScene) : base()
     {
+        _dayScene = dayScene;
+        
+    }
+    public override void Initialize()
+    {
+        farmOrigin = new Vector2(_dayScene.BakeryBounds.Left + 64, 64);
 
-        this.spriteSheet = spriteSheet;
-        this.font = font;
-        _dirt = spriteSheet.CreateSprite("Dirt");
-        wheat = new Crop(1, 4, new int[5] {10, 10, 10, 10, 10}, new Vector2(0, 576));
+        plots = new List<List<Plot>>() { new List<Plot>() { new Plot(farmOrigin), new Plot(new Vector2(_dayScene.BakeryBounds.Left + 128, 64)), new Plot(new Vector2(_dayScene.BakeryBounds.Left + 192, 64))},
+        new List<Plot>() { new Plot(new Vector2(_dayScene.BakeryBounds.Left + 64, 128)), new Plot(new Vector2(_dayScene.BakeryBounds.Left + 128, 128)), new Plot(new Vector2(_dayScene.BakeryBounds.Left + 192, 128))},
+        new List<Plot>() { new Plot(new Vector2(_dayScene.BakeryBounds.Left + 64, 192)), new Plot(new Vector2(_dayScene.BakeryBounds.Left + 128, 192)), new Plot(new Vector2(_dayScene.BakeryBounds.Left + 192, 192))} };
+        base.Initialize();
+    }
 
-        farmOrigin = new Vector2(GameManager.gameWidth / 3 + 64, 64);
-
-        plots = new List<List<Plot>>() { new List<Plot>() { new Plot(farmOrigin), new Plot(new Vector2(GameManager.gameWidth / 3 + 128, 64)), new Plot(new Vector2(GameManager.gameWidth / 3 + 192, 64))},
-        new List<Plot>() { new Plot(new Vector2(GameManager.gameWidth / 3 + 64, 128)), new Plot(new Vector2(GameManager.gameWidth / 3 + 128, 128)), new Plot(new Vector2(GameManager.gameWidth / 3 + 192, 128))},
-        new List<Plot>() { new Plot(new Vector2(GameManager.gameWidth / 3 + 64, 192)), new Plot(new Vector2(GameManager.gameWidth / 3 + 128, 192)), new Plot(new Vector2(GameManager.gameWidth / 3 + 192, 192))} };
+    public override void LoadContent()
+    {
+        _dirt = _dayScene.Atlas.CreateSprite("Dirt");
     }
 
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
-        KMouse.CheckMouse(); //Should this be in only 1 update method
-        if (KMouse.CheckLeftPress())
+        Core.Input.Mouse.CheckMouse(); //Should this be in only 1 update method
+        if (Core.Input.Mouse.CheckLeftPress())
         {
-            if (KMouse.MouseLocation().X > farmOrigin.X && KMouse.MouseLocation().X < farmOrigin.X + plots[0].Count * 64 &&
-            KMouse.MouseLocation().Y > farmOrigin.Y && KMouse.MouseLocation().Y < farmOrigin.Y + plots.Count * 64)
+            if (Core.Input.Mouse.MouseLocation().X > farmOrigin.X && Core.Input.Mouse.MouseLocation().X < farmOrigin.X + plots[0].Count * 64 &&
+            Core.Input.Mouse.MouseLocation().Y > farmOrigin.Y && Core.Input.Mouse.MouseLocation().Y < farmOrigin.Y + plots.Count * 64)
             {
-                int clickedTileX = (int)(KMouse.MouseLocation().X - farmOrigin.X) / 64;
-                int clickedTileY = (int)(KMouse.MouseLocation().Y - farmOrigin.Y) / 64;
+                int clickedTileX = (int)(Core.Input.Mouse.MouseLocation().X - farmOrigin.X) / 64;
+                int clickedTileY = (int)(Core.Input.Mouse.MouseLocation().Y - farmOrigin.Y) / 64;
                 Console.WriteLine("planted", clickedTileY, clickedTileX);
 
-                plots[clickedTileY][clickedTileX].crop = wheat;
+                plots[clickedTileY][clickedTileX].crop = new Crop(1, 4, new int[5] {10, 10, 10, 10, 10}, new AnimatedSprite(_dayScene.Atlas.GetAnimation("Wheat")));
                 plots[clickedTileY][clickedTileX].growthTime = 0;
                 plots[clickedTileY][clickedTileX].currentStage = 0;
             }
@@ -59,6 +67,9 @@ public class Farm
             {
                 if (plot.crop != null)
                 {
+                    plot.crop.AnimatedSprite.Update(gameTime);
+                    /*DEPRECATED
+                    
                     plot.growthTime += gameTime.ElapsedGameTime.TotalSeconds;
                     if (plot.growthTime > plot.crop.stageTimes[plot.currentStage])
                     {
@@ -68,7 +79,7 @@ public class Farm
                     if (plot.currentStage > plot.crop.stages)
                     {
                         plot.crop = null;
-                    }
+                    }*/ 
 
                 }
             }
@@ -84,7 +95,7 @@ public class Farm
                 _dirt.Draw(spriteBatch, plot.location);
                 if (plot.crop != null)
                 {
-                    spriteBatch.Draw(spriteSheet.Texture, plot.location, new Rectangle((int)(plot.crop.animationStart.X + 64 * plot.currentStage), (int)plot.crop.animationStart.Y, 64, 64), Color.White);
+                    plot.crop.AnimatedSprite.Draw(spriteBatch, plot.location);
                 }
             }
         }
@@ -110,14 +121,14 @@ public class Farm
         public int stages;
         public int cost;
         public int[] stageTimes;
-        public Vector2 animationStart; // should have a value that correlates to inventory items
+        public AnimatedSprite AnimatedSprite; // should have a value that correlates to inventory items
 
-        public Crop(int cost, int stages, int[] stageTimes, Vector2 animationStart)
+        public Crop(int cost, int stages, int[] stageTimes, AnimatedSprite animatedSprite)
         {
             this.cost = cost;
             this.stages = stages;
             this.stageTimes = stageTimes;
-            this.animationStart = animationStart;
+            AnimatedSprite = animatedSprite;
         }
     }
 }

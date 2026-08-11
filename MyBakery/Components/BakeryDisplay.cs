@@ -21,7 +21,7 @@ public class BakeryDisplay : Button, ShopObject
     public HashSet<Product.ProductQualities> DisplayQualities { get; set; }
     private Dictionary<String, Product> _products;
 
-    public BakeryDisplay(Vector2 location, SpriteFont font, Rectangle izone, String type, HashSet<Product.ProductQualities> displayQualities)
+    public BakeryDisplay(Vector2 location, SpriteFont font, Rectangle izone, String type, HashSet<Product.ProductQualities> displayQualities, Dictionary<String, Product> _items)
     {
         Location = location;
         _font = font;
@@ -29,8 +29,9 @@ public class BakeryDisplay : Button, ShopObject
         InteractZone = izone;
         Type = type;
         DisplayQualities = displayQualities;
+        product = "None";
         _products = new Dictionary<String, Product>();
-        foreach (KeyValuePair<String, Product> values in GameManager.ItemDB)
+        foreach (KeyValuePair<String, Product> values in _items)
         {
             bool valid = true;
             foreach (Product.ProductQualities qual in values.Value.ProductQualitiesSet)

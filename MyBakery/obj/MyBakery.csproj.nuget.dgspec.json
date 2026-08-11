@@ -1,25 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\krinald\\Desktop\\CompSci\\MyBakery\\MyBakery\\MyBakery.csproj": {}
+    "k:\\Programming\\Monogame\\MyBakery\\MyBakery\\MyBakery.csproj": {}
   },
   "projects": {
-    "c:\\Users\\krinald\\Desktop\\CompSci\\MyBakery\\CoreLibrary\\CoreLibrary.csproj": {
+    "k:\\Programming\\Monogame\\MyBakery\\CoreLibrary\\CoreLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\krinald\\Desktop\\CompSci\\MyBakery\\CoreLibrary\\CoreLibrary.csproj",
+        "projectUniqueName": "k:\\Programming\\Monogame\\MyBakery\\CoreLibrary\\CoreLibrary.csproj",
         "projectName": "CoreLibrary",
-        "projectPath": "c:\\Users\\krinald\\Desktop\\CompSci\\MyBakery\\CoreLibrary\\CoreLibrary.csproj",
-        "packagesPath": "C:\\Users\\krinald\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\krinald\\Desktop\\CompSci\\MyBakery\\CoreLibrary\\obj\\",
+        "projectPath": "k:\\Programming\\Monogame\\MyBakery\\CoreLibrary\\CoreLibrary.csproj",
+        "packagesPath": "C:\\Users\\kevgu\\.nuget\\packages\\",
+        "outputPath": "k:\\Programming\\Monogame\\MyBakery\\CoreLibrary\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\krinald\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\kevgu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -32,11 +37,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -65,34 +65,39 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.420/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "c:\\Users\\krinald\\Desktop\\CompSci\\MyBakery\\MyBakery\\MyBakery.csproj": {
+    "k:\\Programming\\Monogame\\MyBakery\\MyBakery\\MyBakery.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\krinald\\Desktop\\CompSci\\MyBakery\\MyBakery\\MyBakery.csproj",
+        "projectUniqueName": "k:\\Programming\\Monogame\\MyBakery\\MyBakery\\MyBakery.csproj",
         "projectName": "MyBakery",
-        "projectPath": "c:\\Users\\krinald\\Desktop\\CompSci\\MyBakery\\MyBakery\\MyBakery.csproj",
-        "packagesPath": "C:\\Users\\krinald\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\krinald\\Desktop\\CompSci\\MyBakery\\MyBakery\\obj\\",
+        "projectPath": "k:\\Programming\\Monogame\\MyBakery\\MyBakery\\MyBakery.csproj",
+        "packagesPath": "C:\\Users\\kevgu\\.nuget\\packages\\",
+        "outputPath": "k:\\Programming\\Monogame\\MyBakery\\MyBakery\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\krinald\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\kevgu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "c:\\Users\\krinald\\Desktop\\CompSci\\MyBakery\\CoreLibrary\\CoreLibrary.csproj": {
-                "projectPath": "c:\\Users\\krinald\\Desktop\\CompSci\\MyBakery\\CoreLibrary\\CoreLibrary.csproj"
+              "k:\\Programming\\Monogame\\MyBakery\\CoreLibrary\\CoreLibrary.csproj": {
+                "projectPath": "k:\\Programming\\Monogame\\MyBakery\\CoreLibrary\\CoreLibrary.csproj"
               }
             }
           }
@@ -101,11 +106,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -137,7 +137,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.420/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

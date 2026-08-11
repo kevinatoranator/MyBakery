@@ -1,0 +1,85 @@
+{
+  "Coin": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {},
+    "ProductQualitiesSet": []
+  },
+  "ChocoChip": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {},
+    "ProductQualitiesSet": []
+  },
+  "Dough": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {
+      "ChocoChip": 12,
+      "Flour": 12
+    },
+    "ProductQualitiesSet": []
+  },
+  "Cookie": {
+    "Value": 1,
+    "Sellable": true,
+    "Recipe": {
+      "Dough": 12
+    },
+    "ProductQualitiesSet": [
+      0
+    ]
+  },
+  "Apple": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {},
+    "ProductQualitiesSet": []
+  },
+  "Cherry": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {},
+    "ProductQualitiesSet": []
+  },
+  "Orange": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {},
+    "ProductQualitiesSet": []
+  },
+  "Jelly": {
+    "Value": 1,
+    "Sellable": true,
+    "Recipe": {},
+    "ProductQualitiesSet": []
+  },
+  "CoffeeBean": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {},
+    "ProductQualitiesSet": []
+  },
+  "Flour": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {
+      "Wheat": 10
+    },
+    "ProductQualitiesSet": []
+  },
+  "Wheat": {
+    "Value": 1,
+    "Sellable": false,
+    "Recipe": {},
+    "ProductQualitiesSet": []
+  },
+  "BoxedChocolate": {
+    "Value": 1,
+    "Sellable": true,
+    "Recipe": {
+      "ChocoChip": 10
+    },
+    "ProductQualitiesSet": []
+  }
+}

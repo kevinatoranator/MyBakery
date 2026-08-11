@@ -4,53 +4,61 @@ using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using CoreLibrary;
 using CoreLibrary.Graphics;
+using CoreLibrary.Input;
+using CoreLibrary.Scenes;
+using MyBakery.Scenes;
 
 namespace MyBakery;
 
 
-public class JellyGame : Minigame{
+public class JellyGame : Scene{
 
     const int spriteSize = 64;
     const float startingSize = 0.25f;
-    private Sprite jellySprite;
     private List<Jelly> jellies;
     private Jelly player;
     private int gameTimeLeft;
     private double timePassed, tick;
+    private DayScene _mainScene;
 
-    public override void Start(TextureAtlas spriteSheet, Texture2D background)
+    public JellyGame(DayScene main) : base()
     {
-        jellySprite = spriteSheet.CreateSprite("Jelly");
+        _mainScene = main;
+    }
+    public override void Initialize()
+    {
         timePassed = tick = 0;
         jellies = new List<Jelly>();
+        timePassed = 0;
 
+        base.Initialize();
+    }
+    public override void LoadContent()
+    {
         System.Random random = new System.Random();
         int red = random.Next(255);
         int green = random.Next(255);
         int blue = random.Next(255);
         Color newPlayerColor = new Color(red, green, blue);
-        player = new Jelly(new Vector2(gameXOrigin * 2, gameYOrigin + gameYOrigin / 2), startingSize, newPlayerColor, jellySprite);
-        
-        timePassed = 0;
+        player = new Jelly(new Vector2(_mainScene.GameBounds.X * 2, _mainScene.GameBounds.Y + _mainScene.GameBounds.Y / 2), startingSize, newPlayerColor, _mainScene.Atlas.CreateSprite("JellyBlob"), this);
         player.scale = startingSize;
         player.velocityX = 0;
         player.velocityY = 0;
-
     }
 
     public override void Update(GameTime gameTime){
-        KBoard.CheckKey();
-        if(KBoard.CheckKeyRelease(Keys.Left)){
+        if(Core.Input.Keyboard.CheckKeyPress(Keys.Left)){
             player.velocityX -= 1;
         }
-        if(KBoard.CheckKeyRelease(Keys.Right)){
+        if(Core.Input.Keyboard.CheckKeyPress(Keys.Right)){
             player.velocityX += 1;
         }
-        if(KBoard.CheckKeyRelease(Keys.Up)){
+        if(Core.Input.Keyboard.CheckKeyPress(Keys.Up)){
             player.velocityY -= 1;
         }
-        if(KBoard.CheckKeyRelease(Keys.Down)){
+        if(Core.Input.Keyboard.CheckKeyPress(Keys.Down)){
             player.velocityY += 1;
         }
         player.Update(gameTime);
@@ -61,11 +69,12 @@ public class JellyGame : Minigame{
 
         foreach(Jelly jelly in jellies.ToArray()){
             jelly.Update(gameTime);
-            if(jelly.X > GameManager.gameWidth || jelly.X < gameXOrigin - spriteSize * jelly.scale + 1|| jelly.Y > GameManager.gameHeight || jelly.Y < gameYOrigin - spriteSize * jelly.scale + 1)
+            if(jelly.X > _mainScene.GameBounds.Right || jelly.X < _mainScene.GameBounds.X - spriteSize * jelly.scale + 1|| jelly.Y > _mainScene.GameBounds.Bottom || jelly.Y < _mainScene.GameBounds.Top - spriteSize * jelly.scale + 1)
                 jellies.Remove(jelly);
             if(player.hitBox.Intersects(jelly.hitBox)){
                 if(player.scale >= jelly.scale){
                     player.scale += jelly.scale*0.25f/player.scale;
+                    player.sprite.Scale = new Vector2(player.scale, player.scale);
                 }else{
                     EndGame();
                 }
@@ -76,8 +85,8 @@ public class JellyGame : Minigame{
 
         if(tick > 1){
             System.Random random = new System.Random();
-            int xSpawn = random.Next(gameXOrigin, GameManager.gameWidth);
-            int ySpawn = random.Next(gameYOrigin, GameManager.gameHeight);
+            int xSpawn = random.Next(_mainScene.GameBounds.X, _mainScene.GameBounds.Right);
+            int ySpawn = random.Next(_mainScene.GameBounds.Y, _mainScene.GameBounds.Bottom);
             float spawnSize = (float)(random.NextDouble()*player.scale*2);
             int red = random.Next(255);
             int green = random.Next(255);
@@ -90,37 +99,37 @@ public class JellyGame : Minigame{
 
             switch(spawnEdge){
                 case 0://Top
-                    spawnLocation = new Vector2(xSpawn, gameYOrigin - spawnSize*spriteSize + 1);
+                    spawnLocation = new Vector2(xSpawn, _mainScene.GameBounds.Y - spawnSize*spriteSize + 1);
                     spawnVelocityX = (float)(random.NextDouble()*6)-3;
                     spawnVelocityY = (float)(random.NextDouble()*3);
                     break;
                 case 1://Right
-                    spawnLocation = new Vector2(GameManager.gameWidth, ySpawn);
+                    spawnLocation = new Vector2(_mainScene.GameBounds.Right, ySpawn);
                     spawnVelocityX = (float)(random.NextDouble()*-3);
                     spawnVelocityY = (float)(random.NextDouble()*6)-3;
                     break;
                 case 2://Bottom
-                    spawnLocation = new Vector2(xSpawn, GameManager.gameHeight);
+                    spawnLocation = new Vector2(xSpawn, _mainScene.GameBounds.Bottom);
                     spawnVelocityX = (float)(random.NextDouble()*6)-3;
                     spawnVelocityY = (float)(random.NextDouble()*-3);
                     break;
                 case 3://Left
-                    spawnLocation = new Vector2(gameXOrigin - spawnSize*spriteSize + 1, ySpawn);
+                    spawnLocation = new Vector2(_mainScene.GameBounds.X - spawnSize*spriteSize + 1, ySpawn);
                     spawnVelocityX = (float)(random.NextDouble()*3);
                     spawnVelocityY = (float)(random.NextDouble()*6)-3;
                     break;
             }
 
-            jellies.Add(new Jelly(spawnLocation, spawnSize, spawnColor, jellySprite){velocityX = spawnVelocityX, velocityY = spawnVelocityY});
+            jellies.Add(new Jelly(spawnLocation, spawnSize, spawnColor, _mainScene.Atlas.CreateSprite("JellyBlob"), this){velocityX = spawnVelocityX, velocityY = spawnVelocityY});
             tick = 0;
         }
 
     }
 
-    public override void Draw(SpriteFont font, SpriteBatch spriteBatch){
-        player.Draw(spriteBatch);
+    public override void Draw(GameTime gameTime){
+        player.Draw(Core.SpriteBatch);
         foreach(Jelly jelly in jellies)
-            jelly.Draw(spriteBatch);
+            jelly.Draw(Core.SpriteBatch);
     }
 
     private void EndGame(){
@@ -134,31 +143,35 @@ public class JellyGame : Minigame{
             }
         
         jellies.Clear();
-        MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
+        _mainScene.ChangeLowerTab(new SelectionScene(_mainScene));
     }
 
 
     private class Jelly : PhysicsObject{
+        private JellyGame _game;
 
-        public Jelly(Vector2 location, float size, Color color, Sprite sprite) : base(){
+        public Jelly(Vector2 location, float size, Color color, Sprite sprite, JellyGame game) : base(){
             _x = location.X;
             _y = location.Y;
             this.color = color;
+            sprite.color = color;
+            sprite.Scale = new Vector2(size, size);
             scale = size;
             rotation = 0;
             this.sprite = sprite;
+            _game = game;
         }
 
         public void Update(GameTime gameTime){
             
-            if(_x < (int)GameManager.bottomScreenOrigin.X - spriteSize * scale)
-                _x = GameManager.gameWidth;
-            else if(_x > GameManager.gameWidth + 1)
-                _x = (int)GameManager.bottomScreenOrigin.X;
-            if(_y < (int)GameManager.bottomScreenOrigin.Y - spriteSize * scale)
-                _y = GameManager.gameHeight;
-            else if(_y > GameManager.gameHeight + 1)
-                _y = (int)GameManager.bottomScreenOrigin.Y;
+            if(_x < _game._mainScene.GameBounds.Left - spriteSize * scale)
+                _x = _game._mainScene.GameBounds.Right;
+            else if(_x > _game._mainScene.GameBounds.Right + 1)
+                _x = _game._mainScene.GameBounds.Left;
+            if(_y < _game._mainScene.GameBounds.Top - spriteSize * scale)
+                _y = _game._mainScene.GameBounds.Bottom;
+            else if(_y > _game._mainScene.GameBounds.Bottom + 1)
+                _y = _game._mainScene.GameBounds.Top;
             UpdateLocation();
             
         }

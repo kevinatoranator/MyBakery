@@ -4,14 +4,14 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/Brown64S.png</File>
-    <File>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/Font.spritefont</File>
-    <File>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/Green64.png</File>
-    <File>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/Red64.png</File>
-    <File>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/Button.png</File>
-    <File>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/SpriteSheet.png</File>
-    <File>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/Bakery1.png</File>
-    <File>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/chocofall_bg.png</File>
+    <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/Brown64S.png</File>
+    <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/Font.spritefont</File>
+    <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/Green64.png</File>
+    <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/Red64.png</File>
+    <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/Button.png</File>
+    <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/SpriteSheet.png</File>
+    <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/Bakery1.png</File>
+    <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/chocofall_bg.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

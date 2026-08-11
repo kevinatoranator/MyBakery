@@ -5,11 +5,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CoreLibrary.Graphics;
+using CoreLibrary.Input;
+using CoreLibrary;
+using MyBakery.Scenes;
+using CoreLibrary.Scenes;
 
 namespace MyBakery;
 
 
-public class CoffeeSnakeGame: Minigame{
+public class CoffeeSnakeGame: Scene{
 
     private enum Direction{
         North,
@@ -25,36 +29,44 @@ public class CoffeeSnakeGame: Minigame{
     private static float playerSpeed;
     private static List<PhysicsObject> availableBeans = new List<PhysicsObject>();
     private static List<Player> snake = new List<Player>();
+    private DayScene _mainScene;
 
-    public override void Start(TextureAtlas spriteSheet, Texture2D background)
+    public CoffeeSnakeGame(DayScene main) : base()
     {
-        playerSprite = spriteSheet.CreateSprite("ToastDog");
-        coffeeSprite = spriteSheet.CreateSprite("CoffeeBean");
-        player = new Player(new Vector2(gameXOrigin*2, gameYOrigin + gameYOrigin/2), playerSprite);
-        snake.Add(player);
+        _mainScene = main;
+    }
+    public override void Initialize()
+    {
+        
         //snake.Add(new Player(new Vector2(gameXOrigin*2 + 70, gameYOrigin + gameYOrigin/2), coffeeSprite));
         playerSpeed = 2;
-
+        base.Initialize();
+    }
+    public override void LoadContent()
+    {
+        playerSprite = _mainScene.Atlas.CreateSprite("ToastDog");
+        coffeeSprite = _mainScene.Atlas.CreateSprite("CoffeeBean");
+        player = new Player(new Vector2(_mainScene.GameBounds.X*2, _mainScene.GameBounds.Y + _mainScene.GameBounds.Y/2), playerSprite);
+        snake.Add(player);
     }
 
     public override void Update(GameTime gameTime){
-        KBoard.CheckKey();
-        if(KBoard.CheckKeyRelease(Keys.Left) && player.velocityX == 0){
+        if(Core.Input.Keyboard.CheckKeyPress(Keys.Left) && player.velocityX == 0){
             player.velocityX = -playerSpeed;
             player.velocityY = 0;
             player.nextMoves.Add((new Vector2(player.X, player.Y), Direction.West));
         }
-        if(KBoard.CheckKeyRelease(Keys.Right) && player.velocityX == 0){
+        if(Core.Input.Keyboard.CheckKeyPress(Keys.Right) && player.velocityX == 0){
             player.velocityX = playerSpeed;
             player.velocityY = 0;
             player.nextMoves.Add((new Vector2(player.X, player.Y), Direction.East));
         }
-        if(KBoard.CheckKeyRelease(Keys.Up) && player.velocityY == 0){
+        if(Core.Input.Keyboard.CheckKeyPress(Keys.Up) && player.velocityY == 0){
             player.velocityY = -playerSpeed;
             player.velocityX = 0;
             player.nextMoves.Add((new Vector2(player.X, player.Y), Direction.North));
         }
-        if(KBoard.CheckKeyRelease(Keys.Down) && player.velocityY == 0){
+        if(Core.Input.Keyboard.CheckKeyPress(Keys.Down) && player.velocityY == 0){
             player.velocityY = playerSpeed;
             player.velocityX = 0;
             player.nextMoves.Add((new Vector2(player.X, player.Y), Direction.South));
@@ -64,14 +76,14 @@ public class CoffeeSnakeGame: Minigame{
         }
         player.Update(gameTime);
 
-        if(player.X < gameXOrigin || player.X > GameManager.gameWidth - 63 || player.Y < gameYOrigin || player.Y > GameManager.gameHeight - 96){
+        if(player.X < _mainScene.GameBounds.X || player.X > _mainScene.GameBounds.Right - 63 || player.Y < _mainScene.GameBounds.Y || player.Y > _mainScene.GameBounds.Bottom - 96){
             EndGame();
         }
 
         if(availableBeans.Count < 1){
             Random rand = new Random();
-            int spawnX = rand.Next(gameXOrigin, GameManager.gameWidth-64);
-            int spawnY = rand.Next(gameYOrigin, GameManager.gameHeight-96);    
+            int spawnX = rand.Next(_mainScene.GameBounds.X, _mainScene.GameBounds.Right-64);
+            int spawnY = rand.Next(_mainScene.GameBounds.Y, _mainScene.GameBounds.Bottom-96);    
             availableBeans.Add(new Player(new Vector2(spawnX, spawnY), coffeeSprite));
         }
         foreach(Player bean in availableBeans.ToArray()){
@@ -149,13 +161,13 @@ public class CoffeeSnakeGame: Minigame{
         }
     }
 
-    public override void Draw(SpriteFont font, SpriteBatch spriteBatch){
-        player.Draw(spriteBatch);
+    public override void Draw(GameTime gameTime){
+        player.Draw(Core.SpriteBatch);
         foreach(Player part in snake){
-            part.Draw(spriteBatch);
+            part.Draw(Core.SpriteBatch);
         }
         foreach(Player bean in availableBeans){
-            bean.Draw(spriteBatch);
+            bean.Draw(Core.SpriteBatch);
         }
     }
 
@@ -170,11 +182,8 @@ public class CoffeeSnakeGame: Minigame{
             }
         availableBeans.Clear();
         snake.Clear();
-        MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
+        _mainScene.ChangeLowerTab(new SelectionScene(_mainScene));
     }
-
-
-
     private class Player : PhysicsObject{
 
         public List<(Vector2, Direction)> nextMoves = new List<(Vector2, Direction)>();

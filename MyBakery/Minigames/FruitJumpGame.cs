@@ -5,62 +5,78 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CoreLibrary.Graphics;
+using MyBakery.Scenes;
+using CoreLibrary.Scenes;
+using CoreLibrary;
 
 namespace MyBakery;
 
 
-public class FruitJumpGame : Minigame{
+public class FruitJumpGame : Scene{
     
     const int spriteSize = 64;
     const float fallSpeed = 6.5f;
 
     private Sprite orangeSprite, cherrySprite, appleSprite, playerSprite;
-    private Texture2D bg;
+    //private Texture2D bg;
     private List<Fruit> fruits;
     private Player player1, player2, activePlayer, passivePlayer;
     private int collectedOranges, collectedCherries, collectedApples, gameTimeLeft;
     private double timePassed, tick;
-    public override void Start(TextureAtlas spriteSheet, Texture2D background)
+    private DayScene _mainScene;
+    private SpriteFont _font;
+    
+
+    public FruitJumpGame(DayScene main) : base()
+    {
+        _mainScene = main;
+    }
+    public override void Initialize()
     {
         collectedOranges = collectedCherries = collectedApples = 0;
-        orangeSprite = spriteSheet.CreateSprite("Orange");
-        cherrySprite = spriteSheet.CreateSprite("Cherry");
-        appleSprite = spriteSheet.CreateSprite("Apple");
-        playerSprite = spriteSheet.CreateSprite("ToastDog");
-        bg = background;
-
-
-        player1 = new Player(new Vector2(gameXOrigin*1.5f, GameManager.gameHeight-100), playerSprite, true);
-        player2 = new Player(new Vector2(gameXOrigin*2.5f, GameManager.gameHeight-100), playerSprite, false);
         fruits = new List<Fruit>();
         timePassed = tick = 0;
+        
+        base.Initialize();
+    }
+
+    public override void LoadContent()
+    {
+        orangeSprite = _mainScene.Atlas.CreateSprite("Orange");
+        cherrySprite = _mainScene.Atlas.CreateSprite("Cherry");
+        appleSprite = _mainScene.Atlas.CreateSprite("Apple");
+        playerSprite = _mainScene.Atlas.CreateSprite("ToastDog");
+        _font = Content.Load<SpriteFont>("font");
+
+
+        player1 = new Player(new Vector2(_mainScene.GameBounds.X*1.5f, _mainScene.GameBounds.Bottom-100), playerSprite, true, this);
+        player2 = new Player(new Vector2(_mainScene.GameBounds.X*2.5f, _mainScene.GameBounds.Bottom-100), playerSprite, false, this);
         activePlayer = player1;
         passivePlayer = player2;
     }
 
-    public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
+    public override void Draw(GameTime gameTime)
     {
 
-        spriteBatch.Draw(bg, new Rectangle(gameXOrigin, gameYOrigin, GameManager.gameWidth*2/3, GameManager.gameHeight/2), Color.Beige);
         foreach(Fruit f in fruits){
-            f.Draw(spriteBatch);
+            f.Draw(Core.SpriteBatch);
         }
-        player1.Draw(spriteBatch);
-        player2.Draw(spriteBatch);
-        spriteBatch.DrawString(font, "Apples: " + collectedApples, new Vector2(gameXOrigin, gameYOrigin), Color.Black);
-        spriteBatch.DrawString(font, "Cherries: " + collectedCherries, new Vector2(gameXOrigin, gameYOrigin+32), Color.Black);
-        spriteBatch.DrawString(font, "Oranges: " + collectedOranges, new Vector2(gameXOrigin, gameYOrigin+64), Color.Black);
-        spriteBatch.DrawString(font, "Time Left: " + gameTimeLeft, new Vector2(gameXOrigin, gameYOrigin+96), Color.Black);
+        player1.Draw(Core.SpriteBatch);
+        player2.Draw(Core.SpriteBatch);
+        Core.SpriteBatch.DrawString(_font, "Apples: " + collectedApples, new Vector2(_mainScene.GameBounds.X, _mainScene.GameBounds.Y), Color.Black);
+        Core.SpriteBatch.DrawString(_font, "Cherries: " + collectedCherries, new Vector2(_mainScene.GameBounds.X, _mainScene.GameBounds.Y+32), Color.Black);
+        Core.SpriteBatch.DrawString(_font, "Oranges: " + collectedOranges, new Vector2(_mainScene.GameBounds.X, _mainScene.GameBounds.Y+64), Color.Black);
+        Core.SpriteBatch.DrawString(_font, "Time Left: " + gameTimeLeft, new Vector2(_mainScene.GameBounds.X, _mainScene.GameBounds.Y+96), Color.Black);
 
     }
 
     public override void Update(GameTime gameTime)
     {
-        if(Keyboard.GetState().IsKeyDown(Keys.Left) && activePlayer.X > gameXOrigin)
+        if(Keyboard.GetState().IsKeyDown(Keys.Left) && activePlayer.X > _mainScene.GameBounds.X)
             activePlayer.velocityX = -3;
-        if(Keyboard.GetState().IsKeyDown(Keys.Right) && activePlayer.X < GameManager.gameWidth-spriteSize)
+        if(Keyboard.GetState().IsKeyDown(Keys.Right) && activePlayer.X < _mainScene.GameBounds.Right-spriteSize)
             activePlayer.velocityX = 3;
-        if(activePlayer.Y > GameManager.gameHeight - 100){
+        if(activePlayer.Y > _mainScene.GameBounds.Bottom - 100){
             if(activePlayer == player1){
                 activePlayer = player2;
                 passivePlayer = player1;
@@ -111,12 +127,12 @@ public class FruitJumpGame : Minigame{
                 GameManager.PlayerInfo.inventory["Orange"] = collectedOranges;
             }
             
-            MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
+            _mainScene.ChangeLowerTab(new SelectionScene(_mainScene));
         }else{
             Random rand = new();
             int spawnChance = rand.Next(100)+1;
-            int xlocation = (int)(rand.Next(GameManager.gameWidth-gameXOrigin-96)/2 + passivePlayer.leftBound);
-            int ylocation = rand.Next(GameManager.gameHeight - gameYOrigin - gameYOrigin*2/3) + gameYOrigin;
+            int xlocation = (int)(rand.Next(_mainScene.GameBounds.Width-96)/2 + passivePlayer.leftBound);
+            int ylocation = rand.Next(_mainScene.GameBounds.Height - _mainScene.GameBounds.Y*2/3) + _mainScene.GameBounds.Y;
             String sType = "";
             Sprite randSprite;
             if(spawnChance > 67){
@@ -166,7 +182,8 @@ public class FruitJumpGame : Minigame{
     private class Player : PhysicsObject{
         public Boolean Active;
         public float rightBound, leftBound;
-        public Player(Vector2 location, Sprite sprite, Boolean active) : base(){
+        private FruitJumpGame _game;
+        public Player(Vector2 location, Sprite sprite, Boolean active, FruitJumpGame game) : base(){
             _x = location.X;
             _y = location.Y;
             this.sprite = sprite;
@@ -174,14 +191,15 @@ public class FruitJumpGame : Minigame{
             velocityY = 0; 
             rotation = 0;
             Active = active;
-            rightBound = _x + (GameManager.gameWidth - (int)GameManager.bottomScreenOrigin.X)/4;
-            leftBound = _x - (GameManager.gameWidth - (int)GameManager.bottomScreenOrigin.X)/4;
+            _game = game;
+            rightBound = _x + _game._mainScene.GameBounds.Width / 4;
+            leftBound = _x - _game._mainScene.GameBounds.Width / 4;
         }
 
         public void Update(GameTime gameTime){
             if((_x < leftBound && velocityX < 0) || (_x > rightBound - 64 && velocityX > 0))
                 velocityX = 0;
-            if((_y < (int)GameManager.bottomScreenOrigin.Y && velocityY < 0)|| _y > GameManager.gameHeight)
+            if((_y < _game._mainScene.GameBounds.Top && velocityY < 0)|| _y > _game._mainScene.GameBounds.Bottom)
                 velocityY = 0;
             UpdateLocation();
         }

@@ -60,10 +60,10 @@ public class Register : Button, ShopObject
     {
         foreach (Button button in buttons)
         {
-            button.Draw(spriteBatch, _font, spriteSheet.CreateSprite("button"));
+            button.Draw(spriteBatch, _font, spriteSheet.CreateSprite("Button"));
         }
         if (employee != null)
-            spriteSheet.CreateSprite(employee.Name).Draw(spriteBatch, new Vector2(Location.X, Location.Y - 32));
+            spriteSheet.CreateSprite("ToastDog").Draw(spriteBatch, new Vector2(Location.X, Location.Y - 32));//sprite made with employee.Name temp for testing
             
         spriteSheet.CreateSprite(Type).Draw(spriteBatch, Location);
     }

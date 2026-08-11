@@ -1,67 +1,87 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GeneralUtil;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CoreLibrary.Graphics;
+using CoreLibrary.Scenes;
+using MyBakery.Scenes;
+using CoreLibrary;
 
 namespace MyBakery;
 
-public class ChocoGame : Minigame
+public class ChocoGame : Scene
 {
     const int spriteSize = 64;
 
     //Chocogame
-    private Sprite chocoSprite, playerSprite, emberSprite, progressFront, progressBack;
+    private Sprite chocoSprite, playerSprite, emberSprite, progressFront, progressBack, bgSprite;
     private Texture2D bg;
     private List<FallingObject> fallingObjects;
     private Player player;
     private int collectedChocolate, gameTimeLeft, quota;
     private double timePassed;
+    private DayScene _mainScene;
+    private SpriteFont _font;
 
     private ProgressBar timerBar, quotaBar;
 
-    public override void Start(TextureAtlas spriteSheet, Texture2D background)
+    public ChocoGame(DayScene main) : base()
     {
-        playerSprite = spriteSheet.CreateSprite("ToastDog");
-        chocoSprite = spriteSheet.CreateSprite("ChocoChip");
-        emberSprite = spriteSheet.CreateSprite("Ember");
-        progressFront = spriteSheet.CreateSprite("ProgressFront");
-        progressBack = spriteSheet.CreateSprite("ProgressBack");
-        bg = background;
+        _mainScene = main;
+    }
+
+    public override void LoadContent()
+    {
+        _font = Content.Load<SpriteFont>("font");
+        bg = Content.Load<Texture2D>("chocofall_bg");
+        bgSprite = new Sprite(new TextureRegion(bg, 0, 0, bg.Width, bg.Height));
+        bgSprite.Scale *= 2;
+        playerSprite = _mainScene.Atlas.CreateSprite("ToastDog");
+        chocoSprite = _mainScene.Atlas.CreateSprite("ChocoChip");
+        emberSprite = _mainScene.Atlas.CreateSprite("Ember");
+        progressFront = _mainScene.Atlas.CreateSprite("ProgressFront");
+        progressBack = _mainScene.Atlas.CreateSprite("ProgressBack");
+
+        timerBar = new ProgressBar(progressFront, progressBack, 60, 60, new Vector2(_mainScene.GameBounds.Left + 10, _mainScene.GameBounds.Top + 30), false);
+        quotaBar = new ProgressBar(progressFront, progressBack, quota, 0, new Vector2(_mainScene.GameBounds.Left + 10, _mainScene.GameBounds.Top + 130), false);
+        
+    }
+
+    public override void Initialize()
+    {
+        
+        
 
         fallingObjects = new List<FallingObject>();
 
-        player = new Player() { location = new Vector2(gameXOrigin * 2, GameManager.gameHeight - 100) };
+        player = new Player() { location = new Vector2(_mainScene.GameBounds.Left * 2, _mainScene.GameBounds.Bottom - 100) };
         collectedChocolate = 0;
         timePassed = 0;
         quota = 20; //Make dynamic based on... average?
 
-        timerBar = new ProgressBar(progressFront, progressBack, 60, 60, new Vector2(gameXOrigin + 10, gameYOrigin + 30), false);
-        quotaBar = new ProgressBar(progressFront, progressBack, quota, 0, new Vector2(gameXOrigin + 10, gameYOrigin + 130), false);
+        base.Initialize();
 
     }
 
-    public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
+    public override void Draw(GameTime gameTime)
     {
                 //Chocogame
 
-        spriteBatch.Draw(bg, new Rectangle(gameXOrigin, gameYOrigin, GameManager.gameWidth*2/3, GameManager.gameHeight/2), Color.White);
-        timerBar.Draw(spriteBatch);
-        spriteBatch.DrawString(font, "Chocolate Quota: ", new Vector2(gameXOrigin + 10, gameYOrigin + 100), Color.Black);
-        quotaBar.Draw(spriteBatch);
+        bgSprite.Draw(Core.SpriteBatch, new Vector2(_mainScene.GameBounds.X, _mainScene.GameBounds.Y));
+        timerBar.Draw(Core.SpriteBatch);
+        Core.SpriteBatch.DrawString(_font, "Chocolate Quota: ", new Vector2(_mainScene.GameBounds.X + 10, _mainScene.GameBounds.Y + 100), Color.Black);
+        quotaBar.Draw(Core.SpriteBatch);
 
         foreach(FallingObject o in fallingObjects){
             if(o.type == "chocolate")
-                chocoSprite.Draw(spriteBatch, o.location);
+                chocoSprite.Draw(Core.SpriteBatch, o.location);
             else if(o.type == "ember")
-                emberSprite.Draw(spriteBatch, o.location);
+                emberSprite.Draw(Core.SpriteBatch, o.location);
         }
 
-        playerSprite.Draw(spriteBatch, player.location);
+        playerSprite.Draw(Core.SpriteBatch, player.location);
 
     }
 
@@ -69,9 +89,9 @@ public class ChocoGame : Minigame
     {
         //Chocogame
 
-        if(Keyboard.GetState().IsKeyDown(Keys.Left) && player.location.X > gameXOrigin)
+        if(Keyboard.GetState().IsKeyDown(Keys.Left) && player.location.X > _mainScene.GameBounds.X)
             player.location = new Vector2(player.location.X - 7, player.location.Y);
-        if(Keyboard.GetState().IsKeyDown(Keys.Right) && player.location.X < GameManager.gameWidth-spriteSize)
+        if(Keyboard.GetState().IsKeyDown(Keys.Right) && player.location.X < _mainScene.GameBounds.Right-spriteSize)
             player.location = new Vector2(player.location.X + 7, player.location.Y);
 
         timePassed += gameTime.ElapsedGameTime.TotalSeconds;
@@ -92,18 +112,18 @@ public class ChocoGame : Minigame
                 GameManager.PlayerInfo.inventory["ChocoChip"] = collectedChocolate;
             }
             
-            MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
+            _mainScene.ChangeLowerTab(new SelectionScene(_mainScene));
         }
 
         if(gameTimeLeft > 0){
             Random rand = new();
             int spawnChance = rand.Next(100)+1;
-            int xlocation = rand.Next(GameManager.gameWidth-gameXOrigin-spriteSize) + gameXOrigin;
+            int xlocation = rand.Next(_mainScene.GameBounds.Width-spriteSize) + _mainScene.GameBounds.X;
             int fallSpeed = rand.Next(5)+2;
             if(spawnChance > 98){
-                fallingObjects.Add(new FallingObject(){location = new Vector2(xlocation, gameYOrigin), fallSpeed = fallSpeed, type="chocolate"});
+                fallingObjects.Add(new FallingObject(){location = new Vector2(xlocation, _mainScene.GameBounds.Y), fallSpeed = fallSpeed, type="chocolate"});
             }else if(spawnChance == 1){
-                fallingObjects.Add(new FallingObject(){location = new Vector2(xlocation, gameYOrigin), fallSpeed = fallSpeed, type="ember"});
+                fallingObjects.Add(new FallingObject(){location = new Vector2(xlocation, _mainScene.GameBounds.Y), fallSpeed = fallSpeed, type="ember"});
             }
         }
 
@@ -139,6 +159,34 @@ public class ChocoGame : Minigame
         public Vector2 location{
             get => _location;
             set => _location = value;
+        }
+    }
+
+    private class FallingObject
+    {
+        Vector2 _location;
+        int _fallSpeed;
+        String _type;
+
+        public Vector2 location
+        {
+            get => _location;
+            set => _location = value;
+        }
+        public int fallSpeed
+        {
+            get => _fallSpeed;
+            set => _fallSpeed = value;
+        }
+        public String type
+        {
+            get => _type;
+            set => _type = value;
+        }
+
+        public Rectangle hitBox
+        {
+            get => new Rectangle((int)location.X, (int)location.Y, 64, 64);
         }
     }
 }

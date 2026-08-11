@@ -7,10 +7,13 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CoreLibrary.Graphics;
+using CoreLibrary.Scenes;
+using MyBakery.Scenes;
+using CoreLibrary;
 
 namespace MyBakery;
 
-public class BakingGame : Minigame
+public class BakingGame : Scene
 {
 
     const int spriteSize = 64;
@@ -24,62 +27,69 @@ public class BakingGame : Minigame
     private Point mousePos;
     private Item heldItem;
     private ProgressBar timerBar, quotaBar, tempBar;
-    Texture2D bg;
-    public override void Start(TextureAtlas spriteSheet, Texture2D background)
+    //Texture2D bg;
+    private DayScene _mainScene;
+
+    public BakingGame(DayScene main) : base()
     {
-
-        //BakingGame
-        ovenSprite = spriteSheet.CreateSprite("Oven");
-        matchSprite = spriteSheet.CreateSprite("Match");
-        woodSprite = spriteSheet.CreateSprite("Wood");
-        iceSprite = spriteSheet.CreateSprite("Ice");
-        matchBoxSprite = spriteSheet.CreateSprite("MatchBox");
-        ovenPos = new Vector2(gameXOrigin + 100, gameYOrigin + 100);
-        pilePos = new Vector2(gameXOrigin + 400, gameYOrigin + 100);
-        progressFront = spriteSheet.CreateSprite("ProgressFront");
-        progressBack = spriteSheet.CreateSprite("ProgressBack");
-        tempFront = spriteSheet.CreateSprite("TempFront");
-        tempBack = spriteSheet.CreateSprite("TempBack");
-        bg = background;
-
+        _mainScene = main;
+    }
+    public override void Initialize()
+    {
         bakedGoods = 0;
         timePassed = 0;
         previousTime = 30;
         idealTemp = 800;
         currentTemp = 800;
         quota = 20; //Make dynamic based on... average?
+        base.Initialize();
+    }
+    public override void LoadContent()
+    {
 
-        timerBar = new ProgressBar(progressFront, progressBack, previousTime, previousTime, new Vector2(gameXOrigin + 10, gameYOrigin + 30), false);
-        quotaBar = new ProgressBar(progressFront, progressBack, quota, bakedGoods, new Vector2(gameXOrigin + 10, gameYOrigin + 130), false);
-        tempBar = new ProgressBar(tempFront, tempBack, 1000, currentTemp, new Vector2(1240, gameYOrigin + 30), true);
+        //BakingGame
+        ovenSprite = _mainScene.Atlas.CreateSprite("Oven");
+        matchSprite = _mainScene.Atlas.CreateSprite("Match");
+        woodSprite = _mainScene.Atlas.CreateSprite("Wood");
+        iceSprite = _mainScene.Atlas.CreateSprite("Ice");
+        matchBoxSprite = _mainScene.Atlas.CreateSprite("MatchBox");
+        ovenPos = new Vector2(_mainScene.GameBounds.X + 100, _mainScene.GameBounds.Y + 100);
+        pilePos = new Vector2(_mainScene.GameBounds.X + 400, _mainScene.GameBounds.Y + 100);
+        progressFront = _mainScene.Atlas.CreateSprite("ProgressFront");
+        progressBack = _mainScene.Atlas.CreateSprite("ProgressBack");
+        tempFront = _mainScene.Atlas.CreateSprite("TempFront");
+        tempBack = _mainScene.Atlas.CreateSprite("TempBack");
+
+        timerBar = new ProgressBar(progressFront, progressBack, previousTime, previousTime, new Vector2(_mainScene.GameBounds.X + 10, _mainScene.GameBounds.Y + 30), false);
+        quotaBar = new ProgressBar(progressFront, progressBack, quota, bakedGoods, new Vector2(_mainScene.GameBounds.X + 10, _mainScene.GameBounds.Y + 130), false);
+        tempBar = new ProgressBar(tempFront, tempBack, 1000, currentTemp, new Vector2(1240, _mainScene.GameBounds.Y + 30), true);
     }
 
 
-    public override void Draw(SpriteFont font, SpriteBatch spriteBatch)
+    public override void Draw(GameTime gameTime)
     {
         //BakingGame
-        spriteBatch.Draw(bg, new Rectangle(gameXOrigin, gameYOrigin, GameManager.gameWidth*2/3, GameManager.gameHeight/2), Color.White);
 
-        ovenSprite.Draw(spriteBatch, ovenPos);
-        matchBoxSprite.Draw(spriteBatch, pilePos);
+        ovenSprite.Draw(Core.SpriteBatch, ovenPos);
+        matchBoxSprite.Draw(Core.SpriteBatch, pilePos);
 
         Vector2 itemPos = new Vector2(mousePos.X-spriteSize/2, mousePos.Y-spriteSize);
         if(heldItem is not null){
             if(heldItem.type == "ice")
-                iceSprite.Draw(spriteBatch, itemPos);
+                iceSprite.Draw(Core.SpriteBatch, itemPos);
             else if(heldItem.type == "wood")
-                woodSprite.Draw(spriteBatch, itemPos);
+                woodSprite.Draw(Core.SpriteBatch, itemPos);
             else
-                matchSprite.Draw(spriteBatch, itemPos);
+                matchSprite.Draw(Core.SpriteBatch, itemPos);
         }
 
         /*if(bakedGoods < quota)
             spriteBatch.DrawString(font, "Baked Foods: " + bakedGoods +"/"+quota, new Vector2(gameXOrigin + 10, gameYOrigin + 10), Color.Red);
         else
             spriteBatch.DrawString(font, "Baked Foods: " + bakedGoods +"/"+quota, new Vector2(gameXOrigin + 10, gameYOrigin + 10), Color.Green);*/
-        quotaBar.Draw(spriteBatch);
+        quotaBar.Draw(Core.SpriteBatch);
         //spriteBatch.DrawString(font, "Time Left: " + gameTimeLeft, new Vector2(gameXOrigin + 10, gameYOrigin + 30), Color.Black);
-        timerBar.Draw(spriteBatch);
+        timerBar.Draw(Core.SpriteBatch);
         
         /*if(currentTemp < idealTemp - 100)
             spriteBatch.DrawString(font, "Temp: " + currentTemp, new Vector2(gameXOrigin + 10, gameYOrigin + 50), Color.Blue);
@@ -87,7 +97,7 @@ public class BakingGame : Minigame
             spriteBatch.DrawString(font, "Temp: " + currentTemp, new Vector2(gameXOrigin + 10, gameYOrigin + 50), Color.Red);
         else
             spriteBatch.DrawString(font, "Temp: " + currentTemp, new Vector2(gameXOrigin + 10, gameYOrigin + 50), Color.Green);*/
-        tempBar.Draw(spriteBatch);
+        tempBar.Draw(Core.SpriteBatch);
 
     }
 
@@ -99,7 +109,7 @@ public class BakingGame : Minigame
         //BakingGame
         currentMouse = Mouse.GetState();
         mousePos = new Point(currentMouse.X, currentMouse.Y);
-        if(MinigameManager.isInside(mousePos, pilePos, spriteSize, spriteSize) && currentMouse.LeftButton == ButtonState.Pressed && heldItem is null){
+        if(isInside(mousePos, pilePos, spriteSize, spriteSize) && currentMouse.LeftButton == ButtonState.Pressed && heldItem is null){
             Random rand = new();
             int spawnChance = rand.Next(100)+1;
             if(spawnChance < 20){
@@ -111,7 +121,7 @@ public class BakingGame : Minigame
             }
         }
         if(heldItem is not null){
-            if(MinigameManager.isInside(mousePos, ovenPos, ovenSprite.Region.Width, ovenSprite.Region.Height) && currentMouse.LeftButton == ButtonState.Released){
+            if(isInside(mousePos, ovenPos, ovenSprite.Region.Width, ovenSprite.Region.Height) && currentMouse.LeftButton == ButtonState.Released){
                 if(heldItem.type == "ice")
                     currentTemp -= 125;
                 else if(heldItem.type == "wood")
@@ -119,7 +129,7 @@ public class BakingGame : Minigame
                 else
                     currentTemp += 175;
                 heldItem = null;
-            }else if(!MinigameManager.isInside(mousePos, ovenPos, ovenSprite.Region.Width, ovenSprite.Region.Height) && currentMouse.LeftButton == ButtonState.Released){
+            }else if(!isInside(mousePos, ovenPos, ovenSprite.Region.Width, ovenSprite.Region.Height) && currentMouse.LeftButton == ButtonState.Released){
                 heldItem = null;
             }
         }
@@ -144,7 +154,7 @@ public class BakingGame : Minigame
                 GameManager.PlayerInfo.inventory["Cookie"] = bakedGoods;
             }
             
-            MinigameManager.CurrentMinigameState = MinigameManager.MinigameState.Select;
+            _mainScene.ChangeLowerTab(new SelectionScene(_mainScene));
         }
 
         quotaBar.Update(bakedGoods);
@@ -158,5 +168,11 @@ public class BakingGame : Minigame
             get => _type;
             set => _type = value;
         }
+    }
+
+    private static Boolean isInside(Point p1, Vector2 vec2, int xsize, int ysize)
+    {
+        Rectangle obj1 = new Rectangle((int)vec2.X, (int)vec2.Y, xsize, ysize);
+        return obj1.Contains(p1);
     }
 }

@@ -1,9 +1,10 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MyBakery;
 using CoreLibrary.Graphics;
+using CoreLibrary;
+using CoreLibrary.Input;
 
 namespace GeneralUtil;
 
@@ -19,9 +20,9 @@ public abstract class Button{
     public Boolean IsClicked()
     {
 
-        Rectangle mouseLoc = new Rectangle(Mouse.GetState().Position.X, Mouse.GetState().Position.Y, 1, 1);
-        if (Hitbox.Intersects(mouseLoc) && GameManager.MouseClicked)
-        {//Should be changed so that this can be independent library from game
+        Rectangle mouseLoc = new Rectangle(Core.Input.Mouse.MouseLocation().X, Core.Input.Mouse.MouseLocation().Y, 1, 1);
+        if (Hitbox.Intersects(mouseLoc) && Core.Input.Mouse.CheckLeftPress())
+        {
             return true;
         }
         return false;

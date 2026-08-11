@@ -8,23 +8,24 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CoreLibrary.Graphics;
+using CoreLibrary;
+using CoreLibrary.Scenes;
+using MyBakery.Scenes;
 
 namespace MyBakery;
 
-public class Shop{
+public class Shop : Scene{
 
     public List<ShopObject> placedShopObjects; //placed shopObjects
-    UIButton dayStartButton;//Start button
-    Sprite shopSprite;
-    SpriteFont font;
+    private UIButton _dayStartButton;//Start button
     //or
     //List<Sprite> shoptTiles;
     private Dropdown displayMenu;
     public Dictionary<String, int> placeableShopObjects; //List of placedable
     public List<Employee> employees; //List of employees
-    private TextureAtlas _spriteSheet; //Maybe remove
-    private Sprite _register, _employee, _display, _button;
-    private Boolean employeeMenuOpen,mouseOnDisplay;
+    private Sprite _register, _employee, _display, _button, _shopBackground;
+    private Boolean employeeMenuOpen, mouseOnDisplay;
+    public Boolean IsOpen;
     public enum ShopObjectTypes
     {
         Counter,
@@ -35,33 +36,90 @@ public class Shop{
         Shelf,
         None
     }
+    private DayScene _dayScene;
+    private SpriteFont _font;
+    private int dayTimeLeft, previousTime;
+    private double elapsedDayTime;
+    const int dayLength = 120;
 
-    public Shop(Sprite sprite, UIButton dayStartButton, TextureAtlas spriteSheet, SpriteFont font)
+    public Shop(DayScene dayScene) : base()
     {
-        this.dayStartButton = dayStartButton;
-        shopSprite = sprite;
-        _spriteSheet = spriteSheet;
-        _register = spriteSheet.CreateSprite("Register");
-        _employee = spriteSheet.CreateSprite("ToastDog");
-        _display = spriteSheet.CreateSprite("Display");
-        _button = spriteSheet.CreateSprite("Button");
+        _dayScene = dayScene;
+    }
+
+    public override void Initialize()
+    {
         employeeMenuOpen = false;
-        this.font = font;
         placeableShopObjects = new Dictionary<String, int>() { {"Display", 2}, {"Fridge", 1}};
-        Register register = new Register(new Vector2(GameManager.gameWidth / 3 + 10, 50), font, new Rectangle(0, 64, 64, 64), () => Console.WriteLine("reg"));
+        IsOpen = false;
+        previousTime = dayLength;
+        elapsedDayTime = 0;
+
+        base.Initialize();
+    }
+
+    public override void LoadContent()
+    {
+        _register = _dayScene.Atlas.CreateSprite("Register");
+        _employee = _dayScene.Atlas.CreateSprite("ToastDog");
+        _display = _dayScene.Atlas.CreateSprite("Display");
+        _button = _dayScene.Atlas.CreateSprite("Button");
+        Texture2D bg = Core.Content.Load<Texture2D>("Bakery1");
+        _shopBackground = new Sprite(new TextureRegion(bg, _dayScene.BakeryBounds.X, _dayScene.BakeryBounds.Y, bg.Width, bg.Height));
+        _font = Content.Load<SpriteFont>("font");
+        _dayStartButton = new UIButton("Start Day", new Vector2(_dayScene.GameBounds.Right / 2, _dayScene.GameBounds.Bottom / 2), (int)_button.Width, (int)_button.Height,  () =>
+        {
+            IsOpen = true;
+        });
+
+        Register register = new Register(new Vector2(_dayScene.BakeryBounds.Left + 10, 50), _font, new Rectangle(0, 64, 64, 64), () => Console.WriteLine("reg"));
         register.onClick = () => { mouseOnDisplay = true;
             employeeMenuOpen = true;
-            register.buttons.Add(new UIButton("Employee1", new Vector2(GameManager.gameWidth / 2, GameManager.gameHeight / 4), (int)_employee.Width, (int)_employee.Height, () => employeeMenuOpen = false)); };
+            register.buttons.Add(new UIButton("Employee1", new Vector2(_dayScene.BakeryBounds.Width, _dayScene.BakeryBounds.Height / 2), (int)_employee.Width, (int)_employee.Height, () => employeeMenuOpen = false)); };
         placedShopObjects = new List<ShopObject>() { register };
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         mouseOnDisplay = false;
         bool displayWasOpen = false;
-        if (!BakeryManager.IsOpen)
+        if (!IsOpen)
         {
-            dayStartButton.Update();
+            _dayStartButton.Update();
+        }
+        else
+        {
+            elapsedDayTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+            dayTimeLeft = dayLength - (int)elapsedDayTime / 1000;
+            if (dayTimeLeft < 0)
+            {
+                dayTimeLeft = dayLength;
+                elapsedDayTime = 0;
+            }
+            foreach (ShopObject sobject in placedShopObjects)
+            {
+
+                if (previousTime != dayTimeLeft)
+                {//remove when sell function is moved to customers
+                    if (sobject.Type == "Display")
+                    {
+                        BakeryDisplay display = sobject as BakeryDisplay;
+                        if (display.product != "None")
+                        {
+                            if (GameManager.PlayerInfo.inventory[display.product] < 1)
+                            {
+                                display.product = "None";
+                                //display.Text = "Select\nProduct";
+                            }
+                            else
+                            {
+                                _dayScene.ItemDB[display.product].Sell(display.product, 1);
+                            }
+                        }
+                    }
+                }
+            }
+            previousTime = dayTimeLeft;
         }
         foreach (ShopObject shopObject in placedShopObjects)
         {
@@ -81,7 +139,7 @@ public class Shop{
             else if (shopObject.Type == "Register")
             {
                 Register register = shopObject as Register;
-                if (!BakeryManager.IsOpen)
+                if (!IsOpen)
                 {
                     if (register.isOpened)
                     {
@@ -92,14 +150,14 @@ public class Shop{
             }
             shopObject.Update(gameTime);
         }
-        if (GameManager.MouseClicked)
+        if (Core.Input.Mouse.CheckLeftPress())
         {
             Boolean occupied = false;
             Vector2 mouseLocation = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Y);
 
-            if (displayMenu == null && mouseLocation.X > GameManager.gameWidth / 3 && mouseLocation.Y < GameManager.gameHeight / 2 && !mouseOnDisplay && !displayWasOpen)
+            if (displayMenu == null && mouseLocation.X > _dayScene.BakeryBounds.Right / 3 && mouseLocation.Y < _dayScene.BakeryBounds.Bottom / 2 && !mouseOnDisplay && !displayWasOpen)
             {
-                displayMenu = new Dropdown(placeableShopObjects, font, mouseLocation);
+                displayMenu = new Dropdown(placeableShopObjects, _font, mouseLocation);
             }
             else if (displayMenu != null)
             {
@@ -111,7 +169,7 @@ public class Shop{
 
                         if (shopObject.Hitbox.Intersects(new Rectangle(Mouse.GetState().Position.X, Mouse.GetState().Y, shopObject.Hitbox.Width, shopObject.Hitbox.Height)))
                         {
-                            occupied = true;//Checking if place,emt os va;od
+                            occupied = true;//Checking if placememt is va;od
                         }
                     }
                     if (!occupied && placeableShopObjects[displayMenu.selectedDisplay] > 0)
@@ -128,20 +186,20 @@ public class Shop{
             }
         }
     }
-    public void Draw(SpriteBatch spriteBatch, SpriteFont font){
-
-        if (!employeeMenuOpen)
-        {
-            shopSprite.Draw(spriteBatch, new Vector2(GameManager.gameWidth/3, 0));
-        } 
+    public override void Draw(GameTime gameTime){
         
-        if(!BakeryManager.IsOpen)
-            dayStartButton.Draw(spriteBatch, font, _button);
+        _shopBackground.Draw(Core.SpriteBatch, new Vector2(_dayScene.BakeryBounds.Left, 0));
+
+        
+        if(!IsOpen)
+            _dayStartButton.Draw(Core.SpriteBatch, _font, _button);
+        else
+            Core.SpriteBatch.DrawString(_font, "Time Left in Day: " + dayTimeLeft / 60 + " Minutes " + dayTimeLeft % 60 + " Seconds", new Vector2(_dayScene.BakeryBounds.X + 10, _dayScene.BakeryBounds.Y + 30), Color.White);
         foreach(ShopObject shopObject in placedShopObjects){
-            shopObject.Draw(spriteBatch, _spriteSheet);
+            shopObject.Draw(Core.SpriteBatch, _dayScene.Atlas);
         }
         if(displayMenu != null){
-            displayMenu.Draw(spriteBatch, _spriteSheet);
+            displayMenu.Draw(Core.SpriteBatch, _dayScene.Atlas);
         }
     }
 
@@ -151,7 +209,7 @@ public class Shop{
             qualities.UnionWith(new[] { Product.ProductQualities.Refrigerated});
         else if (type == "Shelf")
             qualities.UnionWith(new[] { Product.ProductQualities.Stackable});
-            placedShopObjects.Add(new BakeryDisplay(location, font, new Rectangle((int)location.X, (int)(location.Y + 64), 64, 64), type, qualities));
+            placedShopObjects.Add(new BakeryDisplay(location, _font, new Rectangle((int)location.X, (int)(location.Y + 64), 64, 64), type, qualities, _dayScene.ItemDB));
     }
 
 }

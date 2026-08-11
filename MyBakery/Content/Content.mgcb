@@ -105,3 +105,6 @@
 /processorParam:TextureFormat=Color
 /build:chocofall_bg.png
 
+#begin atlas-definition.xml
+/copy:atlas-definition.xml
+

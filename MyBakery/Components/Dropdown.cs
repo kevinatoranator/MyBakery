@@ -39,7 +39,7 @@ public class Dropdown : Component
                 number += 1;
             }  
         }
-        Button cancel = new UIButton("Cancel", new Vector2(position.X, position.Y + (GameManager.cancelSprite.Height*number)), 128, 64, () => { selectedDisplay = "None"; Clicked = true; });
+        Button cancel = new UIButton("Cancel", new Vector2(position.X, position.Y + (64*number)), 128, 64, () => { selectedDisplay = "None"; Clicked = true; });
         _buttons.Add(cancel);
     }
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/Bakery1.png</SourceFile>
-  <SourceTime>2025-05-29T10:30:54.8640703-04:00</SourceTime>
-  <DestFile>c:/Users/krinald/Desktop/CompSci/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Bakery1.xnb</DestFile>
-  <DestTime>2026-06-06T21:19:33.0181631-04:00</DestTime>
+  <SourceFile>k:/Programming/Monogame/MyBakery/MyBakery/Content/Bakery1.png</SourceFile>
+  <SourceTime>2024-09-22T20:36:56.2472565-04:00</SourceTime>
+  <DestFile>k:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Bakery1.xnb</DestFile>
+  <DestTime>2026-06-09T21:41:40.4491911-04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-06-02T06:31:02-04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
