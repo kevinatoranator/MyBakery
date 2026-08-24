@@ -31,37 +31,44 @@ public class SelectionScene : Scene{
        _buttonSprite = new TextureRegion(Content.Load<Texture2D>("Button"), 0, 0, 128, 64);
        _font = Content.Load<SpriteFont>("font");
 
-       UIButton chocoGameButton = new UIButton("ChocoLatte", new Vector2(_mainScene.GameBounds.X + 20, _mainScene.GameBounds.Y + 20), _buttonSprite.Width, _buttonSprite.Height, () =>
+       UIButton chocoGameButton = new UIButton(new Rectangle(_mainScene.GameBounds.X + 20, _mainScene.GameBounds.Y + 20, _buttonSprite.Width, _buttonSprite.Height),
+       _buttonSprite, "ChocoLatte", _font, () =>
             {
                 _mainScene.ChangeLowerTab(new ChocoGame(_mainScene));
             });
-        UIButton bakingGameButton = new UIButton("Baking", new Vector2(_mainScene.GameBounds.X + 150, _mainScene.GameBounds.Y + 20), _buttonSprite.Width, _buttonSprite.Height, () =>
+        UIButton bakingGameButton = new UIButton(new Rectangle(_mainScene.GameBounds.X + 150, _mainScene.GameBounds.Y + 20, _buttonSprite.Width, _buttonSprite.Height),
+        _buttonSprite, "Baking", _font, () =>
             {
                 //if (HasIngredients(_mainScene.ItemDB["Cookie"].Recipe))
                 //{
                     _mainScene.ChangeLowerTab(new BakingGame(_mainScene));
                // }
             });
-            UIButton doughGameButton = new UIButton("Dough", new Vector2(_mainScene.GameBounds.X + 280, _mainScene.GameBounds.Y + 20), _buttonSprite.Width, _buttonSprite.Height, () =>
+            UIButton doughGameButton = new UIButton(new Rectangle(_mainScene.GameBounds.X + 280, _mainScene.GameBounds.Y + 20, _buttonSprite.Width, _buttonSprite.Height),
+            _buttonSprite, "Dough", _font, () =>
             {
                 //if (HasIngredients(_mainScene.ItemDB["Dough"].Recipe))
                 //{
                     _mainScene.ChangeLowerTab(new DoughGame(_mainScene));
                 //}
             });
-            UIButton fruitJumpGameButton = new UIButton("Fruit Jump", new Vector2(_mainScene.GameBounds.X + 410, _mainScene.GameBounds.Y + 20), _buttonSprite.Width, _buttonSprite.Height, () =>
+            UIButton fruitJumpGameButton = new UIButton(new Rectangle(_mainScene.GameBounds.X + 410, _mainScene.GameBounds.Y + 20, _buttonSprite.Width, _buttonSprite.Height),
+            _buttonSprite, "Fruit Jump", _font, () =>
             {
                 _mainScene.ChangeLowerTab(new FruitJumpGame(_mainScene));
             });
-            UIButton jellyGameButton = new UIButton("Jelly Eater", new Vector2(_mainScene.GameBounds.X + 540, _mainScene.GameBounds.Y + 20), _buttonSprite.Width, _buttonSprite.Height, () =>
+            UIButton jellyGameButton = new UIButton(new Rectangle(_mainScene.GameBounds.X + 540, _mainScene.GameBounds.Y + 20, _buttonSprite.Width, _buttonSprite.Height),
+             _buttonSprite, "Jelly Eater", _font, () =>
             {
                 _mainScene.ChangeLowerTab(new JellyGame(_mainScene));
             });
-            UIButton coffeeGameButton = new UIButton("Coffee Snake", new Vector2(_mainScene.GameBounds.X + 20, _mainScene.GameBounds.Y + 100), _buttonSprite.Width, _buttonSprite.Height, () =>
+            UIButton coffeeGameButton = new UIButton(new Rectangle(_mainScene.GameBounds.X + 20, _mainScene.GameBounds.Y + 100, _buttonSprite.Width, _buttonSprite.Height),
+            _buttonSprite, "Coffee Snake", _font, () =>
             {
                 _mainScene.ChangeLowerTab(new CoffeeSnakeGame(_mainScene));
             });
-            UIButton flourGameButton = new UIButton("Flour Grind", new Vector2(_mainScene.GameBounds.X + 150, _mainScene.GameBounds.Y + 100), _buttonSprite.Width, _buttonSprite.Height, () =>
+            UIButton flourGameButton = new UIButton(new Rectangle(_mainScene.GameBounds.X + 150, _mainScene.GameBounds.Y + 100, _buttonSprite.Width, _buttonSprite.Height),
+            _buttonSprite, "Flour Grind", _font, () =>
             {
                 //if (HasIngredients(_mainScene.ItemDB["Flour"].Recipe))
                        // {
@@ -69,7 +76,8 @@ public class SelectionScene : Scene{
                        // }
             });
 
-            UIButton chocoMineButton = new UIButton("Choco Mine", new Vector2(_mainScene.GameBounds.X + 280, _mainScene.GameBounds.Y + 100), _buttonSprite.Width, _buttonSprite.Height, () =>
+            UIButton chocoMineButton = new UIButton(new Rectangle(_mainScene.GameBounds.X + 280, _mainScene.GameBounds.Y + 100, _buttonSprite.Width, _buttonSprite.Height), 
+            _buttonSprite, "Choco Mine", _font, () =>
             {
                 //if (HasIngredients(_mainScene.ItemDB["BoxedChocolate"].Recipe))
                // {
@@ -87,7 +95,7 @@ public class SelectionScene : Scene{
         
         foreach (UIButton c in _buttons)
         {
-            c.Draw(Core.SpriteBatch, _font, new Sprite(_buttonSprite));
+            c.Draw(gameTime);
         }
                
     }
@@ -95,7 +103,7 @@ public class SelectionScene : Scene{
     {
         foreach (UIButton c in _buttons)
         {
-            c.Update();
+            c.Update(gameTime);
         }
     }
     private bool HasIngredients(Dictionary<string, int> recipe) {

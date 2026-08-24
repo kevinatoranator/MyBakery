@@ -9,15 +9,15 @@
       "MyBakery/1.0.0": {
         "dependencies": {
           "CoreLibrary": "1.0.0",
-          "MonoGame.Content.Builder.Task": "3.8.5",
-          "MonoGame.Framework.DesktopGL": "3.8.5"
+          "MonoGame.Content.Builder.Task": "3.8.5.1",
+          "MonoGame.Framework.DesktopGL": "3.8.5.1"
         },
         "runtime": {
           "MyBakery.dll": {}
         }
       },
-      "MonoGame.Content.Builder.Task/3.8.5": {},
-      "MonoGame.Framework.DesktopGL/3.8.5": {
+      "MonoGame.Content.Builder.Task/3.8.5.1": {},
+      "MonoGame.Framework.DesktopGL/3.8.5.1": {
         "dependencies": {
           "MonoGame.Library.OpenAL": "1.24.3.4",
           "MonoGame.Library.SDL": "2.32.10.2",
@@ -25,8 +25,8 @@
         },
         "runtime": {
           "lib/net8.0/MonoGame.Framework.dll": {
-            "assemblyVersion": "3.8.5.0",
-            "fileVersion": "3.8.5.0"
+            "assemblyVersion": "3.8.5.1",
+            "fileVersion": "3.8.5.1"
           }
         }
       },
@@ -150,19 +150,19 @@
       "serviceable": false,
       "sha512": ""
     },
-    "MonoGame.Content.Builder.Task/3.8.5": {
+    "MonoGame.Content.Builder.Task/3.8.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-J+iCTYSkmQLI5WMVxJ/PSidUesd/A3izDVn8JlUTlMrBI/hOeGjGSIux497zVWlNGlmvoIWDunKTwRbkAXYFHA==",
-      "path": "monogame.content.builder.task/3.8.5",
-      "hashPath": "monogame.content.builder.task.3.8.5.nupkg.sha512"
+      "sha512": "sha512-9isFjZSi87Fy8Hv0qLeol27xUNdt3EzGYdBabR/qHVT7ujVGebWQzfgjDhJaT3M8tJEazpeA+ftYAgokmIZUbQ==",
+      "path": "monogame.content.builder.task/3.8.5.1",
+      "hashPath": "monogame.content.builder.task.3.8.5.1.nupkg.sha512"
     },
-    "MonoGame.Framework.DesktopGL/3.8.5": {
+    "MonoGame.Framework.DesktopGL/3.8.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-oG5Thkic4i/6kX3OWtq2p6DEATflP71yM0p/1ymIoFaIp1xNFOqAd4jW2D9GIQLIMT6mn5RmJknYPqJnOQbi5w==",
-      "path": "monogame.framework.desktopgl/3.8.5",
-      "hashPath": "monogame.framework.desktopgl.3.8.5.nupkg.sha512"
+      "sha512": "sha512-za6tOSYT2xpks932wU/WcpPu2xkUyKwn251gkRuiJ/3XPZBdwds7RPXRhtcrZGnZ2jtjtwh4upRLd+EGrrWtFw==",
+      "path": "monogame.framework.desktopgl/3.8.5.1",
+      "hashPath": "monogame.framework.desktopgl.3.8.5.1.nupkg.sha512"
     },
     "MonoGame.Library.OpenAL/1.24.3.4": {
       "type": "package",

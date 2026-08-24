@@ -4,7 +4,7 @@
   "success": true,
   "projectFilePath": "k:\\Programming\\Monogame\\MyBakery\\CoreLibrary\\CoreLibrary.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\kevgu\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.5\\monogame.framework.desktopgl.3.8.5.nupkg.sha512",
+    "C:\\Users\\kevgu\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.5.1\\monogame.framework.desktopgl.3.8.5.1.nupkg.sha512",
     "C:\\Users\\kevgu\\.nuget\\packages\\monogame.library.openal\\1.24.3.4\\monogame.library.openal.1.24.3.4.nupkg.sha512",
     "C:\\Users\\kevgu\\.nuget\\packages\\monogame.library.sdl\\2.32.10.2\\monogame.library.sdl.2.32.10.2.nupkg.sha512",
     "C:\\Users\\kevgu\\.nuget\\packages\\nvorbis\\0.10.4\\nvorbis.0.10.4.nupkg.sha512",

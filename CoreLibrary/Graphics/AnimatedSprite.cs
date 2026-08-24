@@ -5,7 +5,7 @@ namespace CoreLibrary.Graphics;
 
 public class AnimatedSprite : Sprite
 {
-    private int _currentFrame;
+    public int CurrentFrame;
     private TimeSpan _elapsed;
     private Animation _animation;
 
@@ -33,16 +33,16 @@ public class AnimatedSprite : Sprite
     {
         _elapsed += gameTime.ElapsedGameTime;
 
-        if(_elapsed >= _animation.Delay && _currentFrame < _animation.Frames.Count-1)
+        if(_elapsed >= _animation.Delay && CurrentFrame < _animation.Frames.Count-1)
         {
             _elapsed -= _animation.Delay;
-            _currentFrame++;
+            CurrentFrame++;
         }
 
-        if(_currentFrame >= _animation.Frames.Count && _animation.Loop)
+        if(CurrentFrame >= _animation.Frames.Count && _animation.Loop)
         {
-            _currentFrame = 0;
+            CurrentFrame = 0;
         }
-        Region = _animation.Frames[_currentFrame];
+        Region = _animation.Frames[CurrentFrame];
     }
 }

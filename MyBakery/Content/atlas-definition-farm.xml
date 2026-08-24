@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas>
+  <Texture>SpriteSheetFarm</Texture>
+  <Regions>
+    <Region name="Dirt" x="0" y="0" width="64" height="64" />
+    <Region name="Wheat-1" x="0" y="64" width="64" height="64" />
+    <Region name="Wheat-2" x="64" y="64" width="64" height="64" />
+    <Region name="Wheat-3" x="128" y="64" width="64" height="64" />
+    <Region name="Wheat-4" x="192" y="64" width="64" height="64" />
+    <Region name="Wheat-5" x="256" y="64" width="64" height="64" />
+    <Region name="SugarCane-1" x="0" y="128" width="64" height="64" />
+    <Region name="SugarCane-2" x="64" y="128" width="64" height="64" />
+    <Region name="SugarCane-3" x="128" y="128" width="64" height="64" />
+    <Region name="SugarCane-4" x="192" y="128" width="64" height="64" />
+    <Region name="Oat-1" x="0" y="192" width="64" height="64" />
+    <Region name="Oat-2" x="64" y="192" width="64" height="64" />
+    <Region name="Oat-3" x="128" y="192" width="64" height="64" />
+    <Region name="Oat-4" x="192" y="192" width="64" height="64" />
+    <Region name="Oat-5" x="256" y="192" width="64" height="64" />
+    <Region name="Oat-6" x="320" y="192" width="64" height="64" />
+  </Regions>
+  <Animations>
+    <Animation name="Wheat" delay="10000" loop="false">
+      <Frame region="Wheat-1" />
+      <Frame region="Wheat-2" />
+      <Frame region="Wheat-3" />
+      <Frame region="Wheat-4" />
+      <Frame region="Wheat-5" />
+    </Animation>
+    <Animation name="SugarCane" delay="10000" loop="false">
+      <Frame region="SugarCane-1" />
+      <Frame region="SugarCane-2" />
+      <Frame region="SugarCane-3" />
+      <Frame region="SugarCane-4" />
+    </Animation>
+    <Animation name="Oat" delay="10000" loop="false">
+      <Frame region="Oat-1" />
+      <Frame region="Oat-2" />
+      <Frame region="Oat-3" />
+      <Frame region="Oat-4" />
+      <Frame region="Oat-5" />
+      <Frame region="Oat-6" />
+    </Animation>
+  </Animations>
+</TextureAtlas>

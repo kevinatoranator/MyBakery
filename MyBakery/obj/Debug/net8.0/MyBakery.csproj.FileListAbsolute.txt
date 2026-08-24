@@ -92,3 +92,5 @@ k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\runtimes\win-arm64\na
 k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\runtimes\linux-arm64\native\libSDL2-2.0.so.0
 k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\runtimes\win-arm64\native\SDL2.dll
 k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\Data\playerProfile.json
+k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\Content\atlas-definition-farm.xml
+k:\Programming\Monogame\MyBakery\MyBakery\bin\Debug\net8.0\Content\SpriteSheetFarm.xnb

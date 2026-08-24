@@ -11,5 +11,5 @@ public interface ShopObject
     string Type { get; set; }
 
     public void Update(GameTime gameTime);
-    public void Draw(SpriteBatch spriteBatch, TextureAtlas spriteSheet);
+    public void Draw(GameTime gameTime);
 }

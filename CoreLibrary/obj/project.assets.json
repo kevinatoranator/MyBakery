@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net8.0": {
-      "MonoGame.Framework.DesktopGL/3.8.5": {
+      "MonoGame.Framework.DesktopGL/3.8.5.1": {
         "type": "package",
         "dependencies": {
           "MonoGame.Library.OpenAL": "1.24.3.4",
@@ -139,10 +139,10 @@
     }
   },
   "libraries": {
-    "MonoGame.Framework.DesktopGL/3.8.5": {
-      "sha512": "oG5Thkic4i/6kX3OWtq2p6DEATflP71yM0p/1ymIoFaIp1xNFOqAd4jW2D9GIQLIMT6mn5RmJknYPqJnOQbi5w==",
+    "MonoGame.Framework.DesktopGL/3.8.5.1": {
+      "sha512": "za6tOSYT2xpks932wU/WcpPu2xkUyKwn251gkRuiJ/3XPZBdwds7RPXRhtcrZGnZ2jtjtwh4upRLd+EGrrWtFw==",
       "type": "package",
-      "path": "monogame.framework.desktopgl/3.8.5",
+      "path": "monogame.framework.desktopgl/3.8.5.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -151,7 +151,7 @@
         "build/MonoGame.Framework.DesktopGL.targets",
         "lib/net8.0/MonoGame.Framework.dll",
         "lib/net8.0/MonoGame.Framework.xml",
-        "monogame.framework.desktopgl.3.8.5.nupkg.sha512",
+        "monogame.framework.desktopgl.3.8.5.1.nupkg.sha512",
         "monogame.framework.desktopgl.nuspec"
       ]
     },

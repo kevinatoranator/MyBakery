@@ -1,6 +1,11 @@
 {
   "Name": "NewPlayer",
   "inventory": {
-    "Coin": 10
+    "Coin": 10,
+    "Jelly": 3,
+    "BoxedChocolate": 0,
+    "Apple": 22,
+    "Cherry": 18,
+    "Orange": 17
   }
 }

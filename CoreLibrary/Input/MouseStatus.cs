@@ -3,36 +3,63 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CoreLibrary.Input;
 
+public enum MouseButton
+{
+    Left,
+    Middle,
+    Right
+}
+
 public class MouseStatus
 {
-    MouseState currentMouseState;
-    MouseState previousMouseState;
+    public MouseState CurrentMouseState {get; private set;}
+    public MouseState PreviousMouseState {get; private set;}
     Point mousePos;
     Point clickPoint;
+    public Point PositionDelta => CurrentMouseState.Position - PreviousMouseState.Position;
+    public int XDelta => CurrentMouseState.X - PreviousMouseState.X;
+    public int YDelta => CurrentMouseState.Y - PreviousMouseState.Y;
+    public bool WasMoved => PositionDelta != Point.Zero;
 
     public MouseState CheckMouse()
     {
-        previousMouseState = currentMouseState;
-        currentMouseState = Mouse.GetState();
-        mousePos = new Point(currentMouseState.X, currentMouseState.Y);
-        return currentMouseState;
+        PreviousMouseState = CurrentMouseState;
+        CurrentMouseState = Mouse.GetState();
+        mousePos = new Point(CurrentMouseState.X, CurrentMouseState.Y);
+        return CurrentMouseState;
     }
     public bool CheckLeftPress()
     {
         clickPoint = MouseLocation();
-        return currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released;
+        return CurrentMouseState.LeftButton == ButtonState.Pressed && PreviousMouseState.LeftButton == ButtonState.Released;
     }
     public bool IsDragging()
     {
-        return currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Pressed;
+        return CurrentMouseState.LeftButton == ButtonState.Pressed && PreviousMouseState.LeftButton == ButtonState.Pressed && WasMoved;
     }
     public bool CheckLeftRelease()
     {
-        return currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed;
+        return CurrentMouseState.LeftButton == ButtonState.Released && PreviousMouseState.LeftButton == ButtonState.Pressed;
     }
     public Point MouseLocation()
     {
         return mousePos;
+    }
+
+    public bool IsButtonDown(MouseButton button)
+    {
+        switch (button)
+        {
+            case MouseButton.Left:
+              return CurrentMouseState.LeftButton == ButtonState.Pressed;
+            case MouseButton.Middle:
+              return CurrentMouseState.MiddleButton == ButtonState.Pressed;
+            case MouseButton.Right:
+              return CurrentMouseState.RightButton == ButtonState.Pressed;
+            default:
+                return false;
+        }
+        
     }
 
     public void Update(GameTime gameTime)

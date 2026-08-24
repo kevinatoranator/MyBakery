@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using CoreLibrary;
 using CoreLibrary.Graphics;
 using MyBakery.Scenes;
+using System;
 
 namespace MyBakery;
 
 public class Game1 : Core
 {
-    public TextureAtlas atlas;
+    public Version Version = new Version(0, 1, 0);
 
     public Game1() : base("My Bakery", 1920, 1080, false){}
 
     protected override void Initialize()
     {
         base.Initialize();
-        ChangeScene(new TitleScene());
+        ChangeScene(new TitleScene(this));
     }
 
     protected override void LoadContent()

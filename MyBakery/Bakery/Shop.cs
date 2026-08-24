@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using GeneralUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,6 +10,7 @@ using CoreLibrary.Graphics;
 using CoreLibrary;
 using CoreLibrary.Scenes;
 using MyBakery.Scenes;
+using System.Linq;
 
 namespace MyBakery;
 
@@ -20,12 +20,12 @@ public class Shop : Scene{
     private UIButton _dayStartButton;//Start button
     //or
     //List<Sprite> shoptTiles;
-    private Dropdown displayMenu;
-    public Dictionary<String, int> placeableShopObjects; //List of placedable
+    private List<UIElement> _UIElements;
+    public Dictionary<string, int> placeableShopObjects; //List of placedable
     public List<Employee> employees; //List of employees
     private Sprite _register, _employee, _display, _button, _shopBackground;
-    private Boolean employeeMenuOpen, mouseOnDisplay;
-    public Boolean IsOpen;
+    private bool _menuOpen;
+    public bool ShopOpen, isActive;
     public enum ShopObjectTypes
     {
         Counter,
@@ -49,11 +49,12 @@ public class Shop : Scene{
 
     public override void Initialize()
     {
-        employeeMenuOpen = false;
+        _menuOpen = false;
         placeableShopObjects = new Dictionary<String, int>() { {"Display", 2}, {"Fridge", 1}};
-        IsOpen = false;
+        ShopOpen = false;
         previousTime = dayLength;
         elapsedDayTime = 0;
+        isActive = true;
 
         base.Initialize();
     }
@@ -67,27 +68,34 @@ public class Shop : Scene{
         Texture2D bg = Core.Content.Load<Texture2D>("Bakery1");
         _shopBackground = new Sprite(new TextureRegion(bg, _dayScene.BakeryBounds.X, _dayScene.BakeryBounds.Y, bg.Width, bg.Height));
         _font = Content.Load<SpriteFont>("font");
-        _dayStartButton = new UIButton("Start Day", new Vector2(_dayScene.GameBounds.Right / 2, _dayScene.GameBounds.Bottom / 2), (int)_button.Width, (int)_button.Height,  () =>
-        {
-            IsOpen = true;
-        });
 
-        Register register = new Register(new Vector2(_dayScene.BakeryBounds.Left + 10, 50), _font, new Rectangle(0, 64, 64, 64), () => Console.WriteLine("reg"));
-        register.onClick = () => { mouseOnDisplay = true;
-            employeeMenuOpen = true;
-            register.buttons.Add(new UIButton("Employee1", new Vector2(_dayScene.BakeryBounds.Width, _dayScene.BakeryBounds.Height / 2), (int)_employee.Width, (int)_employee.Height, () => employeeMenuOpen = false)); };
-        placedShopObjects = new List<ShopObject>() { register };
+        _UIElements = new List<UIElement>();
+        _dayStartButton = new UIButton(new Rectangle(_dayScene.GameBounds.Right / 2, _dayScene.GameBounds.Bottom / 2, (int)_button.Width, (int)_button.Height), 
+        _button.Region, "Start Day", _font,  () =>
+        {
+            ShopOpen = true;
+            _UIElements.Remove(_dayStartButton);
+            if (_menuOpen)//temp solution for bug if you start game with dropdown open it becomes locked 
+                {
+                    //close menu
+                    _UIElements.RemoveAt(_UIElements.Count-1);//temp test since the last element in theory could be anything, find away to find the actually dropdown
+                    _menuOpen = false;
+                }
+        });
+        _UIElements.Add(_dayStartButton);
+        UIButton register = new UIButton(new Rectangle(_dayScene.BakeryBounds.Left + 10, 50, 64, 64), _register.Region, () => { Console.WriteLine("Register clicked");});
+        //placedShopObjects = new List<ShopObject>() { register };
     }
 
     public override void Update(GameTime gameTime)
     {
-        mouseOnDisplay = false;
-        bool displayWasOpen = false;
-        if (!IsOpen)
-        {
-            _dayStartButton.Update();
+        if(isActive){
+            foreach(UIElement element in _UIElements.ToList())
+            {
+                element.Update(gameTime);
+            }
         }
-        else
+        if (ShopOpen)
         {
             elapsedDayTime += gameTime.ElapsedGameTime.TotalMilliseconds;
             dayTimeLeft = dayLength - (int)elapsedDayTime / 1000;
@@ -95,93 +103,37 @@ public class Shop : Scene{
             {
                 dayTimeLeft = dayLength;
                 elapsedDayTime = 0;
-            }
-            foreach (ShopObject sobject in placedShopObjects)
-            {
-
-                if (previousTime != dayTimeLeft)
-                {//remove when sell function is moved to customers
-                    if (sobject.Type == "Display")
-                    {
-                        BakeryDisplay display = sobject as BakeryDisplay;
-                        if (display.product != "None")
-                        {
-                            if (GameManager.PlayerInfo.inventory[display.product] < 1)
-                            {
-                                display.product = "None";
-                                //display.Text = "Select\nProduct";
-                            }
-                            else
-                            {
-                                _dayScene.ItemDB[display.product].Sell(display.product, 1);
-                            }
-                        }
-                    }
-                }
-            }
-            previousTime = dayTimeLeft;
+                ShopOpen = false;
+                _UIElements.Add(_dayStartButton);
+            } 
         }
-        foreach (ShopObject shopObject in placedShopObjects)
+        else
         {
-            if (shopObject.Type == "Display" || shopObject.Type == "Fridge")//can these be generalized
+            if (Core.Input.Mouse.CheckLeftPress() && _dayScene.BakeryBounds.Contains(Core.Input.Mouse.MouseLocation()) && isActive)
             {
-                BakeryDisplay display = shopObject as BakeryDisplay;
-                if (display.menu != null)
-                    displayWasOpen = true;//Better fix for this?
-                display.Update(gameTime);
-                if (display.IsClicked())
+                if (_menuOpen)
                 {
-                    mouseOnDisplay = true;
-                    display.onClick.Invoke();
+                    //close menu
+                    _UIElements.RemoveAt(_UIElements.Count-1);//temp test since the last element in theory could be anything, find away to find the actually dropdown
+                    _menuOpen = false;
                 }
-
-            }
-            else if (shopObject.Type == "Register")
-            {
-                Register register = shopObject as Register;
-                if (!IsOpen)
+                else
                 {
-                    if (register.isOpened)
+                    List<UIButton> shopObjectList = new List<UIButton>();
+                    int buttonCount = 0;
+                    foreach (KeyValuePair<string, int> sobject in placeableShopObjects)
                     {
-                        displayWasOpen = true;
-                    }
-                    register.Update();
-                }
-            }
-            shopObject.Update(gameTime);
-        }
-        if (Core.Input.Mouse.CheckLeftPress())
-        {
-            Boolean occupied = false;
-            Vector2 mouseLocation = new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Y);
-
-            if (displayMenu == null && mouseLocation.X > _dayScene.BakeryBounds.Right / 3 && mouseLocation.Y < _dayScene.BakeryBounds.Bottom / 2 && !mouseOnDisplay && !displayWasOpen)
-            {
-                displayMenu = new Dropdown(placeableShopObjects, _font, mouseLocation);
-            }
-            else if (displayMenu != null)
-            {
-                displayMenu.Update(gameTime);
-                if (displayMenu.selectedDisplay != "None")
-                {
-                    foreach (ShopObject shopObject in placedShopObjects.ToArray())
-                    {//should probably check when clicking before making menu but this works if displays are different sizes
-
-                        if (shopObject.Hitbox.Intersects(new Rectangle(Mouse.GetState().Position.X, Mouse.GetState().Y, shopObject.Hitbox.Width, shopObject.Hitbox.Height)))
+                        if(sobject.Value > 0)
                         {
-                            occupied = true;//Checking if placememt is va;od
+                            Sprite _buttonSprite = _dayScene.Atlas.CreateSprite(sobject.Key);
+                            shopObjectList.Add(new UIButton(new Rectangle(Core.Input.Mouse.MouseLocation().X, (int)(Core.Input.Mouse.MouseLocation().Y + buttonCount * _buttonSprite.Height + 1), (int)_buttonSprite.Width, (int)_buttonSprite.Height),
+                            _buttonSprite.Region, () => { Console.WriteLine("Clicked" + sobject.Key);}));
+                            buttonCount++;
                         }
+                        
                     }
-                    if (!occupied && placeableShopObjects[displayMenu.selectedDisplay] > 0)
-                    {
-                        PlaceShopObject(displayMenu.Location, displayMenu.selectedDisplay);
-                        placeableShopObjects[displayMenu.selectedDisplay] -= 1;
-                    }
-
-                }
-                if (displayMenu.Clicked)
-                {
-                    displayMenu = null;
+                    _UIElements.Add(new UIDropdown(new Rectangle(Core.Input.Mouse.MouseLocation().X, Core.Input.Mouse.MouseLocation().Y, shopObjectList[0].TextureRegion.Width, shopObjectList[0].TextureRegion.Height), _button.Region, shopObjectList){Opened = true});
+                    _menuOpen = true;
                 }
             }
         }
@@ -191,16 +143,17 @@ public class Shop : Scene{
         _shopBackground.Draw(Core.SpriteBatch, new Vector2(_dayScene.BakeryBounds.Left, 0));
 
         
-        if(!IsOpen)
-            _dayStartButton.Draw(Core.SpriteBatch, _font, _button);
+        if(ShopOpen)
+            Core.SpriteBatch.DrawString(_font, "Time Left in Day: " + dayTimeLeft / 60 + " Minutes " + dayTimeLeft % 60 + " Seconds", new Vector2(_dayScene.BakeryBounds.X + 10, _dayScene.BakeryBounds.Y + 30), Color.White); 
         else
-            Core.SpriteBatch.DrawString(_font, "Time Left in Day: " + dayTimeLeft / 60 + " Minutes " + dayTimeLeft % 60 + " Seconds", new Vector2(_dayScene.BakeryBounds.X + 10, _dayScene.BakeryBounds.Y + 30), Color.White);
-        foreach(ShopObject shopObject in placedShopObjects){
-            shopObject.Draw(Core.SpriteBatch, _dayScene.Atlas);
+            _dayStartButton.Draw(gameTime);
+        foreach(UIElement element in _UIElements.ToList())
+        {
+            element.Draw(gameTime);
         }
-        if(displayMenu != null){
-            displayMenu.Draw(Core.SpriteBatch, _dayScene.Atlas);
-        }
+        //foreach(ShopObject shopObject in placedShopObjects){
+            //shopObject.Draw(Core.SpriteBatch, _dayScene.Atlas);
+        //}
     }
 
     public void PlaceShopObject(Vector2 location, string type){
@@ -209,7 +162,7 @@ public class Shop : Scene{
             qualities.UnionWith(new[] { Product.ProductQualities.Refrigerated});
         else if (type == "Shelf")
             qualities.UnionWith(new[] { Product.ProductQualities.Stackable});
-            placedShopObjects.Add(new BakeryDisplay(location, _font, new Rectangle((int)location.X, (int)(location.Y + 64), 64, 64), type, qualities, _dayScene.ItemDB));
+            //placedShopObjects.Add(new BakeryDisplay(location, _font, new Rectangle((int)location.X, (int)(location.Y + 64), 64, 64), type, qualities, _dayScene.ItemDB));
     }
 
 }

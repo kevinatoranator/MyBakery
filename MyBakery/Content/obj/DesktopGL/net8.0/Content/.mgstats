@@ -1,5 +1,6 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"k:/Programming/Monogame/MyBakery/MyBakery/Content/atlas-definition.xml","k:\Programming\Monogame\MyBakery\MyBakery\Content\bin\DesktopGL\Content\atlas-definition.xml","CopyItem","File",3589,3589,0.0015343
+"k:/Programming/Monogame/MyBakery/MyBakery/Content/atlas-definition-farm.xml","k:\Programming\Monogame\MyBakery\MyBakery\Content\bin\DesktopGL\Content\atlas-definition-farm.xml","CopyItem","File",2018,2018,0.00069
+"k:/Programming/Monogame/MyBakery/MyBakery/Content/atlas-definition.xml","k:\Programming\Monogame\MyBakery\MyBakery\Content\bin\DesktopGL\Content\atlas-definition.xml","CopyItem","File",3213,3213,0.001684
 "k:/Programming/Monogame/MyBakery/MyBakery/Content/Bakery1.png","k:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Bakery1.xnb","TextureProcessor","Texture2DContent",16852,2764885,0.0833741
 "k:/Programming/Monogame/MyBakery/MyBakery/Content/Brown64S.png","k:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Brown64S.xnb","TextureProcessor","Texture2DContent",224,16469,0.1671791
 "k:/Programming/Monogame/MyBakery/MyBakery/Content/Button.png","k:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Button.xnb","TextureProcessor","Texture2DContent",282,32853,0.0509445
@@ -7,4 +8,5 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "k:/Programming/Monogame/MyBakery/MyBakery/Content/Font.spritefont","k:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2011,21529,0.1091051
 "k:/Programming/Monogame/MyBakery/MyBakery/Content/Green64.png","k:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Green64.xnb","TextureProcessor","Texture2DContent",426,16469,0.0116759
 "k:/Programming/Monogame/MyBakery/MyBakery/Content/Red64.png","k:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/Red64.xnb","TextureProcessor","Texture2DContent",414,16469,0.0720177
-"k:/Programming/Monogame/MyBakery/MyBakery/Content/SpriteSheet.png","k:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/SpriteSheet.xnb","TextureProcessor","Texture2DContent",114702,1638485,0.0855799
+"k:/Programming/Monogame/MyBakery/MyBakery/Content/SpriteSheet.png","k:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/SpriteSheet.xnb","TextureProcessor","Texture2DContent",98723,1638485,0.1780452
+"k:/Programming/Monogame/MyBakery/MyBakery/Content/SpriteSheetFarm.png","k:/Programming/Monogame/MyBakery/MyBakery/Content/bin/DesktopGL/Content/SpriteSheetFarm.xnb","TextureProcessor","Texture2DContent",27286,2764885,0.0932511

@@ -15,12 +15,13 @@
     <Region name="CoffeeBean" x="256" y="128" width="64" height="64" />
     <Region name="Flour" x="320" y="128" width="64" height="64" />
     <Region name="Wheat" x="192" y="64" width="64" height="64" />
+    <Region name="SugarCane" x="64" y="512" width="64" height="64" />
+    <Region name="Oat" x="128" y="512" width="64" height="64" />
     <Region name="BoxedChocolate" x="128" y="256" width="64" height="64" />
     <Region name="Cancel" x="0" y="192" width="64" height="64" />
     <Region name="Display" x="0" y="448" width="64" height="64" />
     <Region name="Fridge" x="0" y="512" width="64" height="64" />
     <Region name="Register" x="64" y="448" width="64" height="64" />
-    <Region name="Dirt" x="128" y="512" width="64" height="64" />
     <Region name="ToastDog" x="128" y="64" width="64" height="64" />
     <Region name="Button" x="448" y="576" width="128" height="64" />
     <Region name="ProgressFront" x="512" y="256" width="128" height="64" />
@@ -31,6 +32,7 @@
     <Region name="Layer1" x="128" y="448" width="32" height="32" />
     <Region name="Layer2" x="160" y="448" width="32" height="32" />
     <Region name="Layer3" x="128" y="480" width="32" height="32" />
+    <Region name="ChocoTileSet" x ="128" y="448" width="64" height="64" />
     <Region name="Circle" x="320" y="256" width="64" height="64" />
     <Region name="Square" x="384" y="256" width="64" height="64" />
     <Region name="Star" x="448" y="256" width="64" height="64" />
@@ -43,19 +45,8 @@
     <Region name="MatchBox" x="320" y="192" width="64" height="64" />
     <Region name="TempFront" x="480" y="320" width="32" height="128" />
     <Region name="TempBack" x="448" y="320" width="32" height="128" />
-    <Region name="Wheat-1" x="0" y="576" width="64" height="64" />
-    <Region name="Wheat-2" x="64" y="576" width="64" height="64" />
-    <Region name="Wheat-3" x="128" y="576" width="64" height="64" />
-    <Region name="Wheat-4" x="192" y="576" width="64" height="64" />
-    <Region name="Wheat-5" x="256" y="576" width="64" height="64" />
+    <Region name="Panel" x="448" y="448" width="192" height="192" />
   </Regions>
   <Animations>
-    <Animation name="Wheat" delay="10000" loop="false">
-      <Frame region="Wheat-1" />
-      <Frame region="Wheat-2" />
-      <Frame region="Wheat-3" />
-      <Frame region="Wheat-4" />
-      <Frame region="Wheat-5" />
-    </Animation>
   </Animations>
 </TextureAtlas>

@@ -32,7 +32,7 @@ public class ChocoMineGame : Scene
     private ProgressBar stabilityBar;
     private Boolean started;
     private Tool currentTool;
-    private Button pickButton, hammerButton;
+    private UIButton pickButton, hammerButton;
     private DayScene _mainScene;
     private SpriteFont _font;
     const int MAX_STABILITY = 20;
@@ -90,8 +90,10 @@ public class ChocoMineGame : Scene
 
         stabilityBar = new ProgressBar(stabilityFront, stabilityBack, MAX_STABILITY, 0, new Vector2(_mainScene.GameBounds.X + 400, _mainScene.GameBounds.Y + 2), false);
 
-        pickButton = new UIButton("", new Vector2(mapOrigin.X + 832, mapOrigin.Y + 64), (int)pick.Width, (int)pick.Width, () => { currentTool = Tool.Pick; toolPower = new (int, int, int)[5]{ (0, -1, 1), (-1, 0, 1), (0, 0, 2), (1, 0, 1), (0, 1, 1)};});
-        hammerButton = new UIButton("", new Vector2(mapOrigin.X + 832, mapOrigin.Y + 128), (int)hammer.Width, (int)hammer.Height, () => { currentTool = Tool.Hammer; toolPower = new (int, int, int)[9] { (-1, -1, 1), (0, -1, 1), (1, -1, 1), (-1, 0, 1), (0, 0, 1), (1, 0, 1), (-1, 1, 1), (0, 1, 1), (1, 1, 1) };});
+        pickButton = new UIButton(new Rectangle((int)(mapOrigin.X + 832), (int)(mapOrigin.Y + 64), (int)pick.Width, (int)pick.Width),
+            pick.Region, () => { currentTool = Tool.Pick; toolPower = new (int, int, int)[5]{ (0, -1, 1), (-1, 0, 1), (0, 0, 2), (1, 0, 1), (0, 1, 1)};});
+        hammerButton = new UIButton(new Rectangle((int)(mapOrigin.X + 832), (int)(mapOrigin.Y + 128), (int)hammer.Width, (int)hammer.Height),
+            hammer.Region, () => { currentTool = Tool.Hammer; toolPower = new (int, int, int)[9] { (-1, -1, 1), (0, -1, 1), (1, -1, 1), (-1, 0, 1), (0, 0, 1), (1, 0, 1), (-1, 1, 1), (0, 1, 1), (1, 1, 1) };});
     }
 
     public override void Draw(GameTime gameTime)
@@ -136,8 +138,8 @@ public class ChocoMineGame : Scene
         stabilityBar.Draw(Core.SpriteBatch);
         Core.SpriteBatch.DrawString(_font, "Items Found: " + chocoUncovered, new Vector2(_mainScene.GameBounds.X + 10, _mainScene.GameBounds.Y + 50), Color.White);
 
-        pickButton.Draw(Core.SpriteBatch, _font, pick);
-        hammerButton.Draw(Core.SpriteBatch, _font, hammer);
+        pickButton.Draw(gameTime);
+        hammerButton.Draw(gameTime);
         if (currentTool == Tool.Hammer)
         {
             hammer.Draw(Core.SpriteBatch, new Vector2(Core.Input.Mouse.MouseLocation().X - 32, Core.Input.Mouse.MouseLocation().Y - 32));
@@ -150,8 +152,8 @@ public class ChocoMineGame : Scene
 
     public override void Update(GameTime gameTime)
     {
-        pickButton.Update();
-        hammerButton.Update();
+        pickButton.Update(gameTime);
+        hammerButton.Update(gameTime);
         if (Core.Input.Mouse.CheckLeftPress() && started)
         {
             if (Core.Input.Mouse.MouseLocation().X > mapOrigin.X && Core.Input.Mouse.MouseLocation().X < mapOrigin.X + tiles[0].Count * 32 &&

@@ -12,8 +12,10 @@
     <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/SpriteSheet.png</File>
     <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/Bakery1.png</File>
     <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/chocofall_bg.png</File>
+    <File>k:/Programming/Monogame/MyBakery/MyBakery/Content/SpriteSheetFarm.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

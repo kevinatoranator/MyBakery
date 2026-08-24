@@ -9,19 +9,21 @@ using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
-public class BakeryDisplay : Button, ShopObject
+public class BakeryDisplay : UIButton, ShopObject
 {
 
     public String product {get; set;}
-    public ProductSelectorMenu menu;
+    public UIDropdown menu;
     private SpriteFont _font;
     public int Quantity { get; set; }
     public Rectangle InteractZone { get; set; } 
     public String Type { get; set; }
     public HashSet<Product.ProductQualities> DisplayQualities { get; set; }
+    public Rectangle Hitbox { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
     private Dictionary<String, Product> _products;
 
-    public BakeryDisplay(Vector2 location, SpriteFont font, Rectangle izone, String type, HashSet<Product.ProductQualities> displayQualities, Dictionary<String, Product> _items)
+    public BakeryDisplay(Vector2 location, SpriteFont font, Rectangle izone, String type, HashSet<Product.ProductQualities> displayQualities, Dictionary<String, Product> _items, TextureRegion tex, Action action) : base(izone, tex, action)
     {
         Location = location;
         _font = font;
@@ -43,17 +45,6 @@ public class BakeryDisplay : Button, ShopObject
             if (valid && values.Value.Sellable)
                 _products[values.Key] = values.Value;
         }
-        onClick = () =>
-        {
-            if (menu == null)
-            {
-                menu = new ProductSelectorMenu(_font, Location, _products);
-            }
-            else if (menu != null)
-            {
-                menu = null;
-            }
-        };
     }
 
     public void Update(GameTime gameTime)
@@ -61,22 +52,18 @@ public class BakeryDisplay : Button, ShopObject
         if (menu != null)
         {
             menu.Update(gameTime);
-            product = menu.selectedProduct;
-            if (menu.Clicked)
-            {
-                menu = null;
-            }
+            product = menu.Selected.ToString();
         }
     }
 
-    public void Draw(SpriteBatch spriteBatch, TextureAtlas spriteSheet){
-        spriteSheet.CreateSprite(Type).Draw(spriteBatch, Location);
+    public void Draw(GameTime gameTime){
+        //spriteSheet.CreateSprite(Type).Draw(spriteBatch, Location);
         if(menu != null){
-            menu.Draw(spriteBatch, spriteSheet);
+            menu.Draw(gameTime);
         }
         
         if(product is not "None"){
-            spriteSheet.CreateSprite(product).Draw(spriteBatch, Location);
+            //spriteSheet.CreateSprite(product).Draw(spriteBatch, Location);
         }
     }
 }

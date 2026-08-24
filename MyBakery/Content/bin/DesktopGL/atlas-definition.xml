@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas>
+  <Texture>SpriteSheet</Texture>
+  <Regions>
+    <Region name="Coin" x="128" y="128" width="64" height="64" />
+    <Region name="ChocoChip" x="0" y="64" width="64" height="64" />
+    <Region name="Ember" x="64" y="64" width="64" height="64" />
+    <Region name="Dough" x="0" y="128" width="64" height="64" />
+    <Region name="Cookie" x="64" y="128" width="64" height="64" />
+    <Region name="Apple" x="0" y="0" width="64" height="64" />
+    <Region name="Cherry" x="64" y="0" width="64" height="64" />
+    <Region name="Orange" x="128" y="0" width="64" height="64" />
+    <Region name="Jelly" x="128" y="192" width="64" height="64" />
+    <Region name="JellyBlob" x="64" y="192" width="64" height="64" />
+    <Region name="CoffeeBean" x="256" y="128" width="64" height="64" />
+    <Region name="Flour" x="320" y="128" width="64" height="64" />
+    <Region name="Wheat" x="192" y="64" width="64" height="64" />
+    <Region name="BoxedChocolate" x="128" y="256" width="64" height="64" />
+    <Region name="Cancel" x="0" y="192" width="64" height="64" />
+    <Region name="Display" x="0" y="448" width="64" height="64" />
+    <Region name="Fridge" x="0" y="512" width="64" height="64" />
+    <Region name="Register" x="64" y="448" width="64" height="64" />
+    <Region name="ToastDog" x="128" y="64" width="64" height="64" />
+    <Region name="Button" x="448" y="576" width="128" height="64" />
+    <Region name="ProgressFront" x="512" y="256" width="128" height="64" />
+    <Region name="ProgressBack" x="192" y="192" width="128" height="64" />
+    <Region name="Pick" x="0" y="256" width="64" height="64" />
+    <Region name="Hammer" x="64" y="256" width="64" height="64" />
+    <Region name="Layer0" x="160" y="480" width="32" height="32" />
+    <Region name="Layer1" x="128" y="448" width="32" height="32" />
+    <Region name="Layer2" x="160" y="448" width="32" height="32" />
+    <Region name="Layer3" x="128" y="480" width="32" height="32" />
+    <Region name="ChocoTileSet" x ="128" y="448" width="64" height="64" />
+    <Region name="Circle" x="320" y="256" width="64" height="64" />
+    <Region name="Square" x="384" y="256" width="64" height="64" />
+    <Region name="Star" x="448" y="256" width="64" height="64" />
+    <Region name="Grinder" x="384" y="0" width="256" height="256" />
+    <Region name="Wheel" x="256" y="0" width="128" height="128" />
+    <Region name="Oven" x="192" y="320" width="256" height="256" />
+    <Region name="Match" x="64" y="320" width="64" height="128" />
+    <Region name="Wood" x="128" y="320" width="64" height="128" />
+    <Region name="Ice" x="0" y="320" width="64" height="128" />
+    <Region name="MatchBox" x="320" y="192" width="64" height="64" />
+    <Region name="TempFront" x="480" y="320" width="32" height="128" />
+    <Region name="TempBack" x="448" y="320" width="32" height="128" />
+    <Region name="Panel" x="448" y="448" width="192" height="192" />
+  </Regions>
+  <Animations>
+  </Animations>
+</TextureAtlas>

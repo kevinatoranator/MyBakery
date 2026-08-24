@@ -9,41 +9,36 @@ using CoreLibrary.Graphics;
 
 namespace MyBakery;
 
-public class Register : Button, ShopObject
+public class Register : UIButton
 {
     public Rectangle InteractZone { get; set; }
     public int Quantity { get; set; }
     public String Type { get; set; }
     private SpriteFont _font;
     public Employee employee{ get; set; }
-    public List<Button> buttons;
+    public List<UIButton> buttons;
     public Boolean isOpened { get; set; }
 
 
-    public Register(Vector2 location, SpriteFont font, Rectangle izone, Action onClick)
+    public Register(Rectangle bounds, TextureRegion texture, Action onClick) : base(bounds, texture, onClick)
     {
-        Location = location;
-        _font = font;
-        Hitbox = new Rectangle((int)Location.X, (int)Location.Y, 64, 64);
-        InteractZone = izone;
         Type = "Register";
-        buttons = new List<Button>();
-        this.onClick = onClick;
+        buttons = new List<UIButton>();
         isOpened = false;
     }
 
-    new public void Update()
+    public void Update()
     {
         if (IsClicked())
         {
-            onClick.Invoke();
+            //onClick.Invoke();
             isOpened = true;
         }
-        foreach(Button b in buttons) {
+        foreach(UIButton b in buttons) {
             if (b.IsClicked())
             {
-                b.onClick.Invoke();
-                employee = new Employee(b.Name, 10);
+                //b.onClick.Invoke();
+                employee = new Employee("Bob", 10); //temp name
                 isOpened = false;
                 buttons.Clear();//may change in the future if assigning to or managing staff
                 break;
@@ -56,15 +51,15 @@ public class Register : Button, ShopObject
         //While shop is running
     }
 
-    public void Draw(SpriteBatch spriteBatch, TextureAtlas spriteSheet)
+    public void Draw(GameTime gameTime)
     {
-        foreach (Button button in buttons)
+        foreach (UIButton button in buttons)
         {
-            button.Draw(spriteBatch, _font, spriteSheet.CreateSprite("Button"));
+            button.Draw(gameTime);
         }
-        if (employee != null)
-            spriteSheet.CreateSprite("ToastDog").Draw(spriteBatch, new Vector2(Location.X, Location.Y - 32));//sprite made with employee.Name temp for testing
+        //if (employee != null)
+            //spriteSheet.CreateSprite("ToastDog").Draw(spriteBatch, new Vector2(Location.X, Location.Y - 32));//sprite made with employee.Name temp for testing
             
-        spriteSheet.CreateSprite(Type).Draw(spriteBatch, Location);
+        //spriteSheet.CreateSprite(Type).Draw(spriteBatch, Location);
     }
 }
